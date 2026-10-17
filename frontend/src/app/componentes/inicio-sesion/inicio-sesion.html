@@ -1,0 +1,13 @@
+<main>
+  <div class="titulo"><h1>Iniciá sesión para poder acceder a la aplicación</h1></div>
+  <section>
+    <form [formGroup]="formularioInicioSesion" (ngSubmit)="iniciarSesion()">
+      <label>Correo: <input type="email" formControlName="correo"></label>
+      <label>Contraseña: <input type="password" formControlName="contrasenia"></label>
+      <div class="botones">
+        <button type="submit">Iniciar sesión</button>
+        <button type="button" routerLink="/registro">Registrarse</button>
+      </div>
+    </form>
+  </section>
+</main>

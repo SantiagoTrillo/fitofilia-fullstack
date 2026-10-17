@@ -1,0 +1,26 @@
+<main>
+  <div class="titulo"><h1>Registrate para poder acceder a la aplicación</h1></div>
+  <section class="registro">
+    <form [formGroup]="formularioRegistro" (ngSubmit)="registrarUsuario()" autocomplete="off">
+      <label>Nombre: <input type="text" formControlName="nombre"></label>
+      <label>Apellido: <input type="text" formControlName="apellido"></label>
+      <label>Correo: <input type="email" formControlName="correo"></label>
+      <label>Nombre de usuario: <input type="text" formControlName="nombreUsuario"></label>
+      <label>Contraseña: <input type="password" formControlName="contrasenia"></label>
+      <label>Repetir contraseña: <input type="password" formControlName="contraseniaRepetida"></label>
+      <label>Fecha de nacimiento: <input type="date" formControlName="fechaNacimiento"></label>
+      <label>Descripción breve: <input type="text" formControlName="descripcion"></label>
+      <label>
+        Foto de perfil: <input #inputFotoPerfil type="file" accept="image/*" (change)="seleccionarImagen(inputFotoPerfil)">
+      </label>
+      <button type="submit">Registrarse</button>
+    </form>
+  </section>
+<!--  @if (mostrarModalConfirmacion()) {-->
+<!--    <app-modal-confirmacion-->
+<!--      [mensaje]="'Tenés cambios sin guardar. ¿Estás seguro de que querés abandonar la página?'"-->
+<!--      (confirmar)="aceptarSalida()"-->
+<!--      (cancelar)="cancelarSalida()"-->
+<!--    />-->
+<!--  }-->
+</main>
