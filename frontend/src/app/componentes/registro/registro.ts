@@ -1,7 +1,7 @@
 import { Component, inject, signal, WritableSignal } from "@angular/core"
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms"
 import { Router } from "@angular/router"
-import { SesionService } from "../../servicios/sesion-service"
+import { AutenticacionService } from "../../servicios/autenticacion-service"
 import { UsuarioInterface } from "../../interfaces/usuario-interface"
 
 @Component({
@@ -11,7 +11,7 @@ import { UsuarioInterface } from "../../interfaces/usuario-interface"
   imports: [ReactiveFormsModule]
 })
 export class Registro {
-  private sesionService: SesionService = inject(SesionService)
+  private autenticacionService: AutenticacionService = inject(AutenticacionService)
   private formBuilder: FormBuilder = inject(FormBuilder)
   private router: Router = inject(Router)
 
@@ -48,7 +48,7 @@ export class Registro {
   protected async registrarUsuario(): Promise<void> {
     if (this.formularioRegistro.valid) {
       const datosFormulario = this.formularioRegistro.getRawValue() as UsuarioInterface
-      const usuarioRegistrado: UsuarioInterface | null = await this.sesionService.registrarUsuario(datosFormulario)
+      const usuarioRegistrado: UsuarioInterface | null = await this.autenticacionService.registrarUsuario(datosFormulario)
 
       if (usuarioRegistrado) {
         this.registroExitoso.set(true)

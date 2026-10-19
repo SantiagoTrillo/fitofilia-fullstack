@@ -1,9 +1,9 @@
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from '@angular/router'
 import { inject } from '@angular/core'
-import { SesionService } from '../servicios/sesion-service'
+import { AutenticacionService } from '../servicios/autenticacion-service'
 
-export const sesionGuard: CanActivateFn = (_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree => {
-  const sesionService: SesionService = inject(SesionService)
+export const autenticacionGuard: CanActivateFn = (_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree => {
+  const sesionService: AutenticacionService = inject(AutenticacionService)
   const router: Router = inject(Router)
 
   const rutaActual: string = decodeURI(state.url)

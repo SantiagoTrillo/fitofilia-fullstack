@@ -1,8 +1,10 @@
-import { Module } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { MongooseModule } from '@nestjs/mongoose'
-import { AppController } from './app.controller.js'
-import { AppService } from './app.service.js'
+import { Module } from "@nestjs/common"
+import { ConfigModule, ConfigService } from "@nestjs/config"
+import { MongooseModule } from "@nestjs/mongoose"
+import { AppController } from "./app.controller.js"
+import { AppService } from "./app.service.js"
+import { UsuariosModule } from "./usuarios/usuarios.module.js"
+import { AutenticacionModule } from './autenticacion/autenticacion.module.js';
 
 @Module({
   imports: [
@@ -11,10 +13,14 @@ import { AppService } from './app.service.js'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        uri: configService.get<string>('URI_MONGODB'),
-        dbName: 'fitofilia'
+        uri: configService.get<string>("URI_MONGODB"),
+        dbName: "fitofilia",
+        tls: true,
+        tlsAllowInvalidCertificates: true
       })
-    })
+    }),
+    UsuariosModule,
+    AutenticacionModule
   ],
   controllers: [AppController],
   providers: [AppService]

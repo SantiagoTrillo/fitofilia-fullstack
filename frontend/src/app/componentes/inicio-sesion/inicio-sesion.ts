@@ -1,7 +1,7 @@
 import { Component, inject } from "@angular/core"
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms"
 import { Router, RouterLink } from "@angular/router"
-import { SesionService } from "../../servicios/sesion-service"
+import { AutenticacionService } from "../../servicios/autenticacion-service"
 import { UsuarioInterface } from "../../interfaces/usuario-interface"
 
 @Component({
@@ -11,7 +11,7 @@ import { UsuarioInterface } from "../../interfaces/usuario-interface"
   imports: [ReactiveFormsModule, RouterLink]
 })
 export class InicioSesion {
-  private sesionService: SesionService = inject(SesionService)
+  private sesionService: AutenticacionService = inject(AutenticacionService)
   private formBuilder: FormBuilder = inject(FormBuilder)
   private router: Router = inject(Router)
 
@@ -24,7 +24,7 @@ export class InicioSesion {
     if (this.formularioInicioSesion.valid) {
       const datosFormulario: any = this.formularioInicioSesion.getRawValue()
       const usuarioAutenticado: UsuarioInterface | null = await this.sesionService.iniciarSesion(
-        datosFormulario.correo_electronico, datosFormulario.contrasenia
+        datosFormulario.correo, datosFormulario.contrasenia
       )
 
       if (usuarioAutenticado) this.router.navigate([""])

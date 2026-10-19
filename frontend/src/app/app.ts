@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 import { Navbar } from "./componentes/navbar/navbar"
-import { SesionService } from "./servicios/sesion-service"
+import { AutenticacionService } from "./servicios/autenticacion-service"
 
 @Component({
   selector: 'app-root',
@@ -10,5 +10,5 @@ import { SesionService } from "./servicios/sesion-service"
   imports: [RouterOutlet, Navbar]
 })
 export class App {
-  protected sesionService: SesionService = inject(SesionService)
+  protected sesionService: AutenticacionService = inject(AutenticacionService)
 }
