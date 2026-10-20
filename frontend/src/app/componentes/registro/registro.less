@@ -1,0 +1,115 @@
+main {
+  div.titulo {
+    display: flex;
+    justify-content: center;
+    h1 {
+      margin: 8px;
+      font-size: 46px;
+      line-height: 1
+    }
+  }
+  section {
+    display: flex;
+    justify-content: center;
+    form {
+      border-radius: 10px;
+      padding: 5px;
+      width: 500px;
+      display: flex;
+      flex-direction: column;
+      margin: 10px;
+      label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 4px 8px;
+        user-select: none;
+        background-color: var(--carbon-marron-claro);
+        border-radius: 5px;
+        padding: 5px 10px;
+        input {
+          font-family: inherit;
+          width: 228px;
+          border: none;
+          border-radius: 5px;
+          padding: 5px;
+          background-color: var(--carbon-marron-claro);
+          &.ng-invalid.ng-touched { border: 1px solid var(--algodon-azucar) }
+        }
+        input[type="date"] {
+          width: 228px;
+          cursor: pointer;
+          text-align: center;
+          &::-webkit-calendar-picker-indicator {
+            cursor: pointer
+          }
+          &:invalid,
+          &.ng-invalid {
+            color: transparent;
+            &:focus {
+              color: white
+            }
+          }
+        }
+        textarea {
+          width: 228px;
+          height: 120px;
+          border-radius: 5px;
+          padding: 5px 5px 0 15px;
+          gap: 10px;
+          border: none;
+          background-color: var(--carbon-marron-claro);
+          font-family: inherit;
+          resize: none;
+          overflow: hidden
+        }
+      }
+      div.foto-perfil {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        h2 {
+          margin: 8px;
+          font-size: 26px;
+          line-height: 1
+        }
+        input {
+          margin: 4px 8px;
+          user-select: none;
+          background-color: var(--carbon-marron-claro);
+          border-radius: 5px;
+          padding: 5px 10px;
+          cursor: pointer;
+          width: calc(100% - 16px);
+          text-align: center;
+          &::file-selector-button {
+            font-family: inherit;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+            background-color: var(--carbon-marron-claro);
+            cursor: pointer
+          }
+        }
+      }
+      div:not(.foto-perfil) {
+        display: flex;
+        justify-content: center;
+        button {
+          background-color: var(--carbon-marron-claro);
+          border: none;
+          border-radius: 5px;
+          margin: 5px 8px 5px 8px;
+          padding: 5px;
+          cursor: pointer;
+          flex: 1
+        }
+      }
+    }
+  }
+}
+
+input:-webkit-autofill {
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0 1000px var(--carbon-marron-claro) inset
+}
