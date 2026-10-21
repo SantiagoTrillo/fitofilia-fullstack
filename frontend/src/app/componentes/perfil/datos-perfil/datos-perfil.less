@@ -4,7 +4,7 @@ section {
   align-items: center;
   width: 820px;
   h2 {
-    margin: 8px;
+    margin: 4px 0 12px 0;
     font-size: 32px;
     line-height: 1;
     text-align: center
@@ -24,15 +24,23 @@ section {
       padding: 5px 10px;
       margin: 4px 8px;
       min-height: 46px;
-      box-sizing: border-box;
       white-space: nowrap;
+      user-select: none;
       li {
         list-style: none;
         width: 235px;
         padding: 5px;
         border-radius: 5px;
         overflow: hidden;
-        text-overflow: ellipsis
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: left
+      }
+      &.campo-ancho-completo {
+        grid-column: 1 / -1;
+        li {
+          width: calc(100% - 150px)
+        }
       }
     }
   }

@@ -22,7 +22,7 @@ export class InicioSesion {
     contrasenia: ["", Validators.required]
   })
 
-  async iniciarSesion(): Promise<void> {
+  protected async iniciarSesion(): Promise<void> {
     if (this.formularioInicioSesion.valid) {
       const datosFormulario: any = this.formularioInicioSesion.getRawValue()
       const usuarioAutenticado: UsuarioInterface | null = await this.sesionService.iniciarSesion(
@@ -32,7 +32,19 @@ export class InicioSesion {
       if (usuarioAutenticado) {
         this.router.navigate([""])
         this.toastService.mostrarToast("Sesión iniciada correctamente", "exito")
-      } else this.toastService.mostrarToast("Credenciales inválidas", "error")
+      }
     } else this.toastService.mostrarToast("Campos del formulario inválidos", "error")
+  }
+
+  protected async iniciarSesionRapido(): Promise<void> {
+    const usuarioAutenticado: UsuarioInterface | null = await this.sesionService.iniciarSesion(
+      "santitrillo07@gmail.com",
+      "Fitofilia2026"
+    )
+
+    if (usuarioAutenticado) {
+      this.router.navigate([""])
+      this.toastService.mostrarToast("Sesión iniciada correctamente", "exito")
+    }
   }
 }

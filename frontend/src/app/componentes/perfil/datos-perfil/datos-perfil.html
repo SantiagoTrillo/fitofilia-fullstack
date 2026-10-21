@@ -5,7 +5,7 @@
     <label>Apellido: <li>{{ usuarioActual().apellido }}</li></label>
     <label>Correo: <li>{{ usuarioActual().correo }}</li></label>
     <label>Nombre de usuario: <li>{{ usuarioActual().nombreUsuario }}</li></label>
-    <label>Fecha de nacimiento: <li>{{ usuarioActual().fechaNacimiento | date: "d/M/yyyy" }}</li></label>
-    <label>Descripción: <li>{{ usuarioActual().descripcion }}</li></label>
+    <label class="campo-ancho-completo">Fecha de nacimiento: <li>{{ usuarioActual().fechaNacimiento | date: "d/M/yyyy" }}</li></label>
+    <label class="campo-ancho-completo">Descripción: <li [title]="usuarioActual().descripcion || ''">{{ usuarioActual().descripcion }}</li></label>
   </ul>
 </section>

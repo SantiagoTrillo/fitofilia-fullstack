@@ -36,7 +36,7 @@ main {
             width: 180px;
             border: none;
             border-radius: 5px;
-            padding: 5px;
+            padding: 5px
           }
         }
         div.contenedor-error {
@@ -44,6 +44,7 @@ main {
           margin: 0 5px;
           display: flex;
           align-items: center;
+          justify-content: flex-start;
           span {
             color: var(--algodon-azucar);
             font-size: 19px;
@@ -51,22 +52,25 @@ main {
           }
         }
       }
-      button {
-        background-color: var(--carbon-marron-claro);
-        border: none;
-        border-radius: 5px;
-        margin: 5px;
-        padding: 5px;
-        cursor: pointer
+      div.botones {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        button {
+          background-color: var(--carbon-marron-claro);
+          border: none;
+          border-radius: 5px;
+          margin: 5px;
+          padding: 5px;
+          cursor: pointer;
+          flex: 1 1 calc(50% - 10px);
+          &.boton-inicio-rapido {
+            flex: 1 1 100%
+          }
+        }
       }
     }
   }
-}
-
-div.botones {
-  display: flex;
-  justify-content: center;
-  button { flex: 1 }
 }
 
 input, select {
