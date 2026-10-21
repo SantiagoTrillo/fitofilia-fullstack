@@ -1,14 +1,18 @@
 import { NestFactory } from '@nestjs/core'
-import { INestApplication, ValidationPipe } from '@nestjs/common'
+import { ValidationPipe } from '@nestjs/common'
+import { NestExpressApplication } from '@nestjs/platform-express'
 import { AppModule } from './app.module.js'
+import { join } from 'path'
 
 async function bootstrap(): Promise<void> {
-  const app: INestApplication = await NestFactory.create(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule)
 
   app.enableCors({ origin: 'http://localhost:4200', credentials: true })
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
 
-  const puerto: number = Number(process.env.PUERTO) ?? 3000
+  app.useStaticAssets(join(process.cwd(), 'subidas'), { prefix: '/subidas/' })
+
+  const puerto: number = Number(process.env.PUERTO) || 3000
 
   await app.listen(puerto)
 

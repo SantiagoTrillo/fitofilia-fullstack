@@ -2,8 +2,22 @@
   <div class="titulo"><h1>Iniciá sesión para poder acceder a la aplicación</h1></div>
   <section>
     <form [formGroup]="formularioInicioSesion" (ngSubmit)="iniciarSesion()">
-      <label>Correo: <input type="email" formControlName="correo"></label>
-      <label>Contraseña: <input type="password" formControlName="contrasenia"></label>
+      <div class="campo">
+        <label>Correo: <input type="email" formControlName="correo"></label>
+        <div class="contenedor-error">
+          @if (formularioInicioSesion.get('correo')?.touched && formularioInicioSesion.get('correo')?.invalid) {
+            @if (formularioInicioSesion.get('correo')?.errors?.['required']) { <span>El correo es obligatorio</span> }
+          }
+        </div>
+      </div>
+      <div class="campo">
+        <label>Contraseña:<input type="password" formControlName="contrasenia"></label>
+        <div class="contenedor-error">
+          @if (formularioInicioSesion.get('contrasenia')?.touched && formularioInicioSesion.get('contrasenia')?.invalid) {
+            @if (formularioInicioSesion.get('contrasenia')?.errors?.['required']) { <span>La contraseña es obligatoria</span> }
+          }
+        </div>
+      </div>
       <div class="botones">
         <button type="submit">Iniciar sesión</button>
         <button type="button" routerLink="/registro">Registrarse</button>

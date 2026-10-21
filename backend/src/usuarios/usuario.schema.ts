@@ -1,18 +1,28 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { HydratedDocument } from 'mongoose'
 
-@Schema({ collection: "usuarios" })
+@Schema({ collection: "usuarios", timestamps: true })
 export class Usuario {
-  @Prop({ required: true }) nombre: string
-  @Prop({ required: true }) apellido: string
-  @Prop({ required: true, unique: true }) correo: string
-  @Prop({ required: true, unique: true }) nombreUsuario: string
-  @Prop({ required: true }) contrasenia: string
-  @Prop({ required: true }) fechaNacimiento: string
-  @Prop({ default: "" }) descripcion: string
-  @Prop({ default: "" }) fotoPerfil: string
-  @Prop({ default: "usuario", enum: ["usuario", "administrador"] }) perfil: string
-  @Prop({ default: true }) disponible: boolean
+  @Prop({ required: [true, "El nombre es obligatorio"], trim: true, minlength: 2, maxlength: 50 })
+  nombre: string
+  @Prop({ required: [true, "El apellido es obligatorio"], trim: true, minlength: 2, maxlength: 50 })
+  apellido: string
+  @Prop({ required: [true, "El correo es obligatorio"], unique: true, trim: true, lowercase: true, match: [/^\S+@\S+\.\S+$/, "El formato de correo no es válido"] })
+  correo: string
+  @Prop({ required: [true, "El nombre de usuario es obligatorio"], unique: true, trim: true, minlength: 2, maxlength: 30 })
+  nombreUsuario: string
+  @Prop({ required: [true, "La contraseña es obligatoria"] })
+  contrasenia: string
+  @Prop({ required: [true, "La fecha de nacimiento es obligatoria"] })
+  fechaNacimiento: string
+  @Prop({ default: "", maxlength: 75, trim: true })
+  descripcion: string
+  @Prop({ default: "" })
+  fotoPerfil: string
+  @Prop({ default: "usuario", enum: ["usuario", "administrador"] })
+  perfil: string
+  @Prop({ default: true })
+  disponible: boolean
 }
 
 export type DocumentoUsuario = HydratedDocument<Usuario>

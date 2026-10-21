@@ -1,0 +1,11 @@
+<section>
+  <h2>Datos del perfil</h2>
+  <ul>
+    <label>Nombre: <li>{{ usuarioActual().nombre }}</li></label>
+    <label>Apellido: <li>{{ usuarioActual().apellido }}</li></label>
+    <label>Correo: <li>{{ usuarioActual().correo }}</li></label>
+    <label>Nombre de usuario: <li>{{ usuarioActual().nombreUsuario }}</li></label>
+    <label>Fecha de nacimiento: <li>{{ usuarioActual().fechaNacimiento | date: "d/M/yyyy" }}</li></label>
+    <label>Descripción: <li>{{ usuarioActual().descripcion }}</li></label>
+  </ul>
+</section>

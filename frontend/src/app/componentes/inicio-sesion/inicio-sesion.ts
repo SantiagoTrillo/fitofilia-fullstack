@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angula
 import { Router, RouterLink } from "@angular/router"
 import { AutenticacionService } from "../../servicios/autenticacion-service"
 import { UsuarioInterface } from "../../interfaces/usuario-interface"
+import { ToastService } from "../../servicios/toast-service"
 
 @Component({
   selector: "app-inicio-sesion",
@@ -12,6 +13,7 @@ import { UsuarioInterface } from "../../interfaces/usuario-interface"
 })
 export class InicioSesion {
   private sesionService: AutenticacionService = inject(AutenticacionService)
+  private toastService: ToastService = inject(ToastService)
   private formBuilder: FormBuilder = inject(FormBuilder)
   private router: Router = inject(Router)
 
@@ -27,7 +29,10 @@ export class InicioSesion {
         datosFormulario.correo, datosFormulario.contrasenia
       )
 
-      if (usuarioAutenticado) this.router.navigate([""])
-    }
+      if (usuarioAutenticado) {
+        this.router.navigate([""])
+        this.toastService.mostrarToast("Sesión iniciada correctamente", "exito")
+      } else this.toastService.mostrarToast("Credenciales inválidas", "error")
+    } else this.toastService.mostrarToast("Campos del formulario inválidos", "error")
   }
 }

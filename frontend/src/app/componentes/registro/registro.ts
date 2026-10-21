@@ -4,6 +4,7 @@ import { Router, RouterLink } from "@angular/router"
 import { AutenticacionService } from "../../servicios/autenticacion-service"
 import { UsuarioInterface } from "../../interfaces/usuario-interface"
 import { ModalConfirmacion } from "../modal-confirmacion/modal-confirmacion"
+import { ToastService } from "../../servicios/toast-service"
 
 @Component({
   selector: "app-registro",
@@ -13,6 +14,7 @@ import { ModalConfirmacion } from "../modal-confirmacion/modal-confirmacion"
 })
 export class Registro {
   private autenticacionService: AutenticacionService = inject(AutenticacionService)
+  private toastService: ToastService = inject(ToastService)
   private formBuilder: FormBuilder = inject(FormBuilder)
   private router: Router = inject(Router)
 
@@ -35,27 +37,44 @@ export class Registro {
   }, { validators: this.validarContraseniasIguales })
 
   private validarContraseniasIguales(formularioRegistro: AbstractControl): ValidationErrors | null {
-    const contrasenia: string = formularioRegistro.get('contrasenia')!.value
-    const contraseniaRepetida: string = formularioRegistro.get('contraseniaRepetida')!.value
+    const contrasenia: string = formularioRegistro.get('contrasenia')?.value
+    const contraseniaRepetida: string = formularioRegistro.get('contraseniaRepetida')?.value
 
-    return contrasenia == contraseniaRepetida ? null : { contraseniasDistintas: true }
+    if (!contrasenia || !contraseniaRepetida) return null
+
+    return contrasenia === contraseniaRepetida ? null : { contraseniasDistintas: true }
   }
 
   protected seleccionarImagen(inputFotoPerfil: HTMLInputElement): void {
     const imagenSeleccionada: File | null = inputFotoPerfil.files?.[0] ?? null
-
     this.imagenSeleccionada.set(imagenSeleccionada)
   }
 
   protected async registrarUsuario(): Promise<void> {
-    if (this.formularioRegistro.valid) {
-      const datosFormulario = this.formularioRegistro.getRawValue() as UsuarioInterface
-      const usuarioRegistrado: UsuarioInterface | null = await this.autenticacionService.registrarUsuario(datosFormulario)
+    if (this.formularioRegistro.invalid) {
+      this.formularioRegistro.markAllAsTouched()
+      this.toastService.mostrarToast("Campos del formulario inválidos", "error")
+      return
+    }
 
-      if (usuarioRegistrado) {
-        this.registroExitoso.set(true)
-        this.router.navigate([""])
-      }
+    const datos = this.formularioRegistro.getRawValue()
+    const formData = new FormData()
+
+    formData.append("nombre", datos.nombre)
+    formData.append("apellido", datos.apellido)
+    formData.append("correo", datos.correo)
+    formData.append("nombreUsuario", datos.nombreUsuario)
+    formData.append("contrasenia", datos.contrasenia)
+    formData.append("fechaNacimiento", datos.fechaNacimiento)
+    if (datos.descripcion) formData.append("descripcion", datos.descripcion)
+    if (this.imagenSeleccionada()) formData.append("fotoPerfil", this.imagenSeleccionada()!)
+
+    const usuarioRegistrado: UsuarioInterface | null = await this.autenticacionService.registrarUsuario(formData)
+
+    if (usuarioRegistrado) {
+      this.registroExitoso.set(true)
+      this.toastService.mostrarToast("Registro completado correctamente", "exito")
+      this.router.navigate([""])
     }
   }
 

@@ -19,22 +19,36 @@ main {
       flex-direction: column;
       margin: 10px;
       border: none;
-      label {
+      div.campo {
         display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        margin: 5px;
-        user-select: none;
-        background-color: var(--carbon-marron-claro);
-        border: none;
-        border-radius: 5px;
-        padding: 5px 10px;
-        input, select {
-          width: 180px;
+        flex-direction: column;
+        label {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin: 4px 5px;
+          user-select: none;
+          background-color: var(--carbon-marron-claro);
           border: none;
           border-radius: 5px;
-          padding: 5px;
-          &.ng-invalid.ng-touched { outline: 2px solid var(--algodon-azucar) }
+          padding: 5px 10px;
+          input, select {
+            width: 180px;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+          }
+        }
+        div.contenedor-error {
+          min-height: 24px;
+          margin: 0 5px;
+          display: flex;
+          align-items: center;
+          span {
+            color: var(--algodon-azucar);
+            font-size: 19px;
+            line-height: 1
+          }
         }
       }
       button {

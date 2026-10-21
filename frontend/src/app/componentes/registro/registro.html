@@ -2,29 +2,84 @@
   <div class="titulo"><h1>Registrate para poder acceder a la aplicación</h1></div>
   <section class="registro">
     <form [formGroup]="formularioRegistro" (ngSubmit)="registrarUsuario()">
-      <label>Nombre: <input type="text" formControlName="nombre"></label>
-      <label>Apellido: <input type="text" formControlName="apellido"></label>
-      <label>Correo: <input type="email" formControlName="correo"></label>
-      <label>Nombre de usuario: <input type="text" autocomplete="none" formControlName="nombreUsuario"></label>
-      <label>Contraseña: <input type="password" autocomplete="new-password" formControlName="contrasenia"></label>
-      <label>Repetir contraseña: <input type="password" formControlName="contraseniaRepetida"></label>
-      <label>Fecha de nacimiento: <input type="date" formControlName="fechaNacimiento"></label>
-      <label>Descripción breve: <textarea type="text" rows="3" maxlength="75" formControlName="descripcion"></textarea></label>
-      <div class="foto-perfil">
-        <h2>Subir foto de perfil</h2>
-        <input #inputFotoPerfil type="file" accept="image/*" (change)="seleccionarImagen(inputFotoPerfil)">
+      <div class="campo">
+        <label>Nombre: <input type="text" formControlName="nombre"></label>
+        <div class="contenedor-error">
+          @if (formularioRegistro.get('nombre')?.touched && formularioRegistro.get('nombre')?.invalid) {
+            @if (formularioRegistro.get('nombre')?.errors?.['required']) { <span>El nombre es obligatorio</span> }
+            @else if (formularioRegistro.get('nombre')?.errors?.['minlength']) { <span>Debe contener al menos 2 caracteres</span> }
+          }
+        </div>
       </div>
-      <div>
+      <div class="campo">
+        <label>Apellido: <input type="text" formControlName="apellido"></label>
+        <div class="contenedor-error">
+          @if (formularioRegistro.get('apellido')?.touched && formularioRegistro.get('apellido')?.invalid) {
+            @if (formularioRegistro.get('apellido')?.errors?.['required']) { <span>El apellido es obligatorio</span> }
+            @else if (formularioRegistro.get('apellido')?.errors?.['minlength']) { <span>Debe contener al menos 2 caracteres</span> }
+          }
+        </div>
+      </div>
+      <div class="campo">
+        <label>Correo: <input type="email" formControlName="correo"></label>
+        <div class="contenedor-error">
+          @if (formularioRegistro.get('correo')?.touched && formularioRegistro.get('correo')?.invalid) {
+            @if (formularioRegistro.get('correo')?.errors?.['required']) { <span>El correo es obligatorio</span> }
+            @else if (formularioRegistro.get('correo')?.errors?.['email']) { <span>Ingresá un formato de correo válido</span> }
+          }
+        </div>
+      </div>
+      <div class="campo">
+        <label>Usuario: <input type="text" autocomplete="none" formControlName="nombreUsuario"></label>
+        <div class="contenedor-error">
+          @if (formularioRegistro.get('nombreUsuario')?.touched && formularioRegistro.get('nombreUsuario')?.invalid) {
+            @if (formularioRegistro.get('nombreUsuario')?.errors?.['required']) { <span>El nombre de usuario es obligatorio</span> }
+            @else if (formularioRegistro.get('nombreUsuario')?.errors?.['minlength']) { <span>Debe contener al menos 2 caracteres</span> }
+          }
+        </div>
+      </div>
+      <div class="campo">
+        <label>Contraseña: <input type="password" autocomplete="new-password" formControlName="contrasenia"></label>
+        <div class="contenedor-error">
+          @if (formularioRegistro.get('contrasenia')?.touched && formularioRegistro.get('contrasenia')?.invalid) {
+            @if (formularioRegistro.get('contrasenia')?.errors?.['required']) { <span>La contraseña es obligatoria</span> }
+            @else if (formularioRegistro.get('contrasenia')?.errors?.['minlength']) { <span>Debe contener al menos 8 caracteres</span> }
+            @else if (formularioRegistro.get('contrasenia')?.errors?.['pattern']) { <span>Debe incluir al menos una mayúscula y un número</span> }
+          }
+        </div>
+      </div>
+      <div class="campo">
+        <label>Repetir contraseña: <input type="password" formControlName="contraseniaRepetida"></label>
+        <div class="contenedor-error">
+          @if (formularioRegistro.get('contraseniaRepetida')?.touched) {
+            @if (formularioRegistro.get('contraseniaRepetida')?.errors?.['required']) { <span>Tenés que repetir la contraseña</span> }
+            @else if (formularioRegistro.errors?.['contraseniasDistintas']) { <span>Las contraseñas no coinciden</span> }
+          }
+        </div>
+      </div>
+      <div class="campo">
+        <label>Nacimiento: <input type="date" formControlName="fechaNacimiento"></label>
+        <div class="contenedor-error">
+          @if (formularioRegistro.get('fechaNacimiento')?.touched && formularioRegistro.get('fechaNacimiento')?.invalid) { <span>La fecha de nacimiento es obligatoria</span> }
+        </div>
+      </div>
+      <div class="campo">
+        <label>Foto de perfil: <input #inputFotoPerfil type="file" accept="image/*" (change)="seleccionarImagen(inputFotoPerfil)"></label>
+        <div class="contenedor-error"></div>
+      </div>
+      <div class="campo campo-descripcion">
+        <label>Descripción: <input type="text" maxlength="75" formControlName="descripcion"></label>
+        <div class="contenedor-error">
+          @if (formularioRegistro.get('descripcion')?.errors?.['maxlength']) { <span>La descripción no puede superar los 75 caracteres</span> }
+        </div>
+      </div>
+      <div class="botones">
         <button type="submit">Registrarse</button>
         <button type="button" routerLink="/inicio-sesión">Iniciar sesión</button>
       </div>
     </form>
   </section>
   @if (mostrarModalConfirmacion()) {
-    <app-modal-confirmacion
-      [mensaje]="'Tenés cambios sin guardar. ¿Estás seguro de que querés abandonar la página?'"
-      (confirmar)="aceptarSalida()"
-      (cancelar)="cancelarSalida()"
-    />
+    <app-modal-confirmacion [mensaje]="'Tenés cambios sin guardar. ¿Estás seguro de que querés abandonar la página?'" (confirmar)="aceptarSalida()" (cancelar)="cancelarSalida()"/>
   }
 </main>

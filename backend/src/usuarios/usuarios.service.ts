@@ -11,9 +11,13 @@ export class UsuariosService {
   constructor(@InjectModel(Usuario.name) private usuarioModel: Model<DocumentoUsuario>) {}
 
   async crear(crearUsuarioDto: CrearUsuarioDto): Promise<DocumentoUsuario> {
-    const usuarioExistente: DocumentoUsuario | null = await this.usuarioModel.findOne({ correo: crearUsuarioDto.correo })
+    const correoExistente: DocumentoUsuario | null = await this.usuarioModel.findOne({ correo: crearUsuarioDto.correo })
 
-    if (usuarioExistente) throw new ConflictException("El correo ya está en uso")
+    if (correoExistente) throw new ConflictException("El correo ya está en uso")
+
+    const usuarioExistente: DocumentoUsuario | null = await this.usuarioModel.findOne({ nombreUsuario: crearUsuarioDto.nombreUsuario })
+
+    if (usuarioExistente) throw new ConflictException("El nombre de usuario ya está en uso")
 
     const contraseniaEncriptada: string = await bcrypt.hash(crearUsuarioDto.contrasenia, 10)
     const nuevoUsuario = new this.usuarioModel({

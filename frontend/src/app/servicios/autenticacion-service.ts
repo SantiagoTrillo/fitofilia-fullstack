@@ -28,7 +28,7 @@ export class AutenticacionService {
     } catch (error: any) {
       const mensaje: string = error.error.message
 
-      this.toastService.mostrarToast(mensaje, "error")
+      this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
 
       return null
     }
@@ -47,7 +47,7 @@ export class AutenticacionService {
     } catch (error: any) {
       const mensaje: string = error.error.message
 
-      this.toastService.mostrarToast(mensaje, "error")
+      this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
 
       return null
     }
