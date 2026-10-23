@@ -1,4 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common"
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from "@nestjs/common"
+import { FileInterceptor } from "@nestjs/platform-express"
+import "multer"
 import { UsuariosService } from "./usuarios.service.js"
 import { CrearUsuarioDto } from "./dto/crear-usuario.dto.js"
 import { ActualizarUsuarioDto } from "./dto/actualizar-usuario.dto.js"
@@ -18,7 +20,13 @@ export class UsuariosController {
   buscarPorId(@Param("id") idBuscado: string): Promise<DocumentoUsuario> { return this.usuariosService.buscarPorId(idBuscado) }
 
   @Patch(":id")
-  actualizarPorId(@Param("id") idBuscado: string, @Body() actualizarUsuarioDto: ActualizarUsuarioDto): Promise<DocumentoUsuario> {
+  @UseInterceptors(FileInterceptor("fotoPerfil", { dest: "./subidas/perfiles" }))
+  actualizarPorId(
+    @Param("id") idBuscado: string,
+    @Body() actualizarUsuarioDto: ActualizarUsuarioDto,
+    @UploadedFile() archivo?: Express.Multer.File
+  ): Promise<DocumentoUsuario> {
+    if (archivo) actualizarUsuarioDto.fotoPerfil = `http://localhost:3000/subidas/perfiles/${archivo.filename}`
     return this.usuariosService.actualizar(idBuscado, actualizarUsuarioDto)
   }
 

@@ -20,12 +20,12 @@ export class UsuariosService {
     if (usuarioExistente) throw new ConflictException("El nombre de usuario ya está en uso")
 
     const contraseniaEncriptada: string = await bcrypt.hash(crearUsuarioDto.contrasenia, 10)
-    const nuevoUsuario = new this.usuarioModel({
+    const usuarioNuevo = new this.usuarioModel({
       ...crearUsuarioDto,
       contrasenia: contraseniaEncriptada
     })
 
-    return await nuevoUsuario.save()
+    return await usuarioNuevo.save()
   }
 
   async buscarTodos(): Promise<DocumentoUsuario[]> {

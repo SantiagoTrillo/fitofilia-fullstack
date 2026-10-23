@@ -5,7 +5,8 @@ main {
     h1 {
       margin: 8px;
       font-size: 46px;
-      line-height: 1
+      line-height: 1;
+      user-select: none
     }
   }
   section {
@@ -27,11 +28,11 @@ main {
           justify-content: space-between;
           align-items: center;
           margin: 4px 5px;
-          user-select: none;
           background-color: var(--carbon-marron-claro);
           border: none;
           border-radius: 5px;
           padding: 5px 10px;
+          user-select: none;
           input, select {
             width: 180px;
             border: none;
@@ -48,7 +49,8 @@ main {
           span {
             color: var(--algodon-azucar);
             font-size: 19px;
-            line-height: 1
+            line-height: 1;
+            user-select: none
           }
         }
       }
@@ -64,6 +66,7 @@ main {
           padding: 5px;
           cursor: pointer;
           flex: 1 1 calc(50% - 10px);
+          user-select: none;
           &.boton-inicio-rapido {
             flex: 1 1 100%
           }

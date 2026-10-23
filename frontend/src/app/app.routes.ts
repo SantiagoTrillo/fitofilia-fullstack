@@ -3,7 +3,7 @@ import { PaginaPrincipal } from "./componentes/pagina-principal/pagina-principal
 import { Publicacion } from "./componentes/publicacion/publicacion"
 import { InicioSesion } from "./componentes/inicio-sesion/inicio-sesion"
 import { autenticacionGuard } from "./guardias/autenticacion-guard"
-import {formularioGuard} from "./guardias/formulario-guard";
+import { formularioGuard } from "./guardias/formulario-guard"
 
 export const routes: Routes = [
   {
@@ -31,6 +31,12 @@ export const routes: Routes = [
     path: "perfil",
     loadComponent: () => import("./componentes/perfil/perfil").then(m => m.Perfil),
     canActivate: [autenticacionGuard]
+  },
+  {
+    path: "perfil/editar",
+    loadComponent: () => import("./componentes/perfil/edicion-perfil/edicion-perfil").then(m => m.EdicionPerfil),
+    canActivate: [autenticacionGuard],
+    canDeactivate: [formularioGuard]
   },
   {
     path: "**",

@@ -2,9 +2,7 @@
   @if (autenticacionService.usuarioActual(); as usuarioActual) {
     <div class="titulo-perfil">
       <h1>Hola, {{ usuarioActual.nombre }}</h1>
-      @if (usuarioActual.fotoPerfil) {
-        <div class="foto-perfil"><img [src]="usuarioActual.fotoPerfil" alt="Foto de perfil"></div>
-      }
+      @if (usuarioActual.fotoPerfil) { <img [src]="usuarioActual.fotoPerfil" alt="Foto de perfil"> }
     </div>
     <div class="perfil">
       <app-datos-perfil [usuarioActual]="usuarioActual"/>

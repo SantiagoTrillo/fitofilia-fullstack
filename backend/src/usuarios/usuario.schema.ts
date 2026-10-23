@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { HydratedDocument } from 'mongoose'
 
-@Schema({ collection: "usuarios", timestamps: true })
+@Schema({ collection: "usuarios" })
 export class Usuario {
   @Prop({ required: [true, "El nombre es obligatorio"], trim: true, minlength: 2, maxlength: 50 })
   nombre: string

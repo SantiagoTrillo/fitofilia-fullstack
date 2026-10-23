@@ -1,10 +1,18 @@
 import { ActivatedRouteSnapshot, CanDeactivateFn, RouterStateSnapshot } from "@angular/router"
-import { Registro } from "../componentes/registro/registro"
 
-export const formularioGuard: CanDeactivateFn<Registro> = (
-  component: Registro, _currentRoute: ActivatedRouteSnapshot, _currentState: RouterStateSnapshot, nextState: RouterStateSnapshot
+interface ComponenteConFormulario {
+  formularioModificado(): boolean
+  registroExitoso?: () => boolean
+  edicionExitosa?: () => boolean
+  confirmacionAceptada(): boolean
+  solicitarSalida(url: string): void
+}
+
+export const formularioGuard: CanDeactivateFn<ComponenteConFormulario> = (
+  component: ComponenteConFormulario, _currentRoute: ActivatedRouteSnapshot, _currentState: RouterStateSnapshot, nextState: RouterStateSnapshot
 ): boolean => {
-  if (component.formularioRegistro.dirty && !component.registroExitoso() && !component.confirmacionAceptada()) {
+  const guardadoExitoso: boolean = component.registroExitoso?.() || component.edicionExitosa?.() || false
+  if (component.formularioModificado() && !guardadoExitoso && !component.confirmacionAceptada()) {
     component.solicitarSalida(nextState.url)
     return false
   } else return true
