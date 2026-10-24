@@ -8,32 +8,27 @@ import bcrypt from "bcrypt"
 
 @Injectable()
 export class UsuariosService {
-  constructor(@InjectModel(Usuario.name) private usuarioModel: Model<DocumentoUsuario>) {}
+  constructor(@InjectModel(Usuario.name) private modeloUsuario: Model<DocumentoUsuario>) {}
 
   async crear(crearUsuarioDto: CrearUsuarioDto): Promise<DocumentoUsuario> {
-    const correoExistente: DocumentoUsuario | null = await this.usuarioModel.findOne({ correo: crearUsuarioDto.correo })
+    const correoExistente: DocumentoUsuario | null = await this.modeloUsuario.findOne({ correo: crearUsuarioDto.correo })
 
     if (correoExistente) throw new ConflictException("El correo ya está en uso")
 
-    const usuarioExistente: DocumentoUsuario | null = await this.usuarioModel.findOne({ nombreUsuario: crearUsuarioDto.nombreUsuario })
+    const usuarioExistente: DocumentoUsuario | null = await this.modeloUsuario.findOne({ nombreUsuario: crearUsuarioDto.nombreUsuario })
 
     if (usuarioExistente) throw new ConflictException("El nombre de usuario ya está en uso")
 
     const contraseniaEncriptada: string = await bcrypt.hash(crearUsuarioDto.contrasenia, 10)
-    const usuarioNuevo = new this.usuarioModel({
-      ...crearUsuarioDto,
-      contrasenia: contraseniaEncriptada
-    })
+    const usuarioNuevo = new this.modeloUsuario({...crearUsuarioDto, contrasenia: contraseniaEncriptada})
 
     return await usuarioNuevo.save()
   }
 
-  async buscarTodos(): Promise<DocumentoUsuario[]> {
-    return await this.usuarioModel.find()
-  }
+  async buscarTodos(): Promise<DocumentoUsuario[]> { return await this.modeloUsuario.find() }
 
   async buscarPorId(idBuscado: string): Promise<DocumentoUsuario> {
-    const usuarioBuscado: DocumentoUsuario | null = await this.usuarioModel.findById(idBuscado)
+    const usuarioBuscado: DocumentoUsuario | null = await this.modeloUsuario.findById(idBuscado)
 
     if (!usuarioBuscado) throw new NotFoundException("Usuario no encontrado")
 
@@ -41,7 +36,7 @@ export class UsuariosService {
   }
 
   async buscarPorCorreo(correoBuscado: string): Promise<DocumentoUsuario> {
-    const usuarioBuscado: DocumentoUsuario | null = await this.usuarioModel.findOne({ correo: correoBuscado })
+    const usuarioBuscado: DocumentoUsuario | null = await this.modeloUsuario.findOne({ correo: correoBuscado })
 
     if (!usuarioBuscado) throw new NotFoundException("Usuario no encontrado")
 
@@ -49,9 +44,8 @@ export class UsuariosService {
   }
 
   async actualizar(idBuscado: string, actualizarUsuarioDto: ActualizarUsuarioDto): Promise<DocumentoUsuario> {
-    const usuarioActualizado: DocumentoUsuario | null = await this.usuarioModel.findByIdAndUpdate(
-      idBuscado, actualizarUsuarioDto, { new: true }
-    )
+    const usuarioActualizado: DocumentoUsuario | null = await this.modeloUsuario
+      .findByIdAndUpdate(idBuscado, actualizarUsuarioDto, { returnDocument: "after" })
 
     if (!usuarioActualizado) throw new NotFoundException("Usuario no encontrado")
 

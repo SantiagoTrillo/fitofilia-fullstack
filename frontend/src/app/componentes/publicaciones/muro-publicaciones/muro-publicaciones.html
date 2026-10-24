@@ -1,0 +1,11 @@
+<main>
+  <div class="muro">
+    @for (publicacion of publicacionesDisponibles(); track $index) {
+      @if (publicacion.disponible) {
+        <hr>
+        <app-publicacion [publicacion]="publicacion"/>
+      }
+    }
+    <hr>
+  </div>
+</main>

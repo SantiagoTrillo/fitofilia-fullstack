@@ -1,0 +1,18 @@
+import { Component, inject, signal, WritableSignal } from "@angular/core"
+import { Publicacion } from "./publicacion/publicacion"
+import { PublicacionService } from "../../../servicios/publicacion-service"
+import { PublicacionInterface } from "../../../interfaces/publicacion-interface"
+
+@Component({
+  selector: "app-muro-publicaciones",
+  templateUrl: "./muro-publicaciones.html",
+  styleUrl: "./muro-publicaciones.less",
+  imports: [Publicacion]
+})
+export class MuroPublicaciones {
+  private publicacionService: PublicacionService = inject(PublicacionService)
+
+  protected publicacionesDisponibles: WritableSignal<PublicacionInterface[]> = signal<PublicacionInterface[]>([])
+
+  protected async ngOnInit(): Promise<void> { this.publicacionesDisponibles.set(await this.publicacionService.obtenerPublicaciones()) }
+}

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator"
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator"
 
 export class CrearPublicacionDto {
   @IsString({ message: "El título debe ser un texto" })
@@ -7,7 +7,10 @@ export class CrearPublicacionDto {
   @IsString({ message: "La URL de la imagen debe ser un texto" })
   @IsOptional()
   imagen?: string
-  @IsString({ message: "El título debe ser un texto" })
-  @IsNotEmpty({ message: "El título es obligatorio" })
-  cuerpo: string
+  @IsString({ message: "El cuerpo debe ser un texto" })
+  @IsOptional()
+  cuerpo?: string
+  @IsBoolean()
+  @IsOptional()
+  disponible?: boolean
 }

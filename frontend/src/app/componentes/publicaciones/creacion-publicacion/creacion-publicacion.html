@@ -1,0 +1,20 @@
+<main>
+  <div class="contenedor-cabecera">
+    <app-boton-volver />
+  </div>
+  <app-formulario-usuario
+    [titulo]="titulo"
+    [textoBotonPrimario]="textoBotonPrimario"
+    [textoBotonSecundario]="textoBotonSecundario"
+    [rutaBotonSecundario]="rutaBotonSecundario"
+    [tipoFormulario]="tipoFormulario"
+    (guardar)="crearPublicacion($event)"
+    (formularioModificado)="formularioModificado.set($event)"
+  />
+  @if (mostrarModalConfirmacion()) {
+    <app-modal-confirmacion
+      [mensaje]="'Tenés cambios sin guardar. ¿Estás seguro de que querés abandonar la página?'"
+      (confirmar)="aceptarSalida()"
+      (cancelar)="cancelarSalida()"/>
+  }
+</main>

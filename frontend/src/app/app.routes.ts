@@ -1,15 +1,21 @@
 import { Routes } from '@angular/router'
-import { PaginaPrincipal } from "./componentes/pagina-principal/pagina-principal"
-import { Publicacion } from "./componentes/publicacion/publicacion"
-import { InicioSesion } from "./componentes/inicio-sesion/inicio-sesion"
+import { MuroPublicaciones } from "./componentes/publicaciones/muro-publicaciones/muro-publicaciones"
+import { Publicacion } from "./componentes/publicaciones/muro-publicaciones/publicacion/publicacion"
+import { InicioSesion } from "./componentes/autenticacion/inicio-sesion/inicio-sesion"
 import { autenticacionGuard } from "./guardias/autenticacion-guard"
 import { formularioGuard } from "./guardias/formulario-guard"
 
 export const routes: Routes = [
   {
     path: "",
-    component: PaginaPrincipal,
+    component: MuroPublicaciones,
     canActivate: [autenticacionGuard]
+  },
+  {
+    path: "publicación/crear",
+    loadComponent: () => import("./componentes/publicaciones/creacion-publicacion/creacion-publicacion").then(m => m.CreacionPublicacion),
+    canActivate: [autenticacionGuard],
+    canDeactivate: [formularioGuard]
   },
   {
     path: "publicación",
@@ -23,18 +29,18 @@ export const routes: Routes = [
   },
   {
     path: "registro",
-    loadComponent: () => import("./componentes/registro/registro").then(m => m.Registro),
+    loadComponent: () => import("./componentes/autenticacion/registro/registro").then(m => m.Registro),
     canActivate: [autenticacionGuard],
     canDeactivate: [formularioGuard]
   },
   {
     path: "perfil",
-    loadComponent: () => import("./componentes/perfil/perfil").then(m => m.Perfil),
+    loadComponent: () => import("./componentes/autenticacion/perfil/perfil").then(m => m.Perfil),
     canActivate: [autenticacionGuard]
   },
   {
     path: "perfil/editar",
-    loadComponent: () => import("./componentes/perfil/edicion-perfil/edicion-perfil").then(m => m.EdicionPerfil),
+    loadComponent: () => import("./componentes/autenticacion/perfil/edicion-perfil/edicion-perfil").then(m => m.EdicionPerfil),
     canActivate: [autenticacionGuard],
     canDeactivate: [formularioGuard]
   },

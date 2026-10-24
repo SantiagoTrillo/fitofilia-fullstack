@@ -11,7 +11,13 @@ export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
   @Post()
-  crear(@Body() crearUsuarioDto: CrearUsuarioDto): Promise<DocumentoUsuario> { return this.usuariosService.crear(crearUsuarioDto) }
+  @UseInterceptors(FileInterceptor("fotoPerfil", { dest: "./subidas/perfiles" }))
+  crear(
+    @Body() crearUsuarioDto: CrearUsuarioDto, @UploadedFile() fotoPerfil?: Express.Multer.File
+  ): Promise<DocumentoUsuario> {
+    if (fotoPerfil) crearUsuarioDto.fotoPerfil = `http://localhost:3000/subidas/perfiles/${ fotoPerfil.filename }`
+    return this.usuariosService.crear(crearUsuarioDto)
+  }
 
   @Get()
   buscarTodos(): Promise<DocumentoUsuario[]> { return this.usuariosService.buscarTodos() }
@@ -21,12 +27,11 @@ export class UsuariosController {
 
   @Patch(":id")
   @UseInterceptors(FileInterceptor("fotoPerfil", { dest: "./subidas/perfiles" }))
-  actualizarPorId(
-    @Param("id") idBuscado: string,
-    @Body() actualizarUsuarioDto: ActualizarUsuarioDto,
-    @UploadedFile() archivo?: Express.Multer.File
+  actualizar(
+    @Param("id") idBuscado: string, @Body() actualizarUsuarioDto: ActualizarUsuarioDto,
+    @UploadedFile() fotoPerfil?: Express.Multer.File
   ): Promise<DocumentoUsuario> {
-    if (archivo) actualizarUsuarioDto.fotoPerfil = `http://localhost:3000/subidas/perfiles/${archivo.filename}`
+    if (fotoPerfil) actualizarUsuarioDto.fotoPerfil = `http://localhost:3000/subidas/perfiles/${ fotoPerfil.filename }`
     return this.usuariosService.actualizar(idBuscado, actualizarUsuarioDto)
   }
 
