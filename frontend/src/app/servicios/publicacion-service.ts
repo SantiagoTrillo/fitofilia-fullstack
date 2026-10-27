@@ -1,9 +1,10 @@
 import { inject, Service, signal, WritableSignal } from "@angular/core"
 import { ToastService } from "./toast-service"
 import { PublicacionInterface } from "../interfaces/publicacion-interface"
-import { HttpClient } from "@angular/common/http"
+import {HttpClient, HttpParams} from "@angular/common/http"
 import { entorno } from "../../entornos/entorno"
 import { firstValueFrom } from "rxjs"
+import { OpcionesPublicacionInterface } from "../interfaces/opciones-publicacion-interface"
 
 @Service()
 export class PublicacionService {
@@ -13,8 +14,14 @@ export class PublicacionService {
 
   publicacionSeleccionada: WritableSignal<PublicacionInterface | null> = signal<PublicacionInterface | null>(null)
 
-  async obtenerPublicaciones(): Promise<PublicacionInterface[]> {
-    try { return await firstValueFrom(this.httpClient.get<PublicacionInterface[]>(this.urlApi)) }
+  async obtenerPublicaciones(opciones: OpcionesPublicacionInterface): Promise<PublicacionInterface[]> {
+    try {
+      let parametros: HttpParams = new HttpParams()
+
+      for (const [clave, valor] of Object.entries(opciones)) if (valor !== undefined) parametros = parametros.set(clave, valor)
+
+      return await firstValueFrom(this.httpClient.get<PublicacionInterface[]>(this.urlApi, { params: parametros }))
+    }
     catch (error: any) {
       const mensaje: string = error.error.message
 

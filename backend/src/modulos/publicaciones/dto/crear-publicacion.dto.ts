@@ -1,16 +1,19 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator"
+import { IsBoolean, IsMongoId, IsNotEmpty, IsOptional, IsString } from "class-validator"
 
 export class CrearPublicacionDto {
-  @IsString({ message: "El título debe ser un texto" })
   @IsNotEmpty({ message: "El título es obligatorio" })
+  @IsString({ message: "El título debe ser un texto" })
   titulo: string
+  @IsOptional()
   @IsString({ message: "La URL de la imagen debe ser un texto" })
-  @IsOptional()
   imagen?: string
+  @IsOptional()
   @IsString({ message: "El cuerpo debe ser un texto" })
-  @IsOptional()
   cuerpo?: string
-  @IsBoolean()
   @IsOptional()
+  @IsMongoId({ message: "El ID del autor debe ser un ObjectId válido" })
+  autor?: string
+  @IsOptional()
+  @IsBoolean({ message: "El estado de la publicación debe ser un valor booleano" })
   disponible?: boolean
 }

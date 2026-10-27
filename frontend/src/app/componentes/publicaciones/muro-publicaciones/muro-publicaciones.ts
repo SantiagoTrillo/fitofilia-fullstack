@@ -14,5 +14,7 @@ export class MuroPublicaciones {
 
   protected publicacionesDisponibles: WritableSignal<PublicacionInterface[]> = signal<PublicacionInterface[]>([])
 
-  protected async ngOnInit(): Promise<void> { this.publicacionesDisponibles.set(await this.publicacionService.obtenerPublicaciones()) }
+  protected async ngOnInit(): Promise<void> {
+    this.publicacionesDisponibles.set(await this.publicacionService.obtenerPublicaciones({ orden: "fecha", disponible: true, limit: 10 }))
+  }
 }

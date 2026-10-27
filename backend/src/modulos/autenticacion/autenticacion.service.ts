@@ -14,7 +14,7 @@ export class AutenticacionService {
       sujeto: usuario._id,
       correo: usuario.correo,
       nombreUsuario: usuario.nombreUsuario,
-      rol: usuario.perfil
+      perfil: usuario.perfil
     }
 
     return this.jwtService.signAsync(payload)
@@ -49,7 +49,7 @@ export class AutenticacionService {
         sujeto: payload.sujeto,
         correo: payload.correo,
         nombreUsuario: payload.nombreUsuario,
-        rol: payload.rol
+        perfil: payload.perfil
       }
 
       return await this.jwtService.signAsync(nuevoPayload)

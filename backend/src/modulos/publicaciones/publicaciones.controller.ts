@@ -1,11 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common"
+import {
+  Body, Controller, Delete, Get,
+  HttpCode, Param, Patch, Post, Query, Req, UploadedFile, UseGuards, UseInterceptors
+} from "@nestjs/common"
 import { PublicacionesService } from "./publicaciones.service.js"
 import { CrearPublicacionDto } from "./dto/crear-publicacion.dto.js"
 import { DocumentoPublicacion } from "./publicacion.schema.js"
 import { ActualizarPublicacionDto } from "./dto/actualizar-publicacion.dto.js"
 import { FileInterceptor } from "@nestjs/platform-express"
 import { AutenticacionGuard } from "../../guardias/autenticacion.guard.js"
-import { PaginacionDto } from "./dto/paginacion.dto.js"
+import { OpcionesDto } from "./dto/opciones.dto.js"
 
 @Controller("publicaciones")
 @UseGuards(AutenticacionGuard)
@@ -15,24 +18,15 @@ export class PublicacionesController {
   @Post()
   @UseInterceptors(FileInterceptor("imagen", { dest: "./subidas/publicaciones" }))
   crear(
-    @Body() crearPublicacionDto: CrearPublicacionDto, @Body("autor") idAutor: string,
-    @UploadedFile() imagen?: Express.Multer.File
+    @Req() peticion: any, @Body() crearPublicacionDto: CrearPublicacionDto, @UploadedFile() imagen?: Express.Multer.File
   ): Promise<DocumentoPublicacion> {
     if (imagen) crearPublicacionDto.imagen = `http://localhost:3000/subidas/publicaciones/${ imagen.filename }`
 
-    return this.publicacionesService.crear(crearPublicacionDto, idAutor)
+    return this.publicacionesService.crear({ ...crearPublicacionDto, autor: peticion.usuario.sujeto})
   }
 
   @Get()
-  buscarTodos(@Query() opciones: PaginacionDto): Promise<DocumentoPublicacion[]> {
-    const { titulo, autor, orden, offset, limit } = opciones
-
-    if (titulo) return this.publicacionesService.buscarPorTitulo(titulo)
-    if (autor && !orden && offset === undefined && limit === undefined) return this.publicacionesService.buscarPorAutor(autor)
-
-    return this.publicacionesService.buscarTodos({ orden, autor, offset, limit })
-  }
-
+  buscarTodos(@Query() opciones: OpcionesDto): Promise<DocumentoPublicacion[]> { return this.publicacionesService.buscarTodos(opciones) }
 
   @Get(":id")
   buscarPorId(@Param("id") idBuscado: string): Promise<DocumentoPublicacion> {
@@ -51,7 +45,19 @@ export class PublicacionesController {
   }
 
   @Delete(":id")
-  eliminar(@Param("id") idBuscado: string): Promise<DocumentoPublicacion> {
-    return this.publicacionesService.actualizar(idBuscado, { disponible: false })
+  @HttpCode(204)
+  eliminar(@Req() peticion: any, @Param("id") idPublicacion: string): Promise<void> {
+    return this.publicacionesService.eliminar(idPublicacion, peticion.usuario.sujeto)
+  }
+
+  @Post(":id/corazones")
+  darCorazon(@Req() peticion: any, @Param("id") idPublicacion: string): Promise<void> {
+    return this.publicacionesService.darCorazon(idPublicacion, peticion.usuario.sujeto)
+  }
+
+  @Delete(":id/corazones")
+  @HttpCode(204)
+  quitarCorazon(@Req() peticion: any, @Param("id") idPublicacion: string): Promise<void> {
+    return this.publicacionesService.quitarCorazon(idPublicacion, peticion.usuario.sujeto)
   }
 }

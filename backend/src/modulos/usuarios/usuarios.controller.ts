@@ -1,4 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards, ForbiddenException } from "@nestjs/common"
+import {
+  Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards, ForbiddenException, HttpCode
+} from "@nestjs/common"
 import { FileInterceptor } from "@nestjs/platform-express"
 import "multer"
 import { UsuariosService } from "./usuarios.service.js"
@@ -38,7 +40,7 @@ export class UsuariosController {
   ): Promise<DocumentoUsuario> {
     const usuarioAutenticado: any = peticion.usuario
     const mismoUsuario: boolean = String(usuarioAutenticado?.sujeto) === String(idBuscado)
-    const administrador: boolean = usuarioAutenticado?.rol === "administrador"
+    const administrador: boolean = usuarioAutenticado?.perfil === "administrador"
 
     if (!mismoUsuario && !administrador) { throw new ForbiddenException("No tenés permisos para editar este perfil") }
     if (fotoPerfil) actualizarUsuarioDto.fotoPerfil = `http://localhost:3000/subidas/perfiles/${ fotoPerfil.filename }`
@@ -47,6 +49,7 @@ export class UsuariosController {
   }
 
   @Delete(":id")
+  @HttpCode(204)
   @UseGuards(AdministradorGuard)
   eliminar(@Param("id") idBuscado: string): Promise<DocumentoUsuario> {
     return this.usuariosService.actualizar(idBuscado, { disponible: false })

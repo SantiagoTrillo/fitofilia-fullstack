@@ -1,7 +1,4 @@
 <main>
-  <div class="contenedor-cabecera">
-    <app-boton-volver />
-  </div>
   <app-formulario-usuario
     [titulo]="titulo"
     [textoBotonPrimario]="textoBotonPrimario"
@@ -15,6 +12,7 @@
     <app-modal-confirmacion
       [mensaje]="'Tenés cambios sin guardar. ¿Estás seguro de que querés abandonar la página?'"
       (confirmar)="aceptarSalida()"
-      (cancelar)="cancelarSalida()"/>
+      (cancelar)="cancelarSalida()"
+    />
   }
 </main>
