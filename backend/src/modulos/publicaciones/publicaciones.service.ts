@@ -15,9 +15,26 @@ export class PublicacionesService {
     return await publicacionNueva.save()
   }
 
-  async buscarTodos(): Promise<DocumentoPublicacion[]> {
-    return await this.modeloPublicacion.find({ disponible: true }).populate("autor", "nombreUsuario fotoPerfil")
-  }
+  async buscarTodos(opciones?: any): Promise<DocumentoPublicacion[]> {
+    const filtros: any = { disponible: true }
+
+    if (opciones?.autor) filtros.autor = opciones.autor
+
+    let respuesta: any = this.modeloPublicacion.find(filtros).populate("autor", "nombreUsuario fotoPerfil")
+
+    switch (opciones?.orden) {
+      case "corazones":
+        respuesta = respuesta.sort({ corazones: -1 })
+        break
+      default:
+        respuesta = respuesta.sort({ createdAt: -1 })
+    }
+
+    if (typeof opciones?.offset === "number") respuesta = respuesta.skip(opciones.offset)
+    if (typeof opciones?.limit === "number") respuesta = respuesta.limit(opciones.limit)
+
+    return await respuesta
+}
 
   async buscarPorId(idBuscado: string): Promise<DocumentoPublicacion> {
     const publicacionBuscada: DocumentoPublicacion | null = await this.modeloPublicacion.findById(idBuscado)

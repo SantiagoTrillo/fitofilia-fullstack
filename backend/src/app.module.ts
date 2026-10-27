@@ -3,9 +3,9 @@ import { ConfigModule, ConfigService } from "@nestjs/config"
 import { MongooseModule } from "@nestjs/mongoose"
 import { AppController } from "./app.controller.js"
 import { AppService } from "./app.service.js"
-import { UsuariosModule } from "./usuarios/usuarios.module.js"
-import { AutenticacionModule } from "./autenticacion/autenticacion.module.js"
-import { PublicacionesModule } from "./publicaciones/publicaciones.module.js"
+import { UsuariosModule } from "./modulos/usuarios/usuarios.module.js"
+import { AutenticacionModule } from "./modulos/autenticacion/autenticacion.module.js"
+import { PublicacionesModule } from "./modulos/publicaciones/publicaciones.module.js"
 
 @Module({
   imports: [

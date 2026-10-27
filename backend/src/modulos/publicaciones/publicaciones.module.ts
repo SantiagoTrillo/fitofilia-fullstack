@@ -3,10 +3,11 @@ import { MongooseModule } from "@nestjs/mongoose"
 import { EsquemaPublicacion, Publicacion } from "./publicacion.schema.js"
 import { PublicacionesService } from "./publicaciones.service.js"
 import { PublicacionesController } from "./publicaciones.controller.js"
+import { AutenticacionModule } from "../autenticacion/autenticacion.module.js"
 
 @Module({
   controllers: [PublicacionesController],
   providers: [PublicacionesService],
-  imports: [MongooseModule.forFeature([{ name: Publicacion.name, schema: EsquemaPublicacion }])]
+  imports: [MongooseModule.forFeature([{ name: Publicacion.name, schema: EsquemaPublicacion }]), AutenticacionModule]
 })
 export class PublicacionesModule {}

@@ -1,11 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common"
 import { PublicacionesService } from "./publicaciones.service.js"
 import { CrearPublicacionDto } from "./dto/crear-publicacion.dto.js"
 import { DocumentoPublicacion } from "./publicacion.schema.js"
 import { ActualizarPublicacionDto } from "./dto/actualizar-publicacion.dto.js"
 import { FileInterceptor } from "@nestjs/platform-express"
+import { AutenticacionGuard } from "../../guardias/autenticacion.guard.js"
+import { PaginacionDto } from "./dto/paginacion.dto.js"
 
 @Controller("publicaciones")
+@UseGuards(AutenticacionGuard)
 export class PublicacionesController {
   constructor(private readonly publicacionesService: PublicacionesService) {}
 
@@ -16,15 +19,20 @@ export class PublicacionesController {
     @UploadedFile() imagen?: Express.Multer.File
   ): Promise<DocumentoPublicacion> {
     if (imagen) crearPublicacionDto.imagen = `http://localhost:3000/subidas/publicaciones/${ imagen.filename }`
+
     return this.publicacionesService.crear(crearPublicacionDto, idAutor)
   }
 
   @Get()
-  buscarTodos(@Query("titulo") titulo?: string, @Query("autor") autor?: string): Promise<DocumentoPublicacion[]> {
+  buscarTodos(@Query() opciones: PaginacionDto): Promise<DocumentoPublicacion[]> {
+    const { titulo, autor, orden, offset, limit } = opciones
+
     if (titulo) return this.publicacionesService.buscarPorTitulo(titulo)
-    if (autor) return this.publicacionesService.buscarPorAutor(autor)
-    return this.publicacionesService.buscarTodos()
+    if (autor && !orden && offset === undefined && limit === undefined) return this.publicacionesService.buscarPorAutor(autor)
+
+    return this.publicacionesService.buscarTodos({ orden, autor, offset, limit })
   }
+
 
   @Get(":id")
   buscarPorId(@Param("id") idBuscado: string): Promise<DocumentoPublicacion> {
@@ -38,6 +46,7 @@ export class PublicacionesController {
     @UploadedFile() imagen?: Express.Multer.File
   ): Promise<DocumentoPublicacion> {
     if (imagen) actualizarPublicacionDto.imagen = `http://localhost:3000/subidas/publicaciones/${ imagen.filename }`
+
     return this.publicacionesService.actualizar(idBuscado, actualizarPublicacionDto)
   }
 

@@ -1,9 +1,9 @@
-import {inject, Service, signal, WritableSignal} from "@angular/core"
-import {ToastService} from "./toast-service"
-import {UsuarioInterface} from "../interfaces/usuario-interface"
-import {HttpClient} from "@angular/common/http"
-import {entorno} from "../../entornos/entorno"
-import {firstValueFrom} from "rxjs"
+import { inject, Service, signal, WritableSignal } from "@angular/core"
+import { ToastService } from "./toast-service"
+import { UsuarioInterface } from "../interfaces/usuario-interface"
+import { HttpClient } from "@angular/common/http"
+import { entorno } from "../../entornos/entorno"
+import { firstValueFrom } from "rxjs"
 
 @Service()
 export class AutenticacionService {
@@ -14,19 +14,20 @@ export class AutenticacionService {
   usuarioActual: WritableSignal<UsuarioInterface | null> = signal<UsuarioInterface | null>(
     sessionStorage.getItem("usuarioActual") ? JSON.parse(sessionStorage.getItem("usuarioActual")!) : null
   )
+  token: WritableSignal<string | null> = signal<string | null>(sessionStorage.getItem("token") || null)
 
   async iniciarSesion(correo: string, contrasenia: string): Promise<UsuarioInterface | null> {
     try {
-      const usuarioAutenticado: UsuarioInterface = await firstValueFrom(
-        this.httpClient.post<UsuarioInterface>(`${ this.urlApi }/inicio-sesion`, { correo, contrasenia })
-      )
+      const respuesta: any = await firstValueFrom(this.httpClient.post<any>(`${ this.urlApi }/inicio-sesion`, { correo, contrasenia }))
 
-      this.usuarioActual.set(usuarioAutenticado)
-      sessionStorage.setItem("usuarioActual", JSON.stringify(usuarioAutenticado))
+      this.usuarioActual.set(respuesta.usuario)
+      this.token.set(respuesta.token)
+      sessionStorage.setItem("usuarioActual", JSON.stringify(respuesta.usuario))
+      sessionStorage.setItem("token", respuesta.token)
 
-      return usuarioAutenticado
+      return respuesta.usuario
     } catch (error: any) {
-      const mensaje: string = error.error.message
+      const mensaje: string = error.error?.message || "Error al iniciar sesión"
 
       this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
 
@@ -36,16 +37,16 @@ export class AutenticacionService {
 
   async registrarUsuario(usuarioNuevo: any): Promise<UsuarioInterface | null> {
     try {
-      const usuarioRegistrado: UsuarioInterface = await firstValueFrom(
-        this.httpClient.post<UsuarioInterface>(`${ this.urlApi }/registro`, usuarioNuevo)
-      )
+      const respuesta: any = await firstValueFrom(this.httpClient.post<any>(`${ this.urlApi }/registro`, usuarioNuevo))
 
-      this.usuarioActual.set(usuarioRegistrado)
-      sessionStorage.setItem("usuarioActual", JSON.stringify(usuarioRegistrado))
+      this.usuarioActual.set(respuesta.usuario)
+      this.token.set(respuesta.token)
+      sessionStorage.setItem("usuarioActual", JSON.stringify(respuesta.usuario))
+      sessionStorage.setItem("token", respuesta.token)
 
-      return usuarioRegistrado
+      return respuesta.usuario
     } catch (error: any) {
-      const mensaje: string = error.error.message
+      const mensaje: string = error.error?.message || "Error al registrarse"
 
       this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
 
@@ -58,8 +59,10 @@ export class AutenticacionService {
       const usuarioActualizado: UsuarioInterface = await firstValueFrom(
         this.httpClient.patch<UsuarioInterface>(`${ this.urlApi }/usuarios/${ this.usuarioActual()?._id }`, perfilEditado)
       )
+
       this.usuarioActual.set(usuarioActualizado)
       sessionStorage.setItem("usuarioActual", JSON.stringify(usuarioActualizado))
+
       return true
     } catch (error: any) {
       const mensaje: string = error.error.message
@@ -72,6 +75,8 @@ export class AutenticacionService {
 
   cerrarSesion(): void {
     this.usuarioActual.set(null)
+    this.token.set(null)
     sessionStorage.removeItem("usuarioActual")
+    sessionStorage.removeItem("token")
   }
 }
