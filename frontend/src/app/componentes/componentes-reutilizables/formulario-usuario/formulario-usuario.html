@@ -1,8 +1,8 @@
-<div class="titulo"><h1>{{ titulo() }}</h1></div>
+<div class="titulo"><h2>{{ titulo() }}</h2></div>
 <section>
   <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" [class.formulario-publicacion]="tipoFormulario() === 'creacionPublicacion'">
     @if (tipoFormulario() === "creacionPublicacion") {
-      <div class="campo titulo-campo">
+      <div class="campo titulo">
         <label>Título: <input type="text" maxlength="80" formControlName="titulo"></label>
         <div class="contenedor-error">
           @if (formulario.get('titulo')?.touched && formulario.get('titulo')?.invalid) {
@@ -12,13 +12,13 @@
           }
         </div>
       </div>
-      <div class="campo imagen-campo">
+      <div class="campo imagen">
         <label>Imagen:
           <input #inputImagen type="file" accept="image/*" (change)="seleccionarImagen(inputImagen)">
         </label>
         <div class="contenedor-error"></div>
       </div>
-      <div class="campo cuerpo-campo">
+      <div class="campo cuerpo">
         <label>Cuerpo:
           <textarea
             #textareaCuerpo
@@ -29,8 +29,12 @@
           ></textarea>
         </label>
         <div class="contenedor-error">
-          @if (formulario.get('cuerpo')?.errors?.['maxlength']) {
-            <span>El cuerpo no puede superar los 1000 caracteres</span>
+          @if (formulario.get('cuerpo')?.touched && formulario.get('cuerpo')?.invalid) {
+            @if (formulario.get('cuerpo')?.errors?.['required']) { <span>El cuerpo es obligatorio</span> }
+            @else if (formulario.get('cuerpo')?.errors?.['minlength']) { <span>Debe contener al menos 3 caracteres</span> }
+            @else if (formulario.get('cuerpo')?.errors?.['maxlength']) {
+              <span>El cuerpo no puede superar los 1000 caracteres</span>
+            }
           }
         </div>
       </div>

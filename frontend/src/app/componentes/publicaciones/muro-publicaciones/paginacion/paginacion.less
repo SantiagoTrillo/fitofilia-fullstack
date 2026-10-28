@@ -1,0 +1,22 @@
+footer {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px;
+  button {
+    width: 35px;
+    height: 35px;
+    border: none;
+    border-radius: 20px;
+    background-color: var(--carbon-marron-claro);
+    &:hover, &.seleccionado {
+      color: black;
+      background-color: var(--te-verde)
+    }
+  }
+  i {
+    color: var(--carbon-marron-claro);
+    &:hover { color: lighten(#3A422C, 10%) }
+  }
+}

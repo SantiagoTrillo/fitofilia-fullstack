@@ -1,10 +1,11 @@
 <main>
   @if (autenticacionService.usuarioActual(); as usuarioActual) {
-    <div class="titulo-perfil">
-      <h1>Hola, {{ usuarioActual.nombre }}</h1>
+    <div class="cabecera-perfil">
+      <h2>Hola, {{ usuarioActual.nombre }}</h2>
       @if (usuarioActual.fotoPerfil) { <img [src]="usuarioActual.fotoPerfil" alt="Foto de perfil"> }
     </div>
     <div class="perfil">
+      <app-ultimas-publicaciones/>
       <app-datos-perfil [usuarioActual]="usuarioActual"/>
       <div class="botones">
         <button routerLink="/perfil/editar">Editar perfil</button>

@@ -36,7 +36,7 @@ export class FormularioUsuario implements OnInit {
     fechaNacimiento: ["", Validators.required],
     descripcion: [""],
     titulo: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(80)]],
-    cuerpo: ["", [Validators.maxLength(1000)]]
+    cuerpo: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(1000)]]
   }, { validators: this.validarContraseniasIguales })
 
   ngOnInit(): void {
@@ -50,7 +50,6 @@ export class FormularioUsuario implements OnInit {
       this.formulario.get("contrasenia")?.clearValidators()
       this.formulario.get("contraseniaRepetida")?.clearValidators()
       this.formulario.get("fechaNacimiento")?.clearValidators()
-
       this.formulario.get("nombre")?.updateValueAndValidity()
       this.formulario.get("apellido")?.updateValueAndValidity()
       this.formulario.get("correo")?.updateValueAndValidity()
@@ -123,10 +122,14 @@ export class FormularioUsuario implements OnInit {
 
     if (this.tipoFormulario() === "creacionPublicacion") {
       formData.append("titulo", datosFormulario.titulo)
-      if (datosFormulario.cuerpo) formData.append("cuerpo", datosFormulario.cuerpo)
+      formData.append("cuerpo", datosFormulario.cuerpo)
+
       const imagen: File | null = this.imagenSeleccionada()
+
       if (imagen) formData.append("imagen", imagen)
+
       this.guardar.emit(formData)
+
       return
     }
 

@@ -6,11 +6,10 @@
       <option value="corazones">Corazones</option>
     </select>
     @for (publicacion of publicacionesDisponibles(); track publicacion._id) {
-      @if (publicacion.disponible) {
-        <hr>
-        <app-publicacion [publicacion]="publicacion"/>
-      }
+      <hr>
+      <app-publicacion [publicacion]="publicacion"/>
     }
     <hr>
   </div>
+  <app-paginacion [cantidadPaginasDisponibles]="publicacionesDisponibles().length / 10"/>
 </main>

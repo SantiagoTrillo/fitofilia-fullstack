@@ -1,0 +1,9 @@
+<footer>
+  <i class="fa-solid fa-angles-left"></i>
+  <i class="fa-solid fa-angle-left"></i>
+  @for (pagina of cantidadPaginas(); track $index) {
+    <button [class.seleccionado]="" (click)="paginaSeleccionada.emit(pagina)">{{ pagina }}</button>
+  }
+  <i class="fa-solid fa-angle-right"></i>
+  <i class="fa-solid fa-angles-right"></i>
+</footer>

@@ -1,7 +1,7 @@
 div.titulo {
   display: flex;
   justify-content: center;
-  h1 {
+  h2 {
     margin: 4px;
     font-size: 46px;
     line-height: 1
@@ -18,9 +18,7 @@ section {
     display: grid;
     grid-template-columns: 1fr 1fr;
     margin: 4px;
-    &.formulario-publicacion {
-      grid-template-columns: 1fr;
-    }
+    &.formulario-publicacion { grid-template-columns: 1fr }
     div.campo {
       display: flex;
       flex-direction: column;
@@ -83,11 +81,11 @@ section {
         grid-column: 1 / -1;
         label { input { width: calc(100% - 110px) } }
       }
-      &.titulo-campo {
+      &.titulo {
         grid-column: 1 / 2;
         label { input { width: calc(100% - 70px) } }
       }
-      &.imagen-campo label {
+      &.imagen label {
         display: grid;
         grid-template-columns: max-content minmax(0, 1fr);
         align-items: center;
@@ -100,7 +98,7 @@ section {
           min-width: 0;
         }
       }
-      &.cuerpo-campo {
+      &.cuerpo {
         grid-column: 1 / -1;
         label {
           display: flex;
@@ -120,9 +118,7 @@ section {
             height: auto;
             line-height: 1.4;
             box-sizing: border-box;
-            &:focus {
-              outline: none
-            }
+            &:focus { outline: none }
           }
         }
       }
