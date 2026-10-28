@@ -84,7 +84,7 @@ export class PublicacionesService {
 
     if (!usuarioDador.disponible) throw new ForbiddenException("El usuario no está disponible")
 
-    const corazonExistente: boolean = publicacionGustada.dadoresCorazones.map(id => id.toString()).includes(idUsuario)
+    const corazonExistente: boolean = (publicacionGustada.dadoresCorazones ?? []).map(id => id.toString()).includes(idUsuario)
 
     if (corazonExistente) throw new ConflictException("El usuario ya dio un corazón a esta publicación")
 
@@ -103,7 +103,7 @@ export class PublicacionesService {
 
     if (!usuarioRevocador.disponible) throw new ForbiddenException("El usuario no está disponible")
 
-    const corazonExistente: boolean = publicacionDisgustada.dadoresCorazones.map(id => id.toString()).includes(idUsuario)
+    const corazonExistente: boolean = (publicacionDisgustada.dadoresCorazones ?? []).map(id => id.toString()).includes(idUsuario)
 
     if (!corazonExistente) throw new ConflictException("El usuario no dio un corazón para quitar de esta publicación")
 

@@ -1,7 +1,7 @@
 import { inject, Service, signal, WritableSignal } from "@angular/core"
 import { ToastService } from "./toast-service"
 import { PublicacionInterface } from "../interfaces/publicacion-interface"
-import {HttpClient, HttpParams} from "@angular/common/http"
+import { HttpClient, HttpParams } from "@angular/common/http"
 import { entorno } from "../../entornos/entorno"
 import { firstValueFrom } from "rxjs"
 import { OpcionesPublicacionInterface } from "../interfaces/opciones-publicacion-interface"
@@ -31,15 +31,59 @@ export class PublicacionService {
     }
   }
 
-  seleccionarPublicacion(publicacionSeleccionada: PublicacionInterface): void { this.publicacionSeleccionada.set(publicacionSeleccionada) }
-
   async crearPublicacion(formData: FormData): Promise<PublicacionInterface | null> {
     try {
       return await firstValueFrom(this.httpClient.post<PublicacionInterface>(this.urlApi, formData))
     } catch (error: any) {
       const mensaje: string = error.error?.message || "Error al crear la publicación"
+
       this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
+
       return null
     }
   }
+
+  async eliminarPublicacion(idPublicacion: string): Promise<void> {
+    try {
+      await firstValueFrom(this.httpClient.delete(`${ this.urlApi }/${ idPublicacion }`))
+
+      this.toastService.mostrarToast("Publicación eliminada con éxito", "exito")
+    } catch (error: any) {
+      const mensaje: string = error.error?.message || "Error al eliminar la publicación"
+
+      this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
+    }
+  }
+
+  async darCorazon(idPublicacion: string): Promise<boolean> {
+    try {
+      await firstValueFrom(this.httpClient.post(`${ this.urlApi }/${ idPublicacion }/corazones`, null))
+
+      return true
+    }
+    catch (error: any) {
+      const mensaje: string = error.error?.message || "Error al crear la publicación"
+
+      this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
+
+      return false
+    }
+  }
+
+  async quitarCorazon(idPublicacion: string): Promise<boolean> {
+    try {
+      await firstValueFrom(this.httpClient.delete(`${ this.urlApi }/${ idPublicacion }/corazones`))
+
+      return true
+    }
+    catch (error: any) {
+      const mensaje: string = error.error?.message || "Error al crear la publicación"
+
+      this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
+
+      return false
+    }
+  }
+
+  seleccionarPublicacion(publicacionSeleccionada: PublicacionInterface): void { this.publicacionSeleccionada.set(publicacionSeleccionada) }
 }

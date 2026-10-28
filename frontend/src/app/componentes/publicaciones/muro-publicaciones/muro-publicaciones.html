@@ -1,6 +1,11 @@
 <main>
   <div class="muro">
-    @for (publicacion of publicacionesDisponibles(); track $index) {
+    <select #selectorFiltro (change)="filtrarPublicaciones(selectorFiltro.value)">
+      <option disabled>Ordenar por</option>
+      <option selected value="fecha">Fecha</option>
+      <option value="corazones">Corazones</option>
+    </select>
+    @for (publicacion of publicacionesDisponibles(); track publicacion._id) {
       @if (publicacion.disponible) {
         <hr>
         <app-publicacion [publicacion]="publicacion"/>

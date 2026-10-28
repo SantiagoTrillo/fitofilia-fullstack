@@ -1,22 +1,27 @@
 div.contenedor-publicacion {
   width: 577px;
   margin: 0 20px 20px 20px;
-  div.contenedor-autor {
+  div.contenedor-cabecera {
     display: flex;
-    align-items: center;
+    justify-content: space-between;
     gap: 8px;
     margin-bottom: 8px;
-    img {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      object-fit: cover
+    div.contenedor-informacion {
+      display: flex;
+      gap: 0 10px;
+      img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover
+      }
+      i.icono-autor-predeterminado {
+        font-size: 32px;
+        color: #7b8369
+      }
+      span { cursor: default }
     }
-    i.icono-autor-predeterminado {
-      font-size: 32px;
-      color: #7b8369
-    }
-    span { cursor: default }
+    div.contenedor-boton-eliminar { i:hover { color: red } }
   }
   div.contenedor-contenido {
     cursor: pointer;
@@ -61,8 +66,12 @@ div.contenedor-publicacion {
       border: none;
       background-color: var(--carbon-marron-claro);
       &.boton-comentarios:hover { background-color: lighten(#3A422C, 10%) }
-      i.fa-heart:hover { color: red }
+      i.fa-heart {
+        cursor: pointer;
+        &.fa-solid, &:hover { color: red }
+      }
       span {
+        font-variant-numeric: tabular-nums;
         user-select: text;
         cursor: text
       }

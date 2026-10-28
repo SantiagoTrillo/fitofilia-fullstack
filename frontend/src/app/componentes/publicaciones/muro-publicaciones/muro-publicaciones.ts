@@ -17,4 +17,8 @@ export class MuroPublicaciones {
   protected async ngOnInit(): Promise<void> {
     this.publicacionesDisponibles.set(await this.publicacionService.obtenerPublicaciones({ orden: "fecha", disponible: true, limit: 10 }))
   }
+
+  protected async filtrarPublicaciones(filtro: string): Promise<void> {
+    this.publicacionesDisponibles.set(await this.publicacionService.obtenerPublicaciones({ orden: filtro, disponible: true, limit: 10 }))
+  }
 }
