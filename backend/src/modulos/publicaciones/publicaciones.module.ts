@@ -5,10 +5,11 @@ import { PublicacionesService } from "./publicaciones.service.js"
 import { PublicacionesController } from "./publicaciones.controller.js"
 import { AutenticacionModule } from "../autenticacion/autenticacion.module.js"
 import { UsuariosModule } from "../usuarios/usuarios.module.js"
+import { ArchivosService } from "../../archivos.service.js"
 
 @Module({
   controllers: [PublicacionesController],
-  providers: [PublicacionesService],
+  providers: [PublicacionesService, ArchivosService],
   imports: [MongooseModule.forFeature([{ name: Publicacion.name, schema: EsquemaPublicacion }]), AutenticacionModule, UsuariosModule]
 })
 export class PublicacionesModule {}

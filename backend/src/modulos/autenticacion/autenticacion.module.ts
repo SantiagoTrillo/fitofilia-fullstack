@@ -6,8 +6,11 @@ import { JwtModule } from "@nestjs/jwt"
 import { ConfigModule, ConfigService } from "@nestjs/config"
 import { AutenticacionGuard } from "../../guardias/autenticacion.guard.js"
 import { AdministradorGuard } from "../../guardias/administrador.guard.js"
+import { ArchivosService } from "../../archivos.service.js"
 
 @Module({
+  controllers: [AutenticacionController],
+  providers: [AutenticacionService, AutenticacionGuard, AdministradorGuard, ArchivosService],
   imports: [
     forwardRef((): typeof UsuariosModule => UsuariosModule),
     JwtModule.registerAsync({
@@ -18,8 +21,6 @@ import { AdministradorGuard } from "../../guardias/administrador.guard.js"
       })
     })
   ],
-  controllers: [AutenticacionController],
-  providers: [AutenticacionService, AutenticacionGuard, AdministradorGuard],
   exports: [AutenticacionService, JwtModule, AutenticacionGuard, AdministradorGuard]
 })
 export class AutenticacionModule {}

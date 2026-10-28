@@ -1,4 +1,4 @@
-import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common"
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { DocumentoPublicacion, Publicacion } from "./publicacion.schema.js"
 import { Model } from "mongoose"
@@ -13,7 +13,7 @@ export class PublicacionesService {
   constructor(
     @InjectModel(Publicacion.name) private modeloPublicacion: Model<DocumentoPublicacion>,
     private readonly usuariosService: UsuariosService
-) {}
+  ) {}
 
   private escaparExpresionRegular(texto: string): string { return texto.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") }
 

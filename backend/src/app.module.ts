@@ -6,8 +6,11 @@ import { AppService } from "./app.service.js"
 import { UsuariosModule } from "./modulos/usuarios/usuarios.module.js"
 import { AutenticacionModule } from "./modulos/autenticacion/autenticacion.module.js"
 import { PublicacionesModule } from "./modulos/publicaciones/publicaciones.module.js"
+import {ArchivosService} from "./archivos.service.js";
 
 @Module({
+  controllers: [AppController],
+  providers: [AppService, ArchivosService],
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
@@ -24,7 +27,6 @@ import { PublicacionesModule } from "./modulos/publicaciones/publicaciones.modul
     AutenticacionModule,
     PublicacionesModule
   ],
-  controllers: [AppController],
-  providers: [AppService]
+  exports: [ArchivosService]
 })
 export class AppModule {}
