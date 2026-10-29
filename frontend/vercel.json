@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://fitofilia-backend-git-feature-sprint-dos-programacion-iv1.vercel.app/:path*"
+      "destination": "https://fitofilia-backend.vercel.app/:path*"
     },
     {
       "source": "/(.*)",
