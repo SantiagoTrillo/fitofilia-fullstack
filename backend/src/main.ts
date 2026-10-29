@@ -11,7 +11,7 @@ async function bootstrap(): Promise<void> {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
   app.useStaticAssets(join(process.cwd(), 'subidas'), { prefix: '/subidas/' })
 
-  const puerto: number = Number(process.env.PUERTO) || 3000
+  const puerto: number = Number(process.env.PORT) || 3000
 
   await app.listen(puerto)
 

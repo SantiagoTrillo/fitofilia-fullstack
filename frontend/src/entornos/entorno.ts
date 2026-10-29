@@ -1,3 +1,3 @@
 export const entorno = {
-  urlApi: "http://localhost:3000"
+  urlApi: location.hostname === "localhost" ? "http://localhost:3000" : "/api"
 }

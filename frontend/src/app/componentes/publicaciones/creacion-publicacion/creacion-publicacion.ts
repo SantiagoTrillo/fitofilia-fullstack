@@ -4,14 +4,13 @@ import { PublicacionService } from "../../../servicios/publicacion-service"
 import { AutenticacionService } from "../../../servicios/autenticacion-service"
 import { ToastService } from "../../../servicios/toast-service"
 import { FormularioUsuario } from "../../componentes-reutilizables/formulario-usuario/formulario-usuario"
-import { BotonVolver } from "../../componentes-reutilizables/boton-volver/boton-volver"
 import { ModalConfirmacion } from "../../componentes-reutilizables/modal-confirmacion/modal-confirmacion"
 
 @Component({
   selector: "app-creacion-publicacion",
   templateUrl: "./creacion-publicacion.html",
   styleUrl: "./creacion-publicacion.less",
-  imports: [FormularioUsuario, BotonVolver, ModalConfirmacion]
+  imports: [FormularioUsuario, ModalConfirmacion]
 })
 export class CreacionPublicacion {
   private publicacionService: PublicacionService = inject(PublicacionService)
@@ -47,14 +46,14 @@ export class CreacionPublicacion {
     if (resultado) {
       this.publicacionExitosa.set(true)
       this.toastService.mostrarToast("Publicación creada correctamente", "exito")
-      this.router.navigate(["/"])
+      void this.router.navigate(["/"])
     }
   }
 
   protected aceptarSalida(): void {
     this.confirmacionAceptada.set(true)
     this.mostrarModalConfirmacion.set(false)
-    this.router.navigate([this.rutaDestino()])
+    void this.router.navigate([this.rutaDestino()])
   }
 
   protected cancelarSalida(): void { this.mostrarModalConfirmacion.set(false) }

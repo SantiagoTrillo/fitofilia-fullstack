@@ -2,7 +2,6 @@ footer {
   margin-bottom: 10px;
   display: flex;
   align-items: center;
-  cursor: pointer;
   gap: 10px;
   button {
     width: 35px;
@@ -10,6 +9,7 @@ footer {
     border: none;
     border-radius: 20px;
     background-color: var(--carbon-marron-claro);
+    cursor: pointer;
     &:hover, &.seleccionado {
       color: black;
       background-color: var(--te-verde)
@@ -17,6 +17,11 @@ footer {
   }
   i {
     color: var(--carbon-marron-claro);
+    cursor: pointer;
     &:hover { color: lighten(#3A422C, 10%) }
+    &.deshabilitado {
+      opacity: 0.6;
+      cursor: not-allowed
+    }
   }
 }

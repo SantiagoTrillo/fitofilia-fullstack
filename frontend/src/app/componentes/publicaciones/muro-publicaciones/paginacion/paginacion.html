@@ -1,9 +1,17 @@
 <footer>
-  <i class="fa-solid fa-angles-left"></i>
-  <i class="fa-solid fa-angle-left"></i>
-  @for (pagina of cantidadPaginas(); track $index) {
-    <button [class.seleccionado]="" (click)="paginaSeleccionada.emit(pagina)">{{ pagina }}</button>
+  <i class="fa-solid fa-angles-left" [class.deshabilitado]="paginaActual() === 1" (click)="paginaSeleccionada.emit(1)"></i>
+  <i class="fa-solid fa-angle-left" [class.deshabilitado]="paginaActual() === 1" (click)="paginaSeleccionada.emit(paginaActual() - 1)"></i>
+  @for (pagina of paginasDisponibles(); track pagina) {
+    <button [class.seleccionado]="pagina === paginaActual()" (click)="paginaSeleccionada.emit(pagina)">{{ pagina }}</button>
   }
-  <i class="fa-solid fa-angle-right"></i>
-  <i class="fa-solid fa-angles-right"></i>
+  <i
+    class="fa-solid fa-angle-right"
+    [class.deshabilitado]="paginaActual() === cantidadPaginas()"
+    (click)="paginaSeleccionada.emit(paginaActual() + 1)"
+  ></i>
+  <i
+    class="fa-solid fa-angles-right"
+    [class.deshabilitado]="paginaActual() === cantidadPaginas()"
+    (click)="paginaSeleccionada.emit(cantidadPaginas())"
+  ></i>
 </footer>

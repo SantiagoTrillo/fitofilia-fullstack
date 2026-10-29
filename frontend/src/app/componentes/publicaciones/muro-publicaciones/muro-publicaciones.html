@@ -1,15 +1,21 @@
 <main>
   <div class="muro">
-    <select #selectorFiltro (change)="filtrarPublicaciones(selectorFiltro.value)">
+    <select #selectorOrden (change)="ordenarPublicaciones(selectorOrden.value)">
       <option disabled>Ordenar por</option>
       <option selected value="fecha">Fecha</option>
       <option value="corazones">Corazones</option>
     </select>
     @for (publicacion of publicacionesDisponibles(); track publicacion._id) {
       <hr>
-      <app-publicacion [publicacion]="publicacion"/>
+      <app-publicacion [publicacion]="publicacion" (publicacionEliminada)="actualizarPublicaciones($event)"/>
     }
     <hr>
   </div>
-  <app-paginacion [cantidadPaginasDisponibles]="publicacionesDisponibles().length / 10"/>
+  @if (cantidadPaginas() > 1) {
+    <app-paginacion
+      [paginaActual]="paginaSeleccionada()"
+      [cantidadPaginas]="cantidadPaginas()"
+      (paginaSeleccionada)="seleccionarPagina($event)"
+    />
+  }
 </main>

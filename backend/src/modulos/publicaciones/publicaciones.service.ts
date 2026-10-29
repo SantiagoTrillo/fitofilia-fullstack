@@ -1,7 +1,7 @@
 import { ConflictException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { DocumentoPublicacion, Publicacion } from "./publicacion.schema.js"
-import { Model } from "mongoose"
+import {Model, Query} from "mongoose"
 import { CrearPublicacionDto } from "./dto/crear-publicacion.dto.js"
 import { ActualizarPublicacionDto } from "./dto/actualizar-publicacion.dto.js"
 import { OpcionesDto } from "./dto/opciones.dto.js"
@@ -23,14 +23,14 @@ export class PublicacionesService {
     return await publicacionNueva.save()
   }
 
-  async buscarTodos(opciones: OpcionesDto = {}): Promise<DocumentoPublicacion[]> {
+  async buscarTodos(opciones: OpcionesDto = {}): Promise<{ publicaciones: DocumentoPublicacion[]; total: number }> {
     const filtros: any = {}
 
     if (opciones.disponible !== undefined) filtros.disponible = opciones.disponible
     if (opciones.autor) filtros.autor = opciones.autor
     if (opciones.titulo?.trim()) filtros.titulo = new RegExp(this.escaparExpresionRegular(opciones.titulo.trim()), "i")
 
-    let consulta = this.modeloPublicacion.find(filtros)
+    let consulta: Query<any, any> = this.modeloPublicacion.find(filtros)
       .populate("autor", "nombreUsuario fotoPerfil")
 
     if (opciones.orden === "fecha") consulta = consulta.sort({ createdAt: -1 })
@@ -38,7 +38,7 @@ export class PublicacionesService {
     if (opciones.offset !== undefined) consulta = consulta.skip(opciones.offset)
     if (opciones.limit !== undefined) consulta = consulta.limit(opciones.limit)
 
-    return await consulta
+    return { publicaciones: await consulta, total: await this.modeloPublicacion.countDocuments(filtros) }
 }
 
   async buscarPorId(idBuscado: string): Promise<DocumentoPublicacion> {

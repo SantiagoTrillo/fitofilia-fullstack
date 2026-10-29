@@ -1,4 +1,4 @@
-import { Component, output, OutputEmitterRef, signal, Signal } from "@angular/core"
+import { Component, computed, input, InputSignal, output, OutputEmitterRef, Signal } from "@angular/core"
 
 @Component({
   selector: "app-paginacion",
@@ -6,7 +6,20 @@ import { Component, output, OutputEmitterRef, signal, Signal } from "@angular/co
   styleUrl: "./paginacion.less"
 })
 export class Paginacion {
-  protected cantidadPaginas: Signal<number[]> = signal<number[]>([1, 2, 3])
+  protected paginasDisponibles: Signal<number[]> = computed((): number[] => {
+    const cantidadPaginas: number = this.cantidadPaginas()
+    const paginaSeleccionada: number = this.paginaActual()
 
-  readonly paginaSeleccionada: OutputEmitterRef<number> = output<number>()
+    if (cantidadPaginas === 0 ) return []
+
+    const inicioPaginado: number = Math.max(1, Math.min(paginaSeleccionada - 1, cantidadPaginas - 2))
+    const finPaginado: number = Math.min(cantidadPaginas, inicioPaginado + 2)
+
+    return Array.from({ length: finPaginado - inicioPaginado + 1 }, (_, indice: number): number => inicioPaginado + indice)
+  })
+
+  paginaActual: InputSignal<number> = input.required<number>()
+  cantidadPaginas: InputSignal<number> = input.required<number>()
+
+  paginaSeleccionada: OutputEmitterRef<number> = output<number>()
 }

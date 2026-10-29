@@ -5,6 +5,7 @@ import { HttpClient, HttpParams } from "@angular/common/http"
 import { entorno } from "../../entornos/entorno"
 import { firstValueFrom } from "rxjs"
 import { OpcionesPublicacionInterface } from "../interfaces/opciones-publicacion-interface"
+import { RespuestaPublicacionInterface } from "../interfaces/respuesta-publicacion-interface"
 
 @Service()
 export class PublicacionService {
@@ -14,20 +15,20 @@ export class PublicacionService {
 
   publicacionSeleccionada: WritableSignal<PublicacionInterface | null> = signal<PublicacionInterface | null>(null)
 
-  async obtenerPublicaciones(opciones: OpcionesPublicacionInterface): Promise<PublicacionInterface[]> {
+  async obtenerPublicaciones(opciones: OpcionesPublicacionInterface): Promise<RespuestaPublicacionInterface> {
     try {
       let parametros: HttpParams = new HttpParams()
 
       for (const [clave, valor] of Object.entries(opciones)) if (valor !== undefined) parametros = parametros.set(clave, valor)
 
-      return await firstValueFrom(this.httpClient.get<PublicacionInterface[]>(this.urlApi, { params: parametros }))
+      return await firstValueFrom(this.httpClient.get<RespuestaPublicacionInterface>(this.urlApi, { params: parametros }))
     }
     catch (error: any) {
       const mensaje: string = error.error.message
 
       this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
 
-      return []
+      return { publicaciones: [], total: 0 }
     }
   }
 
@@ -43,15 +44,19 @@ export class PublicacionService {
     }
   }
 
-  async eliminarPublicacion(idPublicacion: string): Promise<void> {
+  async eliminarPublicacion(idPublicacion: string): Promise<boolean> {
     try {
-      await firstValueFrom(this.httpClient.delete(`${ this.urlApi }/${ idPublicacion }`))
+      await firstValueFrom(this.httpClient.delete<void>(`${ this.urlApi }/${ idPublicacion }`))
 
       this.toastService.mostrarToast("Publicación eliminada con éxito", "exito")
+
+      return true
     } catch (error: any) {
       const mensaje: string = error.error?.message || "Error al eliminar la publicación"
 
       this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
+
+      return false
     }
   }
 
@@ -72,7 +77,7 @@ export class PublicacionService {
 
   async quitarCorazon(idPublicacion: string): Promise<boolean> {
     try {
-      await firstValueFrom(this.httpClient.delete(`${ this.urlApi }/${ idPublicacion }/corazones`))
+      await firstValueFrom(this.httpClient.delete<void>(`${ this.urlApi }/${ idPublicacion }/corazones`))
 
       return true
     }

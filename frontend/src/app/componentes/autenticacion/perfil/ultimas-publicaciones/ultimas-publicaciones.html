@@ -3,7 +3,7 @@
     <h3>Tus Últimas Publicaciones</h3>
     @for (publicacion of publicacionesRecientes(); track publicacion._id) {
       <hr>
-      <app-publicacion [publicacion]="publicacion"/>
+      <app-publicacion [publicacion]="publicacion" (publicacionEliminada)="cargarPublicacionesRecientes()"/>
     }
     <hr>
   </section>

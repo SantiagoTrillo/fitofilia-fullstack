@@ -1,4 +1,4 @@
-import { Component, inject, input, InputSignal, signal, WritableSignal } from "@angular/core"
+import { Component, inject, input, InputSignal, output, OutputEmitterRef, signal, WritableSignal } from "@angular/core"
 import { PublicacionInterface } from "../../../../interfaces/publicacion-interface"
 import { Router } from "@angular/router"
 import { PublicacionService } from "../../../../servicios/publicacion-service"
@@ -22,6 +22,8 @@ export class Publicacion {
 
   protected autenticacionService: AutenticacionService = inject(AutenticacionService)
 
+  publicacionEliminada: OutputEmitterRef<string> = output<string>()
+
   publicacion: InputSignal<PublicacionInterface> = input.required<PublicacionInterface>()
 
   protected ngOnInit(): void {
@@ -29,7 +31,7 @@ export class Publicacion {
     const idUsuario: string | undefined = this.autenticacionService.usuarioActual()?._id
 
     this.cantidadCorazones.set(publicacion.corazones ?? 0)
-    this.corazonDado.set(!!idUsuario && (publicacion.dadoresCorazones ?? []).map(id => id.toString()).includes(idUsuario))
+    this.corazonDado.set(!!idUsuario && (publicacion.dadoresCorazones ?? []).map((id: string): string => id.toString()).includes(idUsuario))
   }
 
   protected async alternarCorazon(): Promise<void> {
@@ -42,7 +44,7 @@ export class Publicacion {
     if (!exito) return
 
     this.corazonDado.set(!corazonDado)
-    this.cantidadCorazones.update(cantidad => cantidad + (corazonDado ? -1 : 1))
+    this.cantidadCorazones.update((cantidad: number): number => cantidad + (corazonDado ? -1 : 1))
   }
 
   protected abrirPublicacion(publicacionSeleccionada: PublicacionInterface): void {
@@ -55,7 +57,11 @@ export class Publicacion {
   protected cerrarModal(): void { this.mostrarModalConfirmacion.set(false) }
 
   protected async eliminarPublicacion(): Promise<void> {
-    await this.publicacionService.eliminarPublicacion(this.publicacion()._id)
+    const eliminacionExitosa: boolean = await this.publicacionService.eliminarPublicacion(this.publicacion()._id)
+
+    if (!eliminacionExitosa) return
+
     this.cerrarModal()
+    this.publicacionEliminada.emit(this.publicacion()._id)
   }
 }
