@@ -3,7 +3,7 @@ import { inject } from "@angular/core"
 import { AutenticacionService } from "../servicios/autenticacion-service"
 import {Observable} from "rxjs";
 
-export const autenticacionInterceptor: HttpInterceptorFn = (peticion: HttpRequest<unknown>, siguiente: HttpHandlerFn):Observable<HttpEvent<unknown>> => {
+export const autenticacionInterceptor: HttpInterceptorFn = (peticion: HttpRequest<unknown>, siguiente: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
   const autenticacionService: AutenticacionService = inject(AutenticacionService)
   const token: string | null = autenticacionService.token()
 
