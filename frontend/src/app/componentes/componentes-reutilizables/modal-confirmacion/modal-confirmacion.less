@@ -13,18 +13,23 @@ div.contenedor-modal {
 div.modal {
   background-color: var(--carbon-marron-oscuro);
   border-radius: 20px;
-  padding: 15px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 420px;
+  width: min(500px, calc(100vw - 32px));
+  border: 1px solid var(--borde-hoja);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .38);
+  div.cabecera-modal h2 { font-size: 30px; line-height: 1.1; color: var(--te-verde) }
   div.detalles-modal {
     display: flex;
     flex-direction: column;
     gap: 15px;
     p {
       margin: 0;
-      text-align: center
+      text-align: center;
+      font-size: 18px;
+      line-height: 1.45
     }
     div {
       display: flex;
@@ -36,6 +41,7 @@ div.modal {
         border: none;
         border-radius: 8px;
         padding: 10px;
+        font-size: 16px;
         cursor: pointer
       }
     }

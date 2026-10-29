@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router'
 import { MuroPublicaciones } from "./componentes/publicaciones/muro-publicaciones/muro-publicaciones"
-import { Publicacion } from "./componentes/publicaciones/muro-publicaciones/publicacion/publicacion"
 import { InicioSesion } from "./componentes/autenticacion/inicio-sesion/inicio-sesion"
 import { autenticacionGuard } from "./guardias/autenticacion-guard"
 import { formularioGuard } from "./guardias/formulario-guard"
+import { PaginaPublicacion } from "./componentes/publicaciones/pagina-publicacion/pagina-publicacion"
 
 export const routes: Routes = [
   {
@@ -19,7 +19,7 @@ export const routes: Routes = [
   },
   {
     path: "publicación",
-    component: Publicacion,
+    component: PaginaPublicacion,
     canActivate: [autenticacionGuard]
   },
   {

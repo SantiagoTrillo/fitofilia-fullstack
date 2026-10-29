@@ -13,7 +13,7 @@ div.cabecera-perfil {
   img {
     width: 75px;
     height: 75px;
-    border: 1px solid var(--te-verde);
+    border: 2px solid var(--te-verde);
     border-radius: 50%;
     background-color: var(--carbon-marron-claro);
     object-fit: cover
@@ -35,13 +35,15 @@ div.perfil {
     justify-content: center;
     margin: 6px 0;
     button {
-      background-color: var(--carbon-marron-claro);
-      border: none;
-      border-radius: 5px;
-      margin: 5px 8px;
+      background-color: #405b42;
+      border: 1px solid var(--borde-hoja);
+      border-radius: 12px;
+      margin: 18px 8px;
       padding: 4px;
       cursor: pointer;
-      flex: 1
+      flex: 1;
+      transition: transform 160ms ease, background-color 160ms ease;
+      &:hover { background-color: #52734f; transform: translateY(-2px) }
     }
   }
 }

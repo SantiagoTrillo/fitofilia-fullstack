@@ -2,19 +2,27 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  hr {
-    width: 615px;
-    margin: 0 0 10px 0;
-    border-color: var(--carbon-marron-oscuro)
-  }
-  div {
-    select {
-      text-align: center;
-      margin: 5px 10px;
-      border: none;
-      border-radius: 20px;
-      background-color: var(--onix);
-      &:hover { background-color: var(--carbon-marron-claro) }
+  div.muro {
+    width: min(680px, calc(100% - 32px));
+    app-publicacion {
+      display: block;
+      width: 100%
     }
+    hr {
+      width: 100%;
+      margin: 0 auto 10px
+    }
+    select {
+      width: 145px;
+      padding: 6px 10px;
+      border: 1px solid var(--borde-hoja);
+      background-color: var(--carbon-marron-oscuro);
+      text-align: left;
+    }
+  }
+  div.muro select {
+    border-radius: 20px;
+    margin: 5px 0 8px;
+    &:hover { background-color: var(--carbon-marron-claro) }
   }
 }

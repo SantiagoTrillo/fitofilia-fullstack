@@ -1,6 +1,6 @@
 import {HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest} from "@angular/common/http"
 import { inject } from "@angular/core"
-import { AutenticacionService } from "./servicios/autenticacion-service"
+import { AutenticacionService } from "../servicios/autenticacion-service"
 import {Observable} from "rxjs";
 
 export const autenticacionInterceptor: HttpInterceptorFn = (peticion: HttpRequest<unknown>, siguiente: HttpHandlerFn):Observable<HttpEvent<unknown>> => {

@@ -1,30 +1,53 @@
 :root {
-  --onix: #11140C;
-  --carbon-marron-oscuro: #212617;
-  --carbon-marron-claro: #3A422C;
-  --te-verde: #CFED9F;
-  --algodon-azucar: #ED9F9F
+  --onix: #111a14;
+  --carbon-marron-oscuro: #1d3023;
+  --carbon-marron-claro: #304735;
+  --te-verde: #c9e89a;
+  --algodon-azucar: #e7a19a;
+  --papel: #f2eddd;
+  --terracota: #d48a68;
+  --borde-hoja: rgba(201, 232, 154, .2)
 }
 
 * {
   color-scheme: dark;
-  font-family: "Dongle", sans-serif;
+  font-family: "Nunito", "Trebuchet MS", sans-serif;
   box-sizing: border-box;
-  font-size: 26px
+  font-size: 16px
+}
+
+h1, h2, h3, .fitofilia {
+  font-family: "Dongle", sans-serif;
+  font-weight: 700
 }
 
 html { scrollbar-gutter: stable }
+html { background-color: var(--onix) }
 
 body {
   margin: 0;
-  background-color: var(--onix)
+  min-height: 100vh;
+  color: var(--papel);
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+  &::before {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    inset: -8px;
+    background:
+      linear-gradient(rgba(12, 20, 14, .78), rgba(12, 20, 14, .84)),
+      url("https://res.cloudinary.com/fitofilia/image/upload/v1793313226/Fondo_de_pantalla.jpg") center / cover no-repeat;
+    filter: blur(4px);
+  }
 }
 
 main { padding-top: 80px }
 
 input, button, select {
   font-family: inherit;
-  font-size: 24px;
+  font-size: 16px;
   color: white
 }
 

@@ -1,1 +1,5 @@
-<p>pagina-publicacion works!</p>
+<main>
+  <app-boton-volver/>
+  <app-publicacion [publicacion]="publicacionService.publicacionSeleccionada()!"/>
+  <div>@for (comentario of comentariosDisponibles(); track comentario._id) { <app-comentario [comentario]="comentario"/> }</div>
+</main>

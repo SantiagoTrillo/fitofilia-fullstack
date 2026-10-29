@@ -1,6 +1,12 @@
 div.contenedor-publicacion {
-  width: 577px;
-  margin: 0 20px 20px 20px;
+  width: 100%;
+  max-width: 820px;
+  margin: 12px auto;
+  padding: 20px;
+  border: 1px solid var(--borde-hoja);
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(48, 71, 53, .72), rgba(29, 48, 35, .82));
+  box-shadow: 0 14px 38px rgba(0, 0, 0, .16);
   div.contenedor-cabecera {
     display: flex;
     justify-content: space-between;
@@ -8,32 +14,45 @@ div.contenedor-publicacion {
     margin-bottom: 8px;
     div.contenedor-informacion {
       display: flex;
+      align-items: center;
       gap: 0 10px;
+      min-width: 0;
       img {
         width: 32px;
         height: 32px;
         border-radius: 50%;
+        border: 1px solid var(--borde-hoja);
         object-fit: cover
       }
       i.icono-autor-predeterminado {
         font-size: 32px;
         color: #7b8369
       }
-      span { cursor: default }
+      span {
+        cursor: default;
+        white-space: nowrap
+      }
     }
     div.contenedor-boton-eliminar { i:hover { color: red } }
   }
   div.contenedor-contenido {
     cursor: pointer;
-    h2 { margin: 0 0 8px 0 }
+    h2 {
+      margin: 10px 0 12px;
+      color: var(--te-verde);
+      font-size: 30px;
+      line-height: 1
+    }
     div {
       display: flex;
       justify-content: center;
       align-items: center;
       width: 100%;
       max-height: 540px;
-      background-color: black;
-      border-radius: 10px;
+      background-color: rgba(10, 18, 12, .7);
+      border: 1px solid rgba(242, 237, 221, .08);
+      border-radius: 14px;
+      overflow: hidden;
       img {
         max-width: 100%;
         max-height: 540px;
@@ -43,6 +62,8 @@ div.contenedor-publicacion {
       }
     }
     p.cuerpo-publicacion {
+      padding-top: 14px;
+      line-height: 1.65;
       display: -webkit-box;
       -webkit-line-clamp: 4;
       -webkit-box-orient: vertical;
@@ -65,7 +86,12 @@ div.contenedor-publicacion {
       border-radius: 20px;
       border: none;
       background-color: var(--carbon-marron-claro);
-      &.boton-comentarios:hover { background-color: lighten(#3A422C, 10%) }
+      transition: background-color 160ms ease, transform 160ms ease;
+      &:hover {
+        background-color: #486348;
+        transform: translateY(-1px)
+      }
+      &.boton-comentarios:hover { background-color: #486348 }
       i.fa-heart {
         cursor: pointer;
         &.fa-solid, &:hover { color: red }

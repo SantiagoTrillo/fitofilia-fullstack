@@ -5,9 +5,12 @@ div {
   z-index: 1000;
   background-color: var(--carbon-marron-oscuro);
   padding: 12px 20px;
+  max-width: min(420px, calc(100vw - 40px));
+  font-size: 15px;
   border-radius: 10px;
   display: flex;
   align-items: center;
+  line-height: 1.35;
   &.error { border: 2px solid var(--algodon-azucar) }
   &.exito { border: 2px solid var(--te-verde) }
   &.informacion { border: 2px solid blue }

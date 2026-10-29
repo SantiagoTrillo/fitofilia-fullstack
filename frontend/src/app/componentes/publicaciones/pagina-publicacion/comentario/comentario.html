@@ -1,0 +1,8 @@
+<div>
+  <div>
+    @if (comentario().autor.fotoPerfil) { <img [src]="comentario().autor.fotoPerfil" alt="Foto de perfil del autor"> }
+    @else { <i class="fa-solid fa-circle-user icono-autor-predeterminado"></i> }
+    <span>{{ comentario().autor.nombreUsuario }}</span>
+    <span>- {{ comentario().createdAt | date:"dd/MM/yyyy hh:mm a" }}</span>
+  </div>
+</div>

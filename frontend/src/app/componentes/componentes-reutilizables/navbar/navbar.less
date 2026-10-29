@@ -7,8 +7,10 @@ nav {
     z-index: 100;
     width: 100%;
     height: 56.5px;
-    background-color: var(--onix);
-    border-bottom: 1px solid var(--te-verde);
+    background-color: rgba(17, 26, 20, .92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--borde-hoja);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, .2);
     div.logo {
       margin: 0 24px;
       display: flex;
@@ -36,7 +38,10 @@ nav {
         border: none;
         border-radius: 20px;
         background-color: var(--carbon-marron-claro);
-        cursor: pointer
+        padding: 8px 18px;
+        transition: background-color 160ms ease, transform 160ms ease;
+        cursor: pointer;
+        &:hover { background-color: #45634a; transform: translateY(-1px) }
       }
       a {
         display: flex;

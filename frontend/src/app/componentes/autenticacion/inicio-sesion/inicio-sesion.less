@@ -1,4 +1,13 @@
 main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 90px 24px 36px;
+  background:
+    radial-gradient(ellipse at 18% 26%, rgba(201, 232, 154, .1), transparent 28%),
+    radial-gradient(ellipse at 82% 78%, rgba(212, 138, 104, .1), transparent 25%);
   div {
     display: flex;
     justify-content: center;
@@ -6,6 +15,7 @@ main {
       margin: 8px;
       font-size: 46px;
       line-height: 1;
+      color: var(--papel);
       user-select: none
     }
   }
@@ -13,13 +23,15 @@ main {
     display: flex;
     justify-content: center;
     form {
-      border-radius: 10px;
-      padding: 5px;
+      border-radius: 24px;
+      padding: 24px;
       width: 400px;
       display: flex;
       flex-direction: column;
       margin: 10px;
-      border: none;
+      border: 1px solid var(--borde-hoja);
+      background: linear-gradient(145deg, rgba(48, 71, 53, .94), rgba(29, 48, 35, .96));
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .28);
       div.campo {
         display: flex;
         flex-direction: column;
@@ -29,9 +41,9 @@ main {
           align-items: center;
           margin: 4px 5px;
           background-color: var(--carbon-marron-claro);
-          border: none;
-          border-radius: 5px;
-          padding: 5px 10px;
+          border: 1px solid rgba(242, 237, 221, .08);
+          border-radius: 12px;
+          padding: 9px 12px;
           user-select: none;
           input, select {
             width: 180px;
@@ -48,7 +60,7 @@ main {
           justify-content: flex-start;
           span {
             color: var(--algodon-azucar);
-            font-size: 19px;
+            font-size: 14px;
             line-height: 1;
             user-select: none
           }
@@ -59,14 +71,24 @@ main {
         flex-wrap: wrap;
         justify-content: space-between;
         button {
-          background-color: var(--carbon-marron-claro);
-          border: none;
-          border-radius: 5px;
+          background-color: #405b42;
+          border: 1px solid rgba(201, 232, 154, .12);
+          border-radius: 12px;
           margin: 5px;
-          padding: 5px;
+          padding: 9px 12px;
           cursor: pointer;
           flex: 1 1 calc(50% - 10px);
           user-select: none;
+          transition: transform 160ms ease, background-color 160ms ease;
+          &:hover {
+            transform: translateY(-2px);
+            background-color: #52734f
+          }
+          &:first-child {
+            background-color: var(--te-verde);
+            color: #1b2c1e;
+            font-weight: 800
+          }
           &.boton-inicio-rapido {
             flex: 1 1 100%
           }
