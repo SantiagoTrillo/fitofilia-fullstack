@@ -19,8 +19,8 @@ export class MuroPublicaciones {
   protected publicacionesDisponibles: WritableSignal<PublicacionInterface[]> = signal<PublicacionInterface[]>([])
   protected totalPublicaciones: WritableSignal<number> = signal<number>(0)
   protected paginaSeleccionada: WritableSignal<number> = signal<number>(1)
+  protected cantidadPaginas: Signal<number> = computed((): number => Math.ceil(this.totalPublicaciones() / this.publicacionesPagina()))
   protected ordenSeleccionado: WritableSignal<string> = signal<string>("fecha")
-  protected cantidadPaginas: Signal<number> = computed(() => Math.ceil(this.totalPublicaciones() / this.publicacionesPagina()))
 
   private async cargarPublicaciones(): Promise<void> {
     const respuesta: RespuestaPublicacionInterface = await this.publicacionService.obtenerPublicaciones({
@@ -45,10 +45,10 @@ export class MuroPublicaciones {
     await this.cargarPublicaciones()
   }
 
-  protected async actualizarPublicaciones(idPublicacion: string): Promise<void> {
+  protected async actualizarPublicaciones(idPublicacionBorrada: string): Promise<void> {
     this.publicacionesDisponibles.update(
       (publicaciones: PublicacionInterface[]): PublicacionInterface[] =>
-        publicaciones.filter((publicacion: PublicacionInterface): boolean => publicacion._id !== idPublicacion)
+        publicaciones.filter((publicacion: PublicacionInterface): boolean => publicacion._id !== idPublicacionBorrada)
     )
     this.totalPublicaciones.update((total: number): number => Math.max(0, total - 1))
 

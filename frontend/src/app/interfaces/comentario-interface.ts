@@ -6,8 +6,6 @@ export interface ComentarioInterface {
     nombreUsuario: string
     fotoPerfil?: string
   }
-  corazones?: number
-  respuestas: ComentarioInterface[]
   disponible: boolean
   createdAt: string
 }

@@ -4,7 +4,7 @@ import { PublicacionInterface } from "../interfaces/publicacion-interface"
 import { HttpClient, HttpParams } from "@angular/common/http"
 import { entorno } from "../../entornos/entorno"
 import { firstValueFrom } from "rxjs"
-import { OpcionesPublicacionInterface } from "../interfaces/opciones-publicacion-interface"
+import { OpcionesRecursoInterface } from "../interfaces/opciones-recurso-interface"
 import { RespuestaPublicacionInterface } from "../interfaces/respuesta-publicacion-interface"
 
 @Service()
@@ -15,7 +15,19 @@ export class PublicacionService {
 
   publicacionSeleccionada: WritableSignal<PublicacionInterface | null> = signal<PublicacionInterface | null>(null)
 
-  async obtenerPublicaciones(opciones: OpcionesPublicacionInterface): Promise<RespuestaPublicacionInterface> {
+  async crearPublicacion(formData: FormData): Promise<PublicacionInterface | null> {
+    try {
+      return await firstValueFrom(this.httpClient.post<PublicacionInterface>(this.urlApi, formData))
+    } catch (error: any) {
+      const mensaje: string = error.error?.message || "Error al crear la publicación"
+
+      this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
+
+      return null
+    }
+  }
+
+  async obtenerPublicaciones(opciones: OpcionesRecursoInterface): Promise<RespuestaPublicacionInterface> {
     try {
       let parametros: HttpParams = new HttpParams()
 
@@ -32,21 +44,9 @@ export class PublicacionService {
     }
   }
 
-  async crearPublicacion(formData: FormData): Promise<PublicacionInterface | null> {
+  async eliminarPublicacion(idPublicacionBuscado: string): Promise<boolean> {
     try {
-      return await firstValueFrom(this.httpClient.post<PublicacionInterface>(this.urlApi, formData))
-    } catch (error: any) {
-      const mensaje: string = error.error?.message || "Error al crear la publicación"
-
-      this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
-
-      return null
-    }
-  }
-
-  async eliminarPublicacion(idPublicacion: string): Promise<boolean> {
-    try {
-      await firstValueFrom(this.httpClient.delete<void>(`${ this.urlApi }/${ idPublicacion }`))
+      await firstValueFrom(this.httpClient.delete<void>(`${ this.urlApi }/${ idPublicacionBuscado }`))
 
       this.toastService.mostrarToast("Publicación eliminada con éxito", "exito")
 
@@ -60,9 +60,9 @@ export class PublicacionService {
     }
   }
 
-  async darCorazon(idPublicacion: string): Promise<boolean> {
+  async darCorazon(idPublicacionBuscado: string): Promise<boolean> {
     try {
-      await firstValueFrom(this.httpClient.post(`${ this.urlApi }/${ idPublicacion }/corazones`, null))
+      await firstValueFrom(this.httpClient.post(`${ this.urlApi }/${ idPublicacionBuscado }/corazones`, null))
 
       return true
     }
@@ -75,9 +75,9 @@ export class PublicacionService {
     }
   }
 
-  async quitarCorazon(idPublicacion: string): Promise<boolean> {
+  async quitarCorazon(idPublicacionBuscado: string): Promise<boolean> {
     try {
-      await firstValueFrom(this.httpClient.delete<void>(`${ this.urlApi }/${ idPublicacion }/corazones`))
+      await firstValueFrom(this.httpClient.delete<void>(`${ this.urlApi }/${ idPublicacionBuscado }/corazones`))
 
       return true
     }

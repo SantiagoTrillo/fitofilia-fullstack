@@ -9,12 +9,6 @@ export class Comentario {
   autor: Types.ObjectId
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Publicacion", required: [true, "La publicación del comentario es obligatoria"] })
   publicacion: Types.ObjectId
-  @Prop({ default: 0 })
-  corazones: number
-  @Prop({ type: [MongooseSchema.Types.ObjectId], ref: "Usuario", default: [] })
-  dadoresCorazones: Types.ObjectId[]
-  @Prop({ type: [MongooseSchema.Types.ObjectId], ref: "Comentario", default: [] })
-  respuestas: Types.ObjectId[]
   @Prop({ default: false })
   modificado: boolean
   @Prop({ default: true })

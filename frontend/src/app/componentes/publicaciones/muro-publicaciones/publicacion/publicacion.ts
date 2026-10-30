@@ -5,6 +5,8 @@ import { PublicacionService } from "../../../../servicios/publicacion-service"
 import { AutenticacionService } from "../../../../servicios/autenticacion-service"
 import { DatePipe } from "@angular/common"
 import { ModalConfirmacion } from "../../../componentes-reutilizables/modal-confirmacion/modal-confirmacion"
+import { RespuestaComentarioInterface } from "../../../../interfaces/respuesta-comentario-interface"
+import { ComentarioService } from "../../../../servicios/comentario-service"
 
 @Component({
   selector: "app-publicacion",
@@ -14,10 +16,12 @@ import { ModalConfirmacion } from "../../../componentes-reutilizables/modal-conf
 })
 export class Publicacion {
   private publicacionService: PublicacionService = inject(PublicacionService)
+  private comentarioService: ComentarioService = inject(ComentarioService)
   private router: Router = inject(Router)
 
   protected corazonDado: WritableSignal<boolean> = signal<boolean>(false)
   protected cantidadCorazones: WritableSignal<number> = signal<number>(0)
+  protected cantidadComentarios: WritableSignal<number> = signal<number>(0)
   protected mostrarModalConfirmacion: WritableSignal<boolean> = signal<boolean>(false)
 
   protected autenticacionService: AutenticacionService = inject(AutenticacionService)
@@ -26,11 +30,15 @@ export class Publicacion {
 
   publicacion: InputSignal<PublicacionInterface> = input.required<PublicacionInterface>()
 
-  protected ngOnInit(): void {
+  protected async ngOnInit(): Promise<void> {
     const publicacion: PublicacionInterface = this.publicacion()
     const idUsuario: string | undefined = this.autenticacionService.usuarioActual()?._id
+    const respuesta: RespuestaComentarioInterface = await this.comentarioService.obtenerComentarios(
+      this.publicacion()._id, { disponible: true }
+    )
 
     this.cantidadCorazones.set(publicacion.corazones ?? 0)
+    this.cantidadComentarios.set(respuesta.total)
     this.corazonDado.set(!!idUsuario && (publicacion.dadoresCorazones ?? []).map((id: string): string => id.toString()).includes(idUsuario))
   }
 

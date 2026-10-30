@@ -1,5 +1,3 @@
-import { ComentarioInterface } from "./comentario-interface"
-
 export interface PublicacionInterface {
   _id: string
   titulo: string
@@ -12,7 +10,6 @@ export interface PublicacionInterface {
   }
   corazones?: number
   dadoresCorazones?: string[]
-  comentarios?: ComentarioInterface[]
   disponible: boolean
   createdAt: string
 }

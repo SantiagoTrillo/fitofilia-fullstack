@@ -1,4 +1,4 @@
-export interface OpcionesPublicacionInterface {
+export interface OpcionesRecursoInterface {
   disponible?: boolean
   orden?: string
   autor?: string

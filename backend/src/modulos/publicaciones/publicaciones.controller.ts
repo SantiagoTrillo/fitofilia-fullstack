@@ -27,7 +27,7 @@ export class PublicacionesController {
   }
 
   @Get()
-  buscarTodos(@Query() opcionesDto: OpcionesDto): Promise<{ publicaciones: DocumentoPublicacion[]; total: number }> {
+  buscarTodos(@Query() opcionesDto: OpcionesDto): Promise<{ publicaciones: DocumentoPublicacion[], total: number }> {
     return this.publicacionesService.buscarTodos(opcionesDto)
   }
 

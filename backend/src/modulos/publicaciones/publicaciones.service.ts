@@ -23,7 +23,7 @@ export class PublicacionesService {
     return await publicacionNueva.save()
   }
 
-  async buscarTodos(opcionesDto: OpcionesDto = {}): Promise<{ publicaciones: DocumentoPublicacion[]; total: number }> {
+  async buscarTodos(opcionesDto: OpcionesDto): Promise<{ publicaciones: DocumentoPublicacion[]; total: number }> {
     const filtros: any = {}
 
     if (opcionesDto.disponible !== undefined) filtros.disponible = opcionesDto.disponible

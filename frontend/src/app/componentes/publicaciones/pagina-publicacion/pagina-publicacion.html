@@ -1,5 +1,8 @@
 <main>
   <app-boton-volver/>
   <app-publicacion [publicacion]="publicacionService.publicacionSeleccionada()!"/>
-  <div>@for (comentario of comentariosDisponibles(); track comentario._id) { <app-comentario [comentario]="comentario"/> }</div>
+  <h3>Comentarios</h3>
+  @if (comentariosDisponibles().length > 0 ){
+    <div>@for (comentario of comentariosDisponibles(); track comentario._id) { <app-comentario [comentario]="comentario"/> }</div>
+  } @else { <h3>No hay comentarios aún</h3> }
 </main>

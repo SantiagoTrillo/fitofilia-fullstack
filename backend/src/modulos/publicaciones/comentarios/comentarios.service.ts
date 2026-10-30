@@ -26,7 +26,9 @@ export class ComentariosService {
     return await comentarioNuevo.save()
   }
 
-  async buscarPorPublicacion(idPublicacionBuscado: string, opcionesDto: OpcionesDto): Promise<DocumentoComentario[]> {
+  async buscarPorPublicacion(
+    idPublicacionBuscado: string, opcionesDto: OpcionesDto
+  ): Promise<{ comentarios: DocumentoComentario[], total: number }> {
     const filtros: any = { publicacion: idPublicacionBuscado }
 
     if (opcionesDto.disponible !== undefined) filtros.disponible = opcionesDto.disponible
@@ -37,7 +39,7 @@ export class ComentariosService {
     if (opcionesDto.offset !== undefined) consulta = consulta.skip(opcionesDto.offset)
     if (opcionesDto.limit !== undefined) consulta = consulta.limit(opcionesDto.limit)
 
-    return await consulta
+    return { comentarios: await consulta, total: await this.modeloComentario.countDocuments(filtros) }
   }
 
   async actualizar(

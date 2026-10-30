@@ -25,7 +25,7 @@
       (click)="alternarCorazon()"
     ></i><span>{{ cantidadCorazones() }}</span></button>
     <button class="boton-comentarios" (click)="abrirPublicacion(publicacion())">
-      <i class="fa-regular fa-comment"></i>{{ publicacion().comentarios?.length || 0 }}
+      <i class="fa-regular fa-comment"></i>{{ cantidadComentarios() }}
     </button>
   </div>
 </div>

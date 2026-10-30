@@ -18,7 +18,9 @@ export class ComentariosController {
   @Get()
   async buscarPorPublicacion(
     @Param("idPublicacionBuscado") idPublicacionBuscado: string, @Query() opcionesDto: OpcionesDto
-  ): Promise<DocumentoComentario[]> { return this.comentariosService.buscarPorPublicacion(idPublicacionBuscado, opcionesDto) }
+  ): Promise<{ comentarios: DocumentoComentario[], total: number }> {
+    return this.comentariosService.buscarPorPublicacion(idPublicacionBuscado, opcionesDto)
+  }
 
   @Put(":idComentarioBuscado")
   async actualizar(
