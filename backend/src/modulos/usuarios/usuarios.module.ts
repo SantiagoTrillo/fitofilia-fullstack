@@ -2,7 +2,7 @@ import { forwardRef, Module } from "@nestjs/common"
 import { UsuariosService } from "./usuarios.service.js"
 import { UsuariosController } from "./usuarios.controller.js"
 import { MongooseModule } from "@nestjs/mongoose"
-import { EsquemaUsuario, Usuario } from "./usuario.schema.js"
+import { EsquemaUsuario, Usuario } from "./entidad/usuario.schema.js"
 import { AutenticacionModule } from "../autenticacion/autenticacion.module.js"
 import { ArchivosService } from "../../archivos.service.js"
 

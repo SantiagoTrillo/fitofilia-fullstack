@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common"
 import { IniciarSesionDto } from "./dto/iniciar-sesion.dto.js"
-import { DocumentoUsuario } from "../usuarios/usuario.schema.js"
+import { DocumentoUsuario } from "../usuarios/entidad/usuario.schema.js"
 import bcrypt from "bcrypt"
 import { UsuariosService } from "../usuarios/usuarios.service.js"
 import { JwtService } from "@nestjs/jwt"

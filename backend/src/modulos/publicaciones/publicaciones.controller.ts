@@ -3,7 +3,7 @@ import {
 } from "@nestjs/common"
 import { PublicacionesService } from "./publicaciones.service.js"
 import { CrearPublicacionDto } from "./dto/crear-publicacion.dto.js"
-import { DocumentoPublicacion } from "./publicacion.schema.js"
+import { DocumentoPublicacion } from "./entidad/publicacion.schema.js"
 import { ActualizarPublicacionDto } from "./dto/actualizar-publicacion.dto.js"
 import { FileInterceptor } from "@nestjs/platform-express"
 import { AutenticacionGuard } from "../../guardias/autenticacion.guard.js"
@@ -23,12 +23,12 @@ export class PublicacionesController {
   ): Promise<DocumentoPublicacion> {
     if (imagen) crearPublicacionDto.imagen = await this.archivosService.subirArchivo(imagen, "publicaciones")
 
-    return this.publicacionesService.crear({ ...crearPublicacionDto, autor: peticion.usuario.sujeto})
+    return this.publicacionesService.crear(crearPublicacionDto, peticion.usuario.sujeto)
   }
 
   @Get()
-  buscarTodos(@Query() opciones: OpcionesDto): Promise<{ publicaciones: DocumentoPublicacion[]; total: number }> {
-    return this.publicacionesService.buscarTodos(opciones)
+  buscarTodos(@Query() opcionesDto: OpcionesDto): Promise<{ publicaciones: DocumentoPublicacion[]; total: number }> {
+    return this.publicacionesService.buscarTodos(opcionesDto)
   }
 
   @Get(":id")
@@ -49,8 +49,8 @@ export class PublicacionesController {
 
   @Delete(":id")
   @HttpCode(204)
-  eliminar(@Req() peticion: any, @Param("id") idPublicacion: string): Promise<void> {
-    return this.publicacionesService.eliminar(idPublicacion, peticion.usuario.sujeto)
+  eliminar(@Req() peticion: any, @Param("id") idBuscado: string): Promise<void> {
+    return this.publicacionesService.eliminar(idBuscado, peticion.usuario.sujeto)
   }
 
   @Post(":id/corazones")

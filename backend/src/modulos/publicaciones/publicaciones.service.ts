@@ -1,11 +1,11 @@
 import { ConflictException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
-import { DocumentoPublicacion, Publicacion } from "./publicacion.schema.js"
-import {Model, Query} from "mongoose"
+import { DocumentoPublicacion, Publicacion } from "./entidad/publicacion.schema.js"
+import { Model, Query } from "mongoose"
 import { CrearPublicacionDto } from "./dto/crear-publicacion.dto.js"
 import { ActualizarPublicacionDto } from "./dto/actualizar-publicacion.dto.js"
 import { OpcionesDto } from "./dto/opciones.dto.js"
-import { DocumentoUsuario } from "../usuarios/usuario.schema.js"
+import { DocumentoUsuario } from "../usuarios/entidad/usuario.schema.js"
 import { UsuariosService } from "../usuarios/usuarios.service.js"
 
 @Injectable()
@@ -17,26 +17,25 @@ export class PublicacionesService {
 
   private escaparExpresionRegular(texto: string): string { return texto.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") }
 
-  async crear(crearPublicacionDto: CrearPublicacionDto): Promise<DocumentoPublicacion> {
-    const publicacionNueva = new this.modeloPublicacion({ ...crearPublicacionDto })
+  async crear(crearPublicacionDto: CrearPublicacionDto, idAutor: string): Promise<DocumentoPublicacion> {
+    const publicacionNueva = new this.modeloPublicacion({ ...crearPublicacionDto, autor: idAutor })
 
     return await publicacionNueva.save()
   }
 
-  async buscarTodos(opciones: OpcionesDto = {}): Promise<{ publicaciones: DocumentoPublicacion[]; total: number }> {
+  async buscarTodos(opcionesDto: OpcionesDto = {}): Promise<{ publicaciones: DocumentoPublicacion[]; total: number }> {
     const filtros: any = {}
 
-    if (opciones.disponible !== undefined) filtros.disponible = opciones.disponible
-    if (opciones.autor) filtros.autor = opciones.autor
-    if (opciones.titulo?.trim()) filtros.titulo = new RegExp(this.escaparExpresionRegular(opciones.titulo.trim()), "i")
+    if (opcionesDto.disponible !== undefined) filtros.disponible = opcionesDto.disponible
+    if (opcionesDto.autor) filtros.autor = opcionesDto.autor
+    if (opcionesDto.titulo?.trim()) filtros.titulo = new RegExp(this.escaparExpresionRegular(opcionesDto.titulo.trim()), "i")
 
-    let consulta: Query<any, any> = this.modeloPublicacion.find(filtros)
-      .populate("autor", "nombreUsuario fotoPerfil")
+    let consulta: Query<any, any> = this.modeloPublicacion.find(filtros).populate("autor", "nombreUsuario fotoPerfil")
 
-    if (opciones.orden === "fecha") consulta = consulta.sort({ createdAt: -1 })
-    else if (opciones.orden === "corazones") consulta = consulta.sort({ corazones: -1 })
-    if (opciones.offset !== undefined) consulta = consulta.skip(opciones.offset)
-    if (opciones.limit !== undefined) consulta = consulta.limit(opciones.limit)
+    if (opcionesDto.orden === "fecha") consulta = consulta.sort({ createdAt: -1 })
+    else if (opcionesDto.orden === "corazones") consulta = consulta.sort({ corazones: -1 })
+    if (opcionesDto.offset !== undefined) consulta = consulta.skip(opcionesDto.offset)
+    if (opcionesDto.limit !== undefined) consulta = consulta.limit(opcionesDto.limit)
 
     return { publicaciones: await consulta, total: await this.modeloPublicacion.countDocuments(filtros) }
 }
@@ -59,12 +58,12 @@ export class PublicacionesService {
     return publicacionActualizada
   }
 
-  async eliminar(idPublicacion: string, idUsuario: string): Promise<void> {
+  async eliminar(idPublicacion: string, idUsuarioEliminador: string): Promise<void> {
     const publicacionEliminada: DocumentoPublicacion | null = await this.modeloPublicacion.findById(idPublicacion)
 
     if (!publicacionEliminada) throw new NotFoundException("Publicación no encontrada")
 
-    const usuarioEliminador: DocumentoUsuario = await this.usuariosService.buscarPorId(idUsuario)
+    const usuarioEliminador: DocumentoUsuario = await this.usuariosService.buscarPorId(idUsuarioEliminador)
 
     if (publicacionEliminada.autor.toString() !== usuarioEliminador._id.toString() && usuarioEliminador.perfil !== "administrador") {
       throw new ForbiddenException("No tenés permiso para eliminar esta publicación")
@@ -82,7 +81,7 @@ export class PublicacionesService {
 
     const usuarioDador: DocumentoUsuario = await this.usuariosService.buscarPorId(idUsuario)
 
-    if (!usuarioDador.disponible) throw new ForbiddenException("El usuario no está disponible")
+    if (!usuarioDador.disponible) throw new ForbiddenException("Usuario no disponible")
 
     const corazonExistente: boolean = (publicacionGustada.dadoresCorazones ?? []).map(id => id.toString()).includes(idUsuario)
 
@@ -101,7 +100,7 @@ export class PublicacionesService {
 
     const usuarioRevocador: DocumentoUsuario = await this.usuariosService.buscarPorId(idUsuario)
 
-    if (!usuarioRevocador.disponible) throw new ForbiddenException("El usuario no está disponible")
+    if (!usuarioRevocador.disponible) throw new ForbiddenException("Usuario no disponible")
 
     const corazonExistente: boolean = (publicacionDisgustada.dadoresCorazones ?? []).map(id => id.toString()).includes(idUsuario)
 

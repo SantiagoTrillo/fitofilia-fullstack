@@ -2,7 +2,7 @@ import { Controller, Post, Body, UseInterceptors, UploadedFile, Headers, Unautho
 import { FileInterceptor } from "@nestjs/platform-express"
 import { AutenticacionService } from "./autenticacion.service.js"
 import { IniciarSesionDto } from "./dto/iniciar-sesion.dto.js"
-import { DocumentoUsuario } from "../usuarios/usuario.schema.js"
+import { DocumentoUsuario } from "../usuarios/entidad/usuario.schema.js"
 import { CrearUsuarioDto } from "../usuarios/dto/crear-usuario.dto.js"
 import { UsuariosService } from "../usuarios/usuarios.service.js"
 import { memoryStorage } from "multer"
