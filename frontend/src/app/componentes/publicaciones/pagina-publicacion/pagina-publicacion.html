@@ -2,7 +2,21 @@
   <app-boton-volver/>
   <app-publicacion [publicacion]="publicacionService.publicacionSeleccionada()!"/>
   <h3>Comentarios</h3>
+  <app-formulario-comentario [textoBoton]="'Publicar'" (formularioEnviado)="publicarComentario($event)"/>
   @if (comentariosDisponibles().length > 0 ){
-    <div>@for (comentario of comentariosDisponibles(); track comentario._id) { <app-comentario [comentario]="comentario"/> }</div>
+    <div class="comentario">
+      @for (comentario of comentariosDisponibles(); track comentario._id) {
+        <hr>
+        <app-comentario
+          [comentario]="comentario"
+          (comentarioEditado)="actualizarComentarios($event, 'edicion')"
+          (comentarioEliminado)="actualizarComentarios($event, 'eliminacion')"
+        />
+      }
+      <hr>
+      @if (cantidadPaginas() > 1 && totalComentarios() !== comentariosDisponibles().length) {
+        <button (click)="seleccionarPagina(paginaSeleccionada() + 1)">Cargar más comentarios</button>
+      }
+    </div>
   } @else { <h3>No hay comentarios aún</h3> }
 </main>

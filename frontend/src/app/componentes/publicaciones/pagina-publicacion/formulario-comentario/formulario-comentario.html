@@ -1,0 +1,20 @@
+<div class="formulario-comentario">
+  <form [formGroup]="formularioComentario" (ngSubmit)="enviarFormulario()">
+    <div class="boton"><button type="submit">{{ textoBoton() }}</button></div>
+    <div class="comentario">
+        <textarea
+          #textareaTexto
+          maxlength="1000"
+          formControlName="texto"
+          (input)="ajustarAlturaTextarea(textareaTexto)"
+        ></textarea>
+      <div class="error">
+        @if (formularioComentario.get("texto")?.touched && formularioComentario.get("texto")?.invalid) {
+          @if (formularioComentario.get("texto")?.errors?.["required"]) { <span>El texto es obligatorio</span> }
+          @else if (formularioComentario.get("texto")?.errors?.["minlength"]) { <span>Debe contener al menos 3 caracteres</span> }
+          @else if (formularioComentario.get("texto")?.errors?.["maxlength"]) { <span>No puede superar los 1000 caracteres</span> }
+        }
+      </div>
+    </div>
+  </form>
+</div>

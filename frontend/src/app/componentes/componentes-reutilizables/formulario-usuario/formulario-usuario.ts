@@ -23,7 +23,7 @@ export class FormularioUsuario implements OnInit {
   tipoFormulario: InputSignal<string> = input.required<string>()
   datosIniciales: InputSignal<UsuarioInterface | null> = input<UsuarioInterface | null>(null)
 
-  guardar: OutputEmitterRef<FormData> = output<FormData>()
+  formularioEnviado: OutputEmitterRef<FormData> = output<FormData>()
   formularioModificado: OutputEmitterRef<boolean> = output<boolean>()
 
   formulario: FormGroup = this.formBuilder.nonNullable.group({
@@ -128,7 +128,7 @@ export class FormularioUsuario implements OnInit {
 
       if (imagen) formData.append("imagen", imagen)
 
-      this.guardar.emit(formData)
+      this.formularioEnviado.emit(formData)
 
       return
     }
@@ -148,6 +148,6 @@ export class FormularioUsuario implements OnInit {
 
     if (imagen) formData.append("fotoPerfil", imagen)
 
-    this.guardar.emit(formData)
+    this.formularioEnviado.emit(formData)
   }
 }

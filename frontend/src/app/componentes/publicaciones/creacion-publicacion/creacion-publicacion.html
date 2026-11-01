@@ -5,7 +5,7 @@
     [textoBotonSecundario]="textoBotonSecundario"
     [rutaBotonSecundario]="rutaBotonSecundario"
     [tipoFormulario]="tipoFormulario"
-    (guardar)="crearPublicacion($event)"
+    (formularioEnviado)="crearPublicacion($event)"
     (formularioModificado)="formularioModificado.set($event)"
   />
   @if (mostrarModalConfirmacion()) {

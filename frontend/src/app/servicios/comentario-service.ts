@@ -13,7 +13,7 @@ export class ComentarioService {
   private httpClient: HttpClient = inject(HttpClient)
   private readonly urlApi: string = `${ entorno.urlApi }/publicaciones`
 
-  async crearComentario(idPublicacionBuscado: string, texto: string): Promise<ComentarioInterface | null> {
+  async publicarComentario(idPublicacionBuscado: string, texto: string): Promise<ComentarioInterface | null> {
     try {
       return await firstValueFrom(
         this.httpClient.post<ComentarioInterface>(`${ this.urlApi }/${ idPublicacionBuscado }/comentarios`, texto)
@@ -42,6 +42,21 @@ export class ComentarioService {
       this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
 
       return { comentarios: [], total: 0 }
+    }
+  }
+
+  async editarComentario(idPublicacionBuscado: string, idComentarioBuscado: string, texto: string): Promise<ComentarioInterface | null> {
+    try {
+      return await firstValueFrom(
+        this.httpClient
+          .put<ComentarioInterface>(`${ this.urlApi }/${ idPublicacionBuscado }/comentarios/${ idComentarioBuscado }`, texto)
+      )
+    } catch (error: any) {
+      const mensaje: string = error.error?.message || "Error al editar el comentario"
+
+      this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
+
+      return null
     }
   }
 

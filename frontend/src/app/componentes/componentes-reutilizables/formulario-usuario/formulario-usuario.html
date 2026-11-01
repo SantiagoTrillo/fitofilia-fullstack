@@ -5,10 +5,10 @@
       <div class="campo titulo">
         <label>Título: <input type="text" maxlength="80" formControlName="titulo"></label>
         <div class="contenedor-error">
-          @if (formulario.get('titulo')?.touched && formulario.get('titulo')?.invalid) {
-            @if (formulario.get('titulo')?.errors?.['required']) { <span>El título es obligatorio</span> }
-            @else if (formulario.get('titulo')?.errors?.['minlength']) { <span>Debe contener al menos 3 caracteres</span> }
-            @else if (formulario.get('titulo')?.errors?.['maxlength']) { <span>El título no puede superar los 80 caracteres</span> }
+          @if (formulario.get("titulo")?.touched && formulario.get("titulo")?.invalid) {
+            @if (formulario.get("titulo")?.errors?.["required"]) { <span>El título es obligatorio</span> }
+            @else if (formulario.get("titulo")?.errors?.["minlength"]) { <span>Debe contener al menos 3 caracteres</span> }
+            @else if (formulario.get("titulo")?.errors?.["maxlength"]) { <span>No puede superar los 80 caracteres</span> }
           }
         </div>
       </div>
@@ -29,12 +29,10 @@
           ></textarea>
         </label>
         <div class="contenedor-error">
-          @if (formulario.get('cuerpo')?.touched && formulario.get('cuerpo')?.invalid) {
-            @if (formulario.get('cuerpo')?.errors?.['required']) { <span>El cuerpo es obligatorio</span> }
-            @else if (formulario.get('cuerpo')?.errors?.['minlength']) { <span>Debe contener al menos 3 caracteres</span> }
-            @else if (formulario.get('cuerpo')?.errors?.['maxlength']) {
-              <span>El cuerpo no puede superar los 1000 caracteres</span>
-            }
+          @if (formulario.get("cuerpo")?.touched && formulario.get("cuerpo")?.invalid) {
+            @if (formulario.get("cuerpo")?.errors?.["required"]) { <span>El cuerpo es obligatorio</span> }
+            @else if (formulario.get("cuerpo")?.errors?.["minlength"]) { <span>Debe contener al menos 3 caracteres</span> }
+            @else if (formulario.get("cuerpo")?.errors?.["maxlength"]) { <span>No puede superar los 1000 caracteres</span> }
           }
         </div>
       </div>
@@ -42,36 +40,36 @@
       <div class="campo">
         <label>Nombre: <input type="text" formControlName="nombre"></label>
         <div class="contenedor-error">
-          @if (formulario.get('nombre')?.touched && formulario.get('nombre')?.invalid) {
-            @if (formulario.get('nombre')?.errors?.['required']) { <span>El nombre es obligatorio</span> }
-            @else if (formulario.get('nombre')?.errors?.['minlength']) { <span>Debe contener al menos 2 caracteres</span> }
+          @if (formulario.get("nombre")?.touched && formulario.get("nombre")?.invalid) {
+            @if (formulario.get("nombre")?.errors?.["required"]) { <span>El nombre es obligatorio</span> }
+            @else if (formulario.get("nombre")?.errors?.["minlength"]) { <span>Debe contener al menos 2 caracteres</span> }
           }
         </div>
       </div>
       <div class="campo">
         <label>Apellido: <input type="text" formControlName="apellido"></label>
         <div class="contenedor-error">
-          @if (formulario.get('apellido')?.touched && formulario.get('apellido')?.invalid) {
-            @if (formulario.get('apellido')?.errors?.['required']) { <span>El apellido es obligatorio</span> }
-            @else if (formulario.get('apellido')?.errors?.['minlength']) { <span>Debe contener al menos 2 caracteres</span> }
+          @if (formulario.get("apellido")?.touched && formulario.get("apellido")?.invalid) {
+            @if (formulario.get("apellido")?.errors?.["required"]) { <span>El apellido es obligatorio</span> }
+            @else if (formulario.get("apellido")?.errors?.["minlength"]) { <span>Debe contener al menos 2 caracteres</span> }
           }
         </div>
       </div>
       <div class="campo">
         <label>Correo: <input type="email" formControlName="correo"></label>
         <div class="contenedor-error">
-          @if (formulario.get('correo')?.touched && formulario.get('correo')?.invalid) {
-            @if (formulario.get('correo')?.errors?.['required']) { <span>El correo es obligatorio</span> }
-            @else if (formulario.get('correo')?.errors?.['email']) { <span>Ingresá un formato de correo válido</span> }
+          @if (formulario.get("correo")?.touched && formulario.get("correo")?.invalid) {
+            @if (formulario.get("correo")?.errors?.["required"]) { <span>El correo es obligatorio</span> }
+            @else if (formulario.get("correo")?.errors?.["email"]) { <span>Ingresá un formato de correo válido</span> }
           }
         </div>
       </div>
       <div class="campo">
         <label>Usuario: <input type="text" autocomplete="none" formControlName="nombreUsuario"></label>
         <div class="contenedor-error">
-          @if (formulario.get('nombreUsuario')?.touched && formulario.get('nombreUsuario')?.invalid) {
-            @if (formulario.get('nombreUsuario')?.errors?.['required']) { <span>El nombre de usuario es obligatorio</span> }
-            @else if (formulario.get('nombreUsuario')?.errors?.['minlength']) { <span>Debe contener al menos 2 caracteres</span> }
+          @if (formulario.get("nombreUsuario")?.touched && formulario.get("nombreUsuario")?.invalid) {
+            @if (formulario.get("nombreUsuario")?.errors?.["required"]) { <span>El nombre de usuario es obligatorio</span> }
+            @else if (formulario.get("nombreUsuario")?.errors?.["minlength"]) { <span>Debe contener al menos 2 caracteres</span> }
           }
         </div>
       </div>
@@ -79,10 +77,10 @@
         <div class="campo">
           <label>Contraseña: <input type="password" autocomplete="new-password" formControlName="contrasenia"></label>
           <div class="contenedor-error">
-            @if (formulario.get('contrasenia')?.touched && formulario.get('contrasenia')?.invalid) {
-              @if (formulario.get('contrasenia')?.errors?.['required']) { <span>La contraseña es obligatoria</span> }
-              @else if (formulario.get('contrasenia')?.errors?.['minlength']) { <span>Debe contener al menos 8 caracteres</span> }
-              @else if (formulario.get('contrasenia')?.errors?.['pattern']) {
+            @if (formulario.get("contrasenia")?.touched && formulario.get("contrasenia")?.invalid) {
+              @if (formulario.get("contrasenia")?.errors?.["required"]) { <span>La contraseña es obligatoria</span> }
+              @else if (formulario.get("contrasenia")?.errors?.["minlength"]) { <span>Debe contener al menos 8 caracteres</span> }
+              @else if (formulario.get("contrasenia")?.errors?.["pattern"]) {
                 <span>Debe incluir al menos una mayúscula y un número</span>
               }
             }
@@ -91,9 +89,9 @@
         <div class="campo">
           <label>Repetir contraseña: <input type="password" formControlName="contraseniaRepetida"></label>
           <div class="contenedor-error">
-            @if (formulario.get('contraseniaRepetida')?.touched) {
-              @if (formulario.get('contraseniaRepetida')?.errors?.['required']) { <span>Tenés que repetir la contraseña</span> }
-              @else if (formulario.errors?.['contraseniasDistintas']) { <span>Las contraseñas no coinciden</span> }
+            @if (formulario.get("contraseniaRepetida")?.touched) {
+              @if (formulario.get("contraseniaRepetida")?.errors?.["required"]) { <span>Tenés que repetir la contraseña</span> }
+              @else if (formulario.errors?.["contraseniasDistintas"]) { <span>Las contraseñas no coinciden</span> }
             }
           </div>
         </div>
@@ -101,7 +99,7 @@
       <div class="campo">
         <label>Nacimiento: <input type="date" formControlName="fechaNacimiento"></label>
         <div class="contenedor-error">
-          @if (formulario.get('fechaNacimiento')?.touched && formulario.get('fechaNacimiento')?.invalid) {
+          @if (formulario.get("fechaNacimiento")?.touched && formulario.get("fechaNacimiento")?.invalid) {
             <span>La fecha de nacimiento es obligatoria</span>
           }
         </div>
@@ -115,7 +113,7 @@
       <div class="campo descripcion">
         <label>Descripción: <input type="text" maxlength="75" formControlName="descripcion"></label>
         <div class="contenedor-error">
-          @if (formulario.get('descripcion')?.errors?.['maxlength']) { <span>La descripción no puede superar los 75 caracteres</span> }
+          @if (formulario.get("descripcion")?.errors?.["maxlength"]) { <span>No puede superar los 75 caracteres</span> }
         </div>
       </div>
     }

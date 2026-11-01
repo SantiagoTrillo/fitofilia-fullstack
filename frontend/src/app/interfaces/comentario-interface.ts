@@ -6,6 +6,7 @@ export interface ComentarioInterface {
     nombreUsuario: string
     fotoPerfil?: string
   }
+  modificado: boolean
   disponible: boolean
   createdAt: string
 }

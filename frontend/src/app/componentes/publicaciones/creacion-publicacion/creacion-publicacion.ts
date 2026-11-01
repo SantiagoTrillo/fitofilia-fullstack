@@ -1,10 +1,10 @@
 import { Component, inject, signal, WritableSignal } from "@angular/core"
 import { Router } from "@angular/router"
 import { PublicacionService } from "../../../servicios/publicacion-service"
-import { AutenticacionService } from "../../../servicios/autenticacion-service"
 import { ToastService } from "../../../servicios/toast-service"
 import { FormularioUsuario } from "../../componentes-reutilizables/formulario-usuario/formulario-usuario"
 import { ModalConfirmacion } from "../../componentes-reutilizables/modal-confirmacion/modal-confirmacion"
+import { PublicacionInterface } from "../../../interfaces/publicacion-interface"
 
 @Component({
   selector: "app-creacion-publicacion",
@@ -14,7 +14,6 @@ import { ModalConfirmacion } from "../../componentes-reutilizables/modal-confirm
 })
 export class CreacionPublicacion {
   private publicacionService: PublicacionService = inject(PublicacionService)
-  private autenticacionService: AutenticacionService = inject(AutenticacionService)
   private toastService: ToastService = inject(ToastService)
   private router: Router = inject(Router)
 
@@ -32,16 +31,7 @@ export class CreacionPublicacion {
   confirmacionAceptada: WritableSignal<boolean> = signal<boolean>(false)
 
   protected async crearPublicacion(formData: FormData): Promise<void> {
-    const usuarioActual = this.autenticacionService.usuarioActual()
-
-    if (!usuarioActual?._id) {
-      this.toastService.mostrarToast("Debés iniciar sesión para publicar", "error")
-      return
-    }
-
-    formData.append("autor", usuarioActual._id)
-
-    const resultado = await this.publicacionService.crearPublicacion(formData)
+    const resultado: PublicacionInterface | null = await this.publicacionService.crearPublicacion(formData)
 
     if (resultado) {
       this.publicacionExitosa.set(true)

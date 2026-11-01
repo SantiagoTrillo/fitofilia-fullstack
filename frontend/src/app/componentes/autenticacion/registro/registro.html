@@ -1,12 +1,12 @@
 <main>
   <app-formulario-usuario
-    [titulo]="titulo"
-    [textoBotonPrimario]="textoBotonPrimario"
-    [textoBotonSecundario]="textoBotonSecundario"
-    [rutaBotonSecundario]="rutaBotonSecundario"
-    [tipoFormulario]="tipoFormulario"
-    [datosIniciales]="datosIniciales"
-    (guardar)="registrarUsuario($event)"
+    [titulo]="this.titulo()"
+    [textoBotonPrimario]="this.textoBotonPrimario()"
+    [textoBotonSecundario]="this.textoBotonSecundario()"
+    [rutaBotonSecundario]="this.rutaBotonSecundario()"
+    [tipoFormulario]="this.tipoFormulario()"
+    [datosIniciales]="this.datosIniciales()"
+    (formularioEnviado)="registrarUsuario($event)"
     (formularioModificado)="formularioModificado.set($event)"
   />
   @if (mostrarModalConfirmacion()) {

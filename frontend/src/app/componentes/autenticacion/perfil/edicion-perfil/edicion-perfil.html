@@ -6,7 +6,7 @@
     [rutaBotonSecundario]="rutaBotonSecundario"
     [tipoFormulario]="tipoFormulario"
     [datosIniciales]="datosIniciales"
-    (guardar)="editarPerfil($event)"
+    (formularioEnviado)="editarPerfil($event)"
     (formularioModificado)="formularioModificado.set($event)"
   />
   @if (mostrarModalConfirmacion()) {

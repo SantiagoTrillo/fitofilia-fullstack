@@ -54,6 +54,37 @@ export class AutenticacionService {
     }
   }
 
+  async autorizarAcceso(token: string): Promise<boolean> {
+    try {
+      await firstValueFrom(this.httpClient.post<string>(`${ this.urlApi }/autorizar-token`, token))
+
+      return true
+    } catch (error: any) {
+      const mensaje: string = error.error?.message || "Error al verificar el token"
+
+      this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
+
+      return false
+    }
+  }
+
+  async refrescarToken(token: string): Promise<boolean> {
+    try {
+      const tokenRefrescado: string = await firstValueFrom(this.httpClient.post<string>(`${ this.urlApi }/refrescar-token`, token))
+
+      this.token.set(tokenRefrescado)
+      sessionStorage.setItem("token", tokenRefrescado)
+
+      return true
+    } catch (error: any) {
+      const mensaje: string = error.error?.message || "Error al refrescar el token"
+
+      this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
+
+      return false
+    }
+  }
+
   async editarPerfil(perfilEditado: FormData): Promise<boolean> {
     try {
       const usuarioActualizado: UsuarioInterface = await firstValueFrom(
