@@ -4,11 +4,17 @@ import { InicioSesion } from "./componentes/autenticacion/inicio-sesion/inicio-s
 import { autenticacionGuard } from "./guardias/autenticacion-guard"
 import { formularioGuard } from "./guardias/formulario-guard"
 import { PaginaPublicacion } from "./componentes/publicaciones/pagina-publicacion/pagina-publicacion"
+import { PaginaCargando } from "./componentes/pagina-cargando/pagina-cargando"
 
 export const routes: Routes = [
   {
     path: "",
     component: MuroPublicaciones,
+    canActivate: [autenticacionGuard]
+  },
+  {
+    path: "cargando",
+    component: PaginaCargando,
     canActivate: [autenticacionGuard]
   },
   {

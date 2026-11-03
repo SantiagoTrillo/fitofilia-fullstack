@@ -29,10 +29,7 @@ export class InicioSesion {
         datosFormulario.correo, datosFormulario.contrasenia
       )
 
-      if (usuarioAutenticado) {
-        this.router.navigate([""])
-        this.toastService.mostrarToast("Sesión iniciada correctamente", "exito")
-      }
+      if (usuarioAutenticado) void this.router.navigate(["cargando"])
     } else this.toastService.mostrarToast("Campos del formulario inválidos", "error")
   }
 
@@ -42,9 +39,6 @@ export class InicioSesion {
       "Fitofilia2026"
     )
 
-    if (usuarioAutenticado) {
-      this.router.navigate([""])
-      this.toastService.mostrarToast("Sesión iniciada correctamente", "exito")
-    }
+    if (usuarioAutenticado) void this.router.navigate(["cargando"])
   }
 }

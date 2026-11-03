@@ -3,7 +3,6 @@ import { Router } from "@angular/router"
 import { AutenticacionService } from "../../../servicios/autenticacion-service"
 import { UsuarioInterface } from "../../../interfaces/usuario-interface"
 import { ModalConfirmacion } from "../../componentes-reutilizables/modal-confirmacion/modal-confirmacion"
-import { ToastService } from "../../../servicios/toast-service"
 import { FormularioUsuario } from "../../componentes-reutilizables/formulario-usuario/formulario-usuario"
 
 @Component({
@@ -14,7 +13,6 @@ import { FormularioUsuario } from "../../componentes-reutilizables/formulario-us
 })
 export class Registro {
   private autenticacionService: AutenticacionService = inject(AutenticacionService)
-  private toastService: ToastService = inject(ToastService)
   private router: Router = inject(Router)
 
   protected titulo: Signal<string> = signal<string>("Registrate para poder acceder a la aplicación")
@@ -36,8 +34,7 @@ export class Registro {
 
     if (usuarioRegistrado) {
       this.registroExitoso.set(true)
-      this.toastService.mostrarToast("Registro completado correctamente", "exito")
-      void this.router.navigate([""])
+      void this.router.navigate(["cargando"])
     }
   }
 
