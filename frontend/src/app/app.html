@@ -1,3 +1,11 @@
 @if (sesionService.usuarioActual()) { <app-navbar/> }
 <router-outlet/>
 <app-toast/>
+@if (sesionService.mostrarModal()) {
+  <app-modal-confirmacion
+    [titulo]="'Sesión expirando'"
+    [mensaje]="'Tu sesión está por vencer. ¿Querés continuar con la sesión activa?'"
+    (confirmar)="extenderSesion()"
+    (cancelar)="cerrarModal()"
+  />
+}

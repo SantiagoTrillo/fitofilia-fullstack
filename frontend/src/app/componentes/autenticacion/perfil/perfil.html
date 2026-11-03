@@ -5,8 +5,8 @@
       @if (usuarioActual.fotoPerfil) { <img [src]="usuarioActual.fotoPerfil" alt="Foto de perfil"> }
     </div>
     <div class="perfil">
-      <app-ultimas-publicaciones/>
       <app-datos-perfil [usuarioActual]="usuarioActual"/>
+      <app-ultimas-publicaciones/>
       <div class="botones">
         <button routerLink="/perfil/editar">Editar perfil</button>
         <button (click)="cerrarSesion()">Cerrar sesión</button>

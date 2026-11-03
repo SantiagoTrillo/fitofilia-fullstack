@@ -1,5 +1,10 @@
 main {
-  height: 800px;
+  position: fixed;
+  top: 60px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 0;
   display: grid;
   place-items: center
 }
@@ -21,6 +26,4 @@ span {
   animation: girar .55s steps(8) infinite
 }
 
-@keyframes girar {
-  to { transform: rotate(360deg) }
-}
+@keyframes girar { to { transform: rotate(360deg) } }
