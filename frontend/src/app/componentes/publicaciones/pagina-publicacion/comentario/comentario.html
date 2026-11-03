@@ -3,6 +3,7 @@
   <app-formulario-comentario
     [textoBoton]="'Editar'"
     [textoInicial]="comentario().texto"
+    (edicionCancelada)="seleccionarPlantilla(plantillaTextoComentario)"
     (formularioEnviado)="editarComentario($event, plantillaTextoComentario)"
   />
 </ng-template>

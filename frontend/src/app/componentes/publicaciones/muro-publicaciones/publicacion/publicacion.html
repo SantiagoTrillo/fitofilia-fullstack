@@ -1,4 +1,4 @@
-<div class="contenedor-publicacion" >
+<div class="contenedor-publicacion">
   <div class="contenedor-cabecera">
     <div class="contenedor-informacion">
       @if (publicacion().autor.fotoPerfil) { <img [src]="publicacion().autor.fotoPerfil" alt="Foto de perfil del autor"> }
@@ -25,7 +25,7 @@
       (click)="alternarCorazon()"
     ></i><span>{{ cantidadCorazones() }}</span></button>
     <button class="boton-comentarios" (click)="abrirPublicacion(publicacion())">
-      <i class="fa-regular fa-comment"></i>{{ cantidadComentarios() }}
+      <i class="fa-regular fa-comment"></i>{{ cantidadComentariosExterna() ?? cantidadComentarios() }}
     </button>
   </div>
 </div>

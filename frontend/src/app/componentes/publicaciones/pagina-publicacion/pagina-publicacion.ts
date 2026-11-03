@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal, signal, WritableSignal } from "@angular/core"
+import { Component, inject, Signal, signal, ViewChild, WritableSignal } from "@angular/core"
 import { PublicacionService } from "../../../servicios/publicacion-service"
 import { Publicacion } from "../muro-publicaciones/publicacion/publicacion"
 import { BotonVolver } from "../../componentes-reutilizables/boton-volver/boton-volver"
@@ -21,7 +21,7 @@ export class PaginaPublicacion {
   private comentarioService: ComentarioService = inject(ComentarioService)
   private toastService: ToastService = inject(ToastService)
 
-  protected cantidadPaginas: Signal<number> = computed((): number => Math.ceil(this.totalComentarios() / this.comentariosPagina()))
+  @ViewChild(FormularioComentario) private formularioComentario!: FormularioComentario
 
   protected comentariosDisponibles: WritableSignal<ComentarioInterface[]> = signal<ComentarioInterface[]>([])
   protected totalComentarios: WritableSignal<number> = signal<number>(0)
@@ -36,28 +36,30 @@ export class PaginaPublicacion {
   protected async cargarComentarios(): Promise<void> {
     const respuesta: RespuestaComentarioInterface = await this.comentarioService.obtenerComentarios(
       this.publicacionService.publicacionSeleccionada()!._id,
-      { disponible: true, limit: this.comentariosPagina(), offset: (this.paginaSeleccionada() - 1) * this.comentariosPagina() }
+      { disponible: true, limit: this.comentariosPagina(), offset: this.comentariosDisponibles().length }
     )
-    const ultimaPagina: number = Math.max(1, Math.ceil(respuesta.total / this.comentariosPagina()))
 
-    if (this.paginaSeleccionada() > ultimaPagina) return this.seleccionarPagina(ultimaPagina)
-
-    this.comentariosDisponibles
-      .update((comentariosActuales: ComentarioInterface[]): ComentarioInterface[] => [...comentariosActuales, ...respuesta.comentarios])
+    this.comentariosDisponibles.update(
+      (comentarios: ComentarioInterface[]): ComentarioInterface[] => [...comentarios, ...respuesta.comentarios]
+    )
     this.totalComentarios.set(respuesta.total)
   }
 
   protected async actualizarComentarios(comentarioModificado: ComentarioInterface, tipoModificacion: string): Promise<void> {
     if (tipoModificacion === "eliminacion") {
-      this.comentariosDisponibles.update(
-        (comentarios: ComentarioInterface[]): ComentarioInterface[] =>
-          comentarios.filter((comentario: ComentarioInterface): boolean => comentario._id !== comentarioModificado._id)
-      )
-      this.totalComentarios.update((total: number): number => Math.max(0, total -1))
+      this.comentariosDisponibles.update((comentarios: ComentarioInterface[]): ComentarioInterface[] =>
+        comentarios.filter((comentario: ComentarioInterface): boolean => comentario._id !== comentarioModificado._id))
+      this.totalComentarios.update((total: number): number => Math.max(0, total - 1))
 
-      const ultimaPagina: number = Math.max(1, this.cantidadPaginas())
+      if (this.totalComentarios() === 0) {
+        this.paginaSeleccionada.set(1)
 
-      if (this.paginaSeleccionada() > ultimaPagina) await this.seleccionarPagina(ultimaPagina)
+        return
+      }
+
+      await this.cargarComentarios()
+
+      return
     }
 
     this.comentariosDisponibles.update((comentarios: ComentarioInterface[]): ComentarioInterface[] => comentarios
@@ -70,8 +72,11 @@ export class PaginaPublicacion {
       .publicarComentario(this.publicacionService.publicacionSeleccionada()!._id, texto)
 
     if (resultado) {
+      this.formularioComentario.limpiarFormulario()
       this.comentarioExitoso.set(true)
       this.toastService.mostrarToast("Comentario publicado correctamente", "exito")
+      this.paginaSeleccionada.set(1)
+      this.comentariosDisponibles.set([])
       await this.cargarComentarios()
     }
   }

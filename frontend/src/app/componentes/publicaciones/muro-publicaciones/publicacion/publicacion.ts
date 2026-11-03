@@ -29,16 +29,21 @@ export class Publicacion {
   publicacionEliminada: OutputEmitterRef<string> = output<string>()
 
   publicacion: InputSignal<PublicacionInterface> = input.required<PublicacionInterface>()
+  cantidadComentariosExterna: InputSignal<number | undefined> = input<number | undefined>()
 
   protected async ngOnInit(): Promise<void> {
     const publicacion: PublicacionInterface = this.publicacion()
     const idUsuario: string | undefined = this.autenticacionService.usuarioActual()?._id
-    const respuesta: RespuestaComentarioInterface = await this.comentarioService.obtenerComentarios(
-      this.publicacion()._id, { disponible: true }
-    )
+
+    if (this.cantidadComentariosExterna() === undefined) {
+      const respuesta: RespuestaComentarioInterface = await this.comentarioService.obtenerComentarios(
+        this.publicacion()._id, { disponible: true }
+      )
+
+      this.cantidadComentarios.set(respuesta.total)
+    }
 
     this.cantidadCorazones.set(publicacion.corazones ?? 0)
-    this.cantidadComentarios.set(respuesta.total)
     this.corazonDado.set(!!idUsuario && (publicacion.dadoresCorazones ?? []).map((id: string): string => id.toString()).includes(idUsuario))
   }
 

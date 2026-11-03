@@ -10,15 +10,56 @@ main {
     grid-row: 1;
     margin-top: 28px
   }
-  app-publicacion {
+  app-boton-volver + div {
     grid-column: 2;
     grid-row: 1;
     width: 100%;
-    min-width: 0
-  }
-  div.comentario {
-    grid-column: 2;
-    width: 100%;
-    min-width: 0
+    min-width: 0;
+    padding: 22px 28px;
+    border: 1px solid var(--borde-hoja);
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(48, 71, 53, .72), rgba(29, 48, 35, .84));
+    box-shadow: 0 14px 38px rgba(0, 0, 0, .16);
+    app-publicacion {
+      display: block;
+      width: 100%;
+      min-width: 0
+    }
+    app-publicacion + hr { margin: 24px 0 }
+    h3 {
+      margin: 0 0 16px;
+      color: var(--te-verde);
+      font-size: 30px;
+      line-height: 1
+    }
+    app-formulario-comentario,
+    app-comentario {
+      display: block;
+      width: 100%;
+      min-width: 0
+    }
+    div.comentario {
+      width: 100%;
+      min-width: 0
+    }
+    hr {
+      margin: 14px 0;
+      border: 0;
+      border-top: 1px solid white
+    }
+    button {
+      display: block;
+      margin: 18px auto 0;
+      padding: 9px 18px;
+      border: 1px solid var(--borde-hoja);
+      border-radius: 12px;
+      background-color: #405b42;
+      cursor: pointer;
+      transition: transform 160ms ease, background-color 160ms ease;
+      &:hover {
+        background-color: #52734f;
+        transform: translateY(-2px)
+      }
+    }
   }
 }

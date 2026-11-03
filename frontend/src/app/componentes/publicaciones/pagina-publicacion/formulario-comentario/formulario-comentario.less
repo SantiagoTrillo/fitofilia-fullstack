@@ -1,0 +1,62 @@
+div.formulario-comentario {
+  width: 100%;
+  margin-bottom: 18px;
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    width: 100%;
+    div.comentario {
+      width: 100%;
+      textarea {
+        display: block;
+        width: 100%;
+        min-height: 52px;
+        padding: 12px 14px;
+        border: 1px solid var(--borde-hoja);
+        border-radius: 12px;
+        background-color: rgba(48, 71, 53, .82);
+        font: inherit;
+        line-height: 1.45;
+        overflow-y: hidden;
+        resize: none;
+        &:focus { outline: 2px solid var(--te-verde) }
+      }
+      div.error {
+        min-height: 18px;
+        margin-top: 4px;
+        span { color: var(--algodon-azucar) }
+      }
+    }
+    div.boton {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      button {
+        padding: 9px 22px;
+        border: 1px solid var(--borde-hoja);
+        border-radius: 12px;
+        background-color: var(--te-verde);
+        color: var(--onix);
+        font-weight: 800;
+        cursor: pointer;
+        transition: transform 160ms ease, background-color 160ms ease;
+        &:hover {
+          background-color: color-mix(in srgb, var(--te-verde) 80%, var(--carbon-marron-claro));
+          transform: translateY(-2px)
+        }
+        &[type="button"] {
+          padding: 9px 18px;
+          background-color: #405b42;
+          color: white;
+          font-weight: 400;
+          &:hover {
+            background-color: #52734f;
+            transform: translateY(-2px)
+          }
+        }
+      }
+    }
+  }
+}
