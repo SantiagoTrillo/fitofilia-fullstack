@@ -45,10 +45,10 @@ export class MuroPublicaciones {
     await this.cargarPublicaciones()
   }
 
-  protected async actualizarPublicaciones(idPublicacionBorrada: string): Promise<void> {
+  protected async actualizarPublicaciones(publicacionBorrada: PublicacionInterface): Promise<void> {
     this.publicacionesDisponibles.update(
       (publicaciones: PublicacionInterface[]): PublicacionInterface[] =>
-        publicaciones.filter((publicacion: PublicacionInterface): boolean => publicacion._id !== idPublicacionBorrada)
+        publicaciones.filter((publicacion: PublicacionInterface): boolean => publicacion._id !== publicacionBorrada._id)
     )
     this.totalPublicaciones.update((total: number): number => Math.max(0, total - 1))
 

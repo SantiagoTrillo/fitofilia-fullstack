@@ -19,7 +19,8 @@ export const routes: Routes = [
   },
   {
     path: "publicación/crear",
-    loadComponent: () => import("./componentes/publicaciones/creacion-publicacion/creacion-publicacion").then(m => m.CreacionPublicacion),
+    loadComponent: () =>
+      import("./componentes/publicaciones/creacion-publicacion/creacion-publicacion").then(m => m.CreacionPublicacion),
     canActivate: [autenticacionGuard],
     canDeactivate: [formularioGuard]
   },
@@ -27,6 +28,14 @@ export const routes: Routes = [
     path: "publicación",
     component: PaginaPublicacion,
     canActivate: [autenticacionGuard]
+  },
+  {
+    path: "publicación/editar",
+    loadComponent: () =>
+      import("./componentes/publicaciones/muro-publicaciones/publicacion/edicion-publicacion/edicion-publicacion")
+        .then(m => m.EdicionPublicacion),
+    canActivate: [autenticacionGuard],
+    canDeactivate: [formularioGuard]
   },
   {
     path: "inicio-sesión",
@@ -46,7 +55,8 @@ export const routes: Routes = [
   },
   {
     path: "perfil/editar",
-    loadComponent: () => import("./componentes/autenticacion/perfil/edicion-perfil/edicion-perfil").then(m => m.EdicionPerfil),
+    loadComponent: () =>
+      import("./componentes/autenticacion/perfil/edicion-perfil/edicion-perfil").then(m => m.EdicionPerfil),
     canActivate: [autenticacionGuard],
     canDeactivate: [formularioGuard]
   },

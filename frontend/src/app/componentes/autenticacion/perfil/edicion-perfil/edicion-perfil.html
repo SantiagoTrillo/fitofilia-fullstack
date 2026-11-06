@@ -1,11 +1,10 @@
 <main>
   <app-formulario-usuario
-    [titulo]="titulo"
-    [textoBotonPrimario]="textoBotonPrimario"
-    [textoBotonSecundario]="textoBotonSecundario"
-    [rutaBotonSecundario]="rutaBotonSecundario"
-    [tipoFormulario]="tipoFormulario"
-    [datosIniciales]="datosIniciales"
+    [titulo]="'Editando datos del perfil'"
+    [textoBotonPrimario]="'Guardar cambios'"
+    [textoBotonSecundario]="'Cancelar'"
+    [tipoFormulario]="'edicionPerfil'"
+    [datosIniciales]="datosIniciales()"
     (formularioEnviado)="editarPerfil($event)"
     (formularioModificado)="formularioModificado.set($event)"
   />

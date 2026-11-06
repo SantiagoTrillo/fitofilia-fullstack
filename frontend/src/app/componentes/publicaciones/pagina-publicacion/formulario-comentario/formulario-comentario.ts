@@ -41,7 +41,7 @@ export class FormularioComentario implements AfterViewInit {
       return
     }
 
-    this.formularioEnviado.emit(this.formularioComentario.getRawValue().texto)
+    this.formularioEnviado.emit(this.formularioComentario.getRawValue())
     this.envioIntentado = false
   }
 
@@ -57,5 +57,4 @@ export class FormularioComentario implements AfterViewInit {
   }
 
   ngAfterViewInit(): void { this.ajustarAlturaTextarea() }
-
 }

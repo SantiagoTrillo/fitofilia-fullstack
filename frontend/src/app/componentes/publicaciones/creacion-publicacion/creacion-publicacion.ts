@@ -23,7 +23,6 @@ export class CreacionPublicacion {
   protected readonly titulo: string = "Crear nueva publicación"
   protected readonly textoBotonPrimario: string = "Publicar"
   protected readonly textoBotonSecundario: string = "Cancelar"
-  protected readonly rutaBotonSecundario: string = "/"
   protected readonly tipoFormulario: string = "creacionPublicacion"
 
   formularioModificado: WritableSignal<boolean> = signal<boolean>(false)

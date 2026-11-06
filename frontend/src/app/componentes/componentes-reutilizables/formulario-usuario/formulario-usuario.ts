@@ -1,8 +1,9 @@
 import { Component, inject, input, InputSignal, OnInit, output, OutputEmitterRef, signal, WritableSignal } from "@angular/core"
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms"
-import { RouterLink } from "@angular/router"
+import { Router, RouterLink } from "@angular/router"
 import { UsuarioInterface } from "../../../interfaces/usuario-interface"
 import { ToastService } from "../../../servicios/toast-service"
+import { PublicacionInterface } from "../../../interfaces/publicacion-interface"
 
 @Component({
   selector: "app-formulario-usuario",
@@ -13,15 +14,17 @@ import { ToastService } from "../../../servicios/toast-service"
 export class FormularioUsuario implements OnInit {
   private formBuilder: FormBuilder = inject(FormBuilder)
   private toastService: ToastService = inject(ToastService)
+  private router: Router = inject(Router)
 
   protected imagenSeleccionada: WritableSignal<File | null> = signal<File | null>(null)
+
+  protected readonly rutaBotonSecundario: string = window.history.state["rutaOrigen"] ?? this.router.currentNavigation()?.previousNavigation?.finalUrl?.toString() ?? "/"
 
   titulo: InputSignal<string> = input.required<string>()
   textoBotonPrimario: InputSignal<string> = input.required<string>()
   textoBotonSecundario: InputSignal<string> = input.required<string>()
-  rutaBotonSecundario: InputSignal<string> = input.required<string>()
   tipoFormulario: InputSignal<string> = input.required<string>()
-  datosIniciales: InputSignal<UsuarioInterface | null> = input<UsuarioInterface | null>(null)
+  datosIniciales: InputSignal<UsuarioInterface | PublicacionInterface | null> = input<UsuarioInterface | PublicacionInterface | null>(null)
 
   formularioEnviado: OutputEmitterRef<FormData> = output<FormData>()
   formularioModificado: OutputEmitterRef<boolean> = output<boolean>()
@@ -71,19 +74,26 @@ export class FormularioUsuario implements OnInit {
       }
     }
 
-    const datosIniciales: UsuarioInterface | null = this.datosIniciales()
+    const datosIniciales: UsuarioInterface | PublicacionInterface | null = this.datosIniciales()
 
     if (datosIniciales) {
-      const fechaNacimiento: string = new Date(datosIniciales.fechaNacimiento).toISOString().split("T")[0]
+      if ("correo" in datosIniciales) {
+        const fechaNacimiento: string = new Date(datosIniciales.fechaNacimiento).toISOString().split("T")[0]
 
-      this.formulario.patchValue({
-        nombre: datosIniciales.nombre,
-        apellido: datosIniciales.apellido,
-        correo: datosIniciales.correo,
-        nombreUsuario: datosIniciales.nombreUsuario,
-        fechaNacimiento: fechaNacimiento,
-        descripcion: datosIniciales.descripcion
-      })
+        this.formulario.patchValue({
+          nombre: datosIniciales.nombre,
+          apellido: datosIniciales.apellido,
+          correo: datosIniciales.correo,
+          nombreUsuario: datosIniciales.nombreUsuario,
+          fechaNacimiento: fechaNacimiento,
+          descripcion: datosIniciales.descripcion
+        })
+      } else if ("titulo" in datosIniciales) {
+        this.formulario.patchValue({
+          titulo: datosIniciales.titulo,
+          cuerpo: datosIniciales.cuerpo
+        })
+      }
     }
   }
 

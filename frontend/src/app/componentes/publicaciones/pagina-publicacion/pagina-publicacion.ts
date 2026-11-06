@@ -57,7 +57,16 @@ export class PaginaPublicacion {
         return
       }
 
-      await this.cargarComentarios()
+      if (this.totalComentarios() > this.comentariosDisponibles().length) {
+        const respuesta: RespuestaComentarioInterface = await this.comentarioService.obtenerComentarios(
+          this.publicacionService.publicacionSeleccionada()!._id,
+          { disponible: true, limit: 1, offset: this.comentariosDisponibles().length }
+        )
+
+        this.comentariosDisponibles.update(
+          (comentarios: ComentarioInterface[]): ComentarioInterface[] => [...comentarios, ...respuesta.comentarios]
+        )
+      }
 
       return
     }

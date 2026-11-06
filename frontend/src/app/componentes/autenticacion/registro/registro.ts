@@ -18,7 +18,6 @@ export class Registro {
   protected titulo: Signal<string> = signal<string>("Registrate para poder acceder a la aplicación")
   protected textoBotonPrimario: Signal<string> = signal<string>("Registrarse")
   protected textoBotonSecundario: Signal<string> = signal<string>("Iniciar sesión")
-  protected rutaBotonSecundario: Signal<string> = signal<string>("/inicio-sesión")
   protected tipoFormulario: Signal<string> = signal<string>("registro")
 
   protected mostrarModalConfirmacion: WritableSignal<boolean> = signal<boolean>(false)

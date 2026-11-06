@@ -36,24 +36,24 @@ export class Comentario {
   protected cerrarModal(): void { this.mostrarModalConfirmacion.set(false) }
 
   protected async editarComentario(texto: string, plantilla: TemplateRef<any>): Promise<void> {
-    const resultado: ComentarioInterface | null = await this.comentarioService.editarComentario(
+    const comentarioEditado: ComentarioInterface | null = await this.comentarioService.editarComentario(
       this.publicacionService.publicacionSeleccionada()!._id, this.comentario()._id, texto
     )
 
-    if (resultado) {
+    if (comentarioEditado) {
       this.comentarioExitoso.set(true)
       this.seleccionarPlantilla(plantilla)
       this.toastService.mostrarToast("Comentario editado correctamente", "exito")
-      this.comentarioEditado.emit(resultado)
+      this.comentarioEditado.emit(comentarioEditado)
     }
   }
 
   protected async eliminarComentario(): Promise<void> {
-    const eliminacionExitosa: boolean = await this.comentarioService.eliminarComentario(
+    const comentarioEliminado: boolean = await this.comentarioService.eliminarComentario(
       this.publicacionService.publicacionSeleccionada()!._id, this.comentario()._id
     )
 
-    if (!eliminacionExitosa) return
+    if (!comentarioEliminado) return
 
     this.cerrarModal()
     this.comentarioEliminado.emit(this.comentario())

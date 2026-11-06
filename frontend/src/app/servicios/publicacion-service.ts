@@ -44,6 +44,18 @@ export class PublicacionService {
     }
   }
 
+  async editarPublicacion(idPublicacionBuscado: string, formData: FormData): Promise<PublicacionInterface | null> {
+    try {
+      return await firstValueFrom(this.httpClient.patch<PublicacionInterface>(`${ this.urlApi }/${ idPublicacionBuscado }`, formData))
+    } catch (error: any) {
+      const mensaje: string = error.error?.message || "Error al editar la publicación"
+
+      this.toastService.mostrarToast(`Error al procesar la solicitud: ${ mensaje }`, "error")
+
+      return null
+    }
+  }
+
   async eliminarPublicacion(idPublicacionBuscado: string): Promise<boolean> {
     try {
       await firstValueFrom(this.httpClient.delete<void>(`${ this.urlApi }/${ idPublicacionBuscado }`))

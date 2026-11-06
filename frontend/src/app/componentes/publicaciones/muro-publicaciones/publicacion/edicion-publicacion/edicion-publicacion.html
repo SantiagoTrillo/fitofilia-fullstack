@@ -1,0 +1,18 @@
+<main>
+  <app-formulario-usuario
+    [titulo]="'Editando publicación'"
+    [textoBotonPrimario]="'Guardar cambios'"
+    [textoBotonSecundario]="'Cancelar'"
+    [tipoFormulario]="'edicionPublicacion'"
+    [datosIniciales]="datosIniciales()"
+    (formularioEnviado)="editarPublicacion($event)"
+    (formularioModificado)="formularioModificado.set($event)"
+  />
+  @if (mostrarModalConfirmacion()) {
+    <app-modal-confirmacion
+      [mensaje]="'Tenés cambios sin guardar. ¿Estás seguro de que querés abandonar la página?'"
+      (confirmar)="aceptarSalida()"
+      (cancelar)="cancelarSalida()"
+    />
+  }
+</main>
