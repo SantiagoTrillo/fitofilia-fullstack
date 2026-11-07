@@ -66,11 +66,9 @@ export class PublicacionesService {
 
   async eliminar(idPublicacion: string, idUsuarioEliminador: string): Promise<void> {
     const publicacionEliminada: DocumentoPublicacion | null = await this.modeloPublicacion.findById(idPublicacion)
-
-    if (!publicacionEliminada) throw new NotFoundException("Publicación no encontrada")
-
     const usuarioEliminador: DocumentoUsuario = await this.usuariosService.buscarPorId(idUsuarioEliminador)
 
+    if (!publicacionEliminada) throw new NotFoundException("Publicación no encontrada")
     if (publicacionEliminada.autor.toString() !== usuarioEliminador._id.toString() && usuarioEliminador.perfil !== "administrador") {
       throw new ForbiddenException("No tenés permiso para eliminar esta publicación")
     }

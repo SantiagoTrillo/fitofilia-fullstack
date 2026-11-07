@@ -10,14 +10,16 @@ import bcrypt from "bcrypt"
 export class UsuariosService {
   constructor(@InjectModel(Usuario.name) private modeloUsuario: Model<DocumentoUsuario>) {}
 
-  async crear(crearUsuarioDto: CrearUsuarioDto): Promise<DocumentoUsuario> {
+  async crear(idUsuarioCreador: string, crearUsuarioDto: CrearUsuarioDto): Promise<DocumentoUsuario> {
     const correoExistente: DocumentoUsuario | null = await this.modeloUsuario.findOne({ correo: crearUsuarioDto.correo })
+    const usuarioExistente: DocumentoUsuario | null = await this.modeloUsuario.findOne({ nombreUsuario: crearUsuarioDto.nombreUsuario })
+    const usuarioCreador: DocumentoUsuario | null = await this.buscarPorId(idUsuarioCreador)
 
     if (correoExistente) throw new ConflictException("El correo ya está en uso")
-
-    const usuarioExistente: DocumentoUsuario | null = await this.modeloUsuario.findOne({ nombreUsuario: crearUsuarioDto.nombreUsuario })
-
     if (usuarioExistente) throw new ConflictException("El nombre de usuario ya está en uso")
+    if (usuarioCreador.perfil !== "administrador" && crearUsuarioDto.perfil === "administrador") {
+      throw new ForbiddenException("No tenés permiso para crear este usuario")
+    }
 
     const contraseniaEncriptada: string = await bcrypt.hash(crearUsuarioDto.contrasenia, 10)
     const usuarioNuevo = new this.modeloUsuario({...crearUsuarioDto, contrasenia: contraseniaEncriptada})
@@ -25,24 +27,12 @@ export class UsuariosService {
     return await usuarioNuevo.save()
   }
 
-  async buscarTodos(idUsuarioBuscador: string): Promise<DocumentoUsuario[]> {
-    const usuarioBuscador: DocumentoUsuario = await this.buscarPorId(idUsuarioBuscador, idUsuarioBuscador)
+  async buscarTodos(): Promise<DocumentoUsuario[]> { return await this.modeloUsuario.find() }
 
-    if (usuarioBuscador.perfil !== "administrador") {
-      throw new ForbiddenException("No tenés permisos para buscar usuarios")
-    }
-
-    return await this.modeloUsuario.find()
-  }
-
-  async buscarPorId(idUsuarioBuscado: string, idUsuarioBuscador: string): Promise<DocumentoUsuario> {
+  async buscarPorId(idUsuarioBuscado: string): Promise<DocumentoUsuario> {
     const usuarioBuscado: DocumentoUsuario | null = await this.modeloUsuario.findById(idUsuarioBuscado)
-    const usuarioBuscador: DocumentoUsuario | null = await this.modeloUsuario.findById(idUsuarioBuscador)
 
     if (!usuarioBuscado) throw new NotFoundException("Usuario no encontrado")
-    if (usuarioBuscador?.perfil !== "administrador") {
-      throw new ForbiddenException("No tenés permisos para buscar usuarios")
-    }
 
     return usuarioBuscado
   }
@@ -55,12 +45,31 @@ export class UsuariosService {
     return usuarioBuscado
   }
 
-  async actualizar(idBuscado: string, actualizarUsuarioDto: ActualizarUsuarioDto): Promise<DocumentoUsuario> {
-    const usuarioActualizado: DocumentoUsuario | null = await this.modeloUsuario
-      .findByIdAndUpdate(idBuscado, actualizarUsuarioDto, { returnDocument: "after" })
+  async buscarPorNombreUsuario(nombreUsuarioBuscado: string): Promise<DocumentoUsuario> {
+    const usuarioBuscado: DocumentoUsuario | null = await this.modeloUsuario.findOne({ nombreUsuario: nombreUsuarioBuscado })
 
-    if (!usuarioActualizado) throw new NotFoundException("Usuario no encontrado")
+    if (!usuarioBuscado) throw new NotFoundException("Usuario no encontrado")
 
-    return usuarioActualizado
+    return usuarioBuscado
+  }
+
+  async actualizar(
+    idUsuarioActualizado: string, idUsuarioActualizador: string, actualizarUsuarioDto: ActualizarUsuarioDto
+  ): Promise<DocumentoUsuario | null> {
+    await this.buscarPorId(idUsuarioActualizado)
+
+    const usuarioActualizador: DocumentoUsuario = await this.buscarPorId(idUsuarioActualizador)
+
+    if (idUsuarioActualizado.toString() !== idUsuarioActualizador.toString() && usuarioActualizador?.perfil !== "administrador") {
+      throw new ForbiddenException("No tenés permiso para editar este usuario")
+    }
+
+    await this.modeloUsuario.updateOne({ _id: idUsuarioActualizado }, { $set: { ...actualizarUsuarioDto } })
+
+    return this.modeloUsuario.findById(idUsuarioActualizado)
+  }
+
+  async habilitar(idUsuarioHabilitado: string): Promise<DocumentoUsuario | null> {
+    return await this.modeloUsuario.findByIdAndUpdate(idUsuarioHabilitado, { disponible: true }, { returnDocument: "after" })
   }
 }

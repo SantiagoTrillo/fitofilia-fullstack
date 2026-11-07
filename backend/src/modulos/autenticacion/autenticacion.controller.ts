@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseInterceptors, UploadedFile, Headers, UnauthorizedException } from "@nestjs/common"
+import { Controller, Post, Body, UseInterceptors, UploadedFile, Headers, UnauthorizedException, Req } from "@nestjs/common"
 import { FileInterceptor } from "@nestjs/platform-express"
 import { AutenticacionService } from "./autenticacion.service.js"
 import { IniciarSesionDto } from "./dto/iniciar-sesion.dto.js"
@@ -22,10 +22,12 @@ export class AutenticacionController {
 
   @Post("/registro")
   @UseInterceptors(FileInterceptor("fotoPerfil", { storage: memoryStorage() }))
-  async registrar(@Body() crearUsuarioDto: CrearUsuarioDto, @UploadedFile() fotoPerfil?: Express.Multer.File): Promise<any> {
+  async registrar(
+    @Req() peticion: any, @Body() crearUsuarioDto: CrearUsuarioDto, @UploadedFile() fotoPerfil?: Express.Multer.File
+  ): Promise<any> {
     if (fotoPerfil) crearUsuarioDto.fotoPerfil = await this.archivosService.subirArchivo(fotoPerfil, "usuarios")
 
-    const usuarioCreado: DocumentoUsuario = await this.usuarioService.crear(crearUsuarioDto)
+    const usuarioCreado: DocumentoUsuario = await this.usuarioService.crear(peticion.usuario.sujeto, crearUsuarioDto)
     const token: string = await this.autenticacionService.generarToken(usuarioCreado)
 
     return { token, usuario: usuarioCreado }

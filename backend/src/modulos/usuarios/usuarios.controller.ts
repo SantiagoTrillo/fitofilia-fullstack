@@ -1,6 +1,4 @@
-import {
-  Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards, ForbiddenException, HttpCode
-} from "@nestjs/common"
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards, HttpCode } from "@nestjs/common"
 import { FileInterceptor } from "@nestjs/platform-express"
 import { UsuariosService } from "./usuarios.service.js"
 import { CrearUsuarioDto } from "./dto/crear-usuario.dto.js"
@@ -20,10 +18,12 @@ export class UsuariosController {
   @Post()
   @UseGuards(AdministradorGuard)
   @UseInterceptors(FileInterceptor("fotoPerfil", { storage: memoryStorage() }))
-  async crear(@Body() crearUsuarioDto: CrearUsuarioDto, @UploadedFile() fotoPerfil?: Express.Multer.File): Promise<DocumentoUsuario> {
+  async crear(
+    @Req() peticion: any, @Body() crearUsuarioDto: CrearUsuarioDto, @UploadedFile() fotoPerfil?: Express.Multer.File
+  ): Promise<DocumentoUsuario> {
     if (fotoPerfil) crearUsuarioDto.fotoPerfil = await this.archivosService.subirArchivo(fotoPerfil, "usuarios")
 
-    return this.usuariosService.crear(crearUsuarioDto)
+    return this.usuariosService.crear(peticion.usuario.sujeto, crearUsuarioDto)
   }
 
   @Get()
@@ -34,25 +34,37 @@ export class UsuariosController {
   @UseGuards(AdministradorGuard)
   buscarPorId(@Param("id") idBuscado: string): Promise<DocumentoUsuario> { return this.usuariosService.buscarPorId(idBuscado) }
 
+  @Get(":correo")
+  @UseGuards(AdministradorGuard)
+  buscarPorCorreo(@Param("correo") correoBuscado: string): Promise<DocumentoUsuario> {
+    return this.usuariosService.buscarPorCorreo(correoBuscado)
+  }
+
+  @Get(":nombreUsuario")
+  @UseGuards(AdministradorGuard)
+  buscarPorNombreUsuario(@Param("nombreUsuario") nombreUsuarioBuscado: string): Promise<DocumentoUsuario> {
+    return this.usuariosService.buscarPorNombreUsuario(nombreUsuarioBuscado)
+  }
+
   @Patch(":id")
   @UseInterceptors(FileInterceptor("fotoPerfil", { storage: memoryStorage() }))
   async actualizar(@Param("id") idBuscado: string, @Body() actualizarUsuarioDto: ActualizarUsuarioDto,
     @Req() peticion: any, @UploadedFile() fotoPerfil?: Express.Multer.File
-  ): Promise<DocumentoUsuario> {
-    const usuarioAutenticado: any = peticion.usuario
-    const mismoUsuario: boolean = String(usuarioAutenticado?.sujeto) === String(idBuscado)
-    const administrador: boolean = usuarioAutenticado?.perfil === "administrador"
-
-    if (!mismoUsuario && !administrador) { throw new ForbiddenException("No tenés permisos para editar este perfil") }
+  ): Promise<DocumentoUsuario | null> {
     if (fotoPerfil) actualizarUsuarioDto.fotoPerfil = await this.archivosService.subirArchivo(fotoPerfil, "usuarios")
 
-    return this.usuariosService.actualizar(idBuscado, actualizarUsuarioDto)
+    return this.usuariosService.actualizar(idBuscado, peticion.usuario.sujeto, actualizarUsuarioDto)
   }
 
   @Delete(":id")
   @HttpCode(204)
   @UseGuards(AdministradorGuard)
-  eliminar(@Param("id") idBuscado: string): Promise<DocumentoUsuario> {
-    return this.usuariosService.actualizar(idBuscado, { disponible: false })
+  eliminar(@Req() peticion: any, @Param("id") idBuscado: string): Promise<DocumentoUsuario | null> {
+    return this.usuariosService.actualizar(idBuscado, peticion.usuario.sujeto, { disponible: false })
   }
+
+  @Post(":id")
+  @HttpCode(200)
+  @UseGuards(AdministradorGuard)
+  habilitar(@Param("id") idBuscado: string): Promise<DocumentoUsuario | null> { return this.usuariosService.habilitar(idBuscado) }
 }

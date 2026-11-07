@@ -6,9 +6,7 @@ export class AdministradorGuard implements CanActivate {
     const peticion: any = contexto.switchToHttp().getRequest()
     const usuario: any = peticion.usuario
 
-    if (usuario?.perfil !== "administrador") {
-      throw new ForbiddenException("Acceso denegado: se requieren permisos de administrador")
-    }
+    if (usuario?.perfil !== "administrador") throw new ForbiddenException("No tenés permiso para realizar esta acción")
 
     return true
   }
