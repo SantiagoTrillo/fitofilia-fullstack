@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common"
+import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common"
 import { CrearUsuarioDto } from "./dto/crear-usuario.dto.js"
 import { ActualizarUsuarioDto } from "./dto/actualizar-usuario.dto.js"
 import { DocumentoUsuario, Usuario } from "./entidad/usuario.schema.js"
@@ -25,12 +25,24 @@ export class UsuariosService {
     return await usuarioNuevo.save()
   }
 
-  async buscarTodos(): Promise<DocumentoUsuario[]> { return await this.modeloUsuario.find() }
+  async buscarTodos(idUsuarioBuscador: string): Promise<DocumentoUsuario[]> {
+    const usuarioBuscador: DocumentoUsuario = await this.buscarPorId(idUsuarioBuscador, idUsuarioBuscador)
 
-  async buscarPorId(idBuscado: string): Promise<DocumentoUsuario> {
-    const usuarioBuscado: DocumentoUsuario | null = await this.modeloUsuario.findById(idBuscado)
+    if (usuarioBuscador.perfil !== "administrador") {
+      throw new ForbiddenException("No tenés permisos para buscar usuarios")
+    }
+
+    return await this.modeloUsuario.find()
+  }
+
+  async buscarPorId(idUsuarioBuscado: string, idUsuarioBuscador: string): Promise<DocumentoUsuario> {
+    const usuarioBuscado: DocumentoUsuario | null = await this.modeloUsuario.findById(idUsuarioBuscado)
+    const usuarioBuscador: DocumentoUsuario | null = await this.modeloUsuario.findById(idUsuarioBuscador)
 
     if (!usuarioBuscado) throw new NotFoundException("Usuario no encontrado")
+    if (usuarioBuscador?.perfil !== "administrador") {
+      throw new ForbiddenException("No tenés permisos para buscar usuarios")
+    }
 
     return usuarioBuscado
   }

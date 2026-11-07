@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common"
+import {BadRequestException, ForbiddenException, Injectable, UnauthorizedException} from "@nestjs/common"
 import { IniciarSesionDto } from "./dto/iniciar-sesion.dto.js"
 import { DocumentoUsuario } from "../usuarios/entidad/usuario.schema.js"
 import bcrypt from "bcrypt"
@@ -24,6 +24,7 @@ export class AutenticacionService {
     const usuarioAutenticado: DocumentoUsuario | null = await this.usuariosService.buscarPorCorreo(iniciarSesionDto.correo)
 
     if (!usuarioAutenticado) throw new BadRequestException("Credenciales incorrectas")
+    if (!usuarioAutenticado.disponible) throw new ForbiddenException("Esta cuenta se encuentra deshabilitada")
 
     const contraseniaCorrecta: boolean = await bcrypt.compare(iniciarSesionDto.contrasenia, usuarioAutenticado.contrasenia)
 

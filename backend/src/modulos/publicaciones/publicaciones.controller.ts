@@ -39,12 +39,12 @@ export class PublicacionesController {
   @Patch(":id")
   @UseInterceptors(FileInterceptor("imagen", { storage: memoryStorage() }))
   async actualizar(
-    @Param("id") idBuscado: string, @Body() actualizarPublicacionDto: ActualizarPublicacionDto,
+    @Req() peticion: any, @Param("id") idBuscado: string, @Body() actualizarPublicacionDto: ActualizarPublicacionDto,
     @UploadedFile() imagen?: Express.Multer.File
-  ): Promise<DocumentoPublicacion> {
+  ): Promise<DocumentoPublicacion | null> {
     if (imagen) actualizarPublicacionDto.imagen = await this.archivosService.subirArchivo(imagen, "publicaciones")
 
-    return this.publicacionesService.actualizar(idBuscado, actualizarPublicacionDto)
+    return this.publicacionesService.actualizar(idBuscado, peticion.usuario.sujeto, actualizarPublicacionDto)
   }
 
   @Delete(":id")
