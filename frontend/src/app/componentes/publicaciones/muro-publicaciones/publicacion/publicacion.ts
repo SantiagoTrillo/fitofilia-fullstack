@@ -7,7 +7,6 @@ import { DatePipe } from "@angular/common"
 import { ModalConfirmacion } from "../../../componentes-reutilizables/modal-confirmacion/modal-confirmacion"
 import { RespuestaComentarioInterface } from "../../../../interfaces/respuesta-comentario-interface"
 import { ComentarioService } from "../../../../servicios/comentario-service"
-import { ToastService } from "../../../../servicios/toast-service"
 
 @Component({
   selector: "app-publicacion",
@@ -18,7 +17,6 @@ import { ToastService } from "../../../../servicios/toast-service"
 export class Publicacion {
   private publicacionService: PublicacionService = inject(PublicacionService)
   private comentarioService: ComentarioService = inject(ComentarioService)
-  private toastService: ToastService = inject(ToastService)
   private router: Router = inject(Router)
 
   protected corazonDado: WritableSignal<boolean> = signal<boolean>(false)
@@ -28,12 +26,9 @@ export class Publicacion {
 
   protected autenticacionService: AutenticacionService = inject(AutenticacionService)
 
-  publicacionExitosa: WritableSignal<boolean> = signal<boolean>(false)
-
   publicacion: InputSignal<PublicacionInterface> = input.required<PublicacionInterface>()
   cantidadComentariosExterna: InputSignal<number | undefined> = input<number | undefined>()
 
-  publicacionEditada: OutputEmitterRef<PublicacionInterface> = output<PublicacionInterface>()
   publicacionEliminada: OutputEmitterRef<PublicacionInterface> = output<PublicacionInterface>()
 
   protected async ngOnInit(): Promise<void> {
@@ -50,18 +45,6 @@ export class Publicacion {
 
     this.cantidadCorazones.set(publicacion.corazones ?? 0)
     this.corazonDado.set(!!idUsuario && (publicacion.dadoresCorazones ?? []).map((id: string): string => id.toString()).includes(idUsuario))
-  }
-
-  protected async editarPublicacion(formData: FormData): Promise<void> {
-    const publicacionEditada : PublicacionInterface | null = await this.publicacionService.editarPublicacion(
-      this.publicacion()._id, formData
-    )
-
-    if (publicacionEditada) {
-      this.publicacionExitosa.set(true)
-      this.toastService.mostrarToast("Publicación editada correctamente", "exito")
-      this.publicacionEditada.emit(publicacionEditada)
-    }
   }
 
   protected async alternarCorazon(): Promise<void> {
@@ -81,6 +64,8 @@ export class Publicacion {
     this.publicacionService.seleccionarPublicacion(publicacionSeleccionada)
     void this.router.navigate(["/publicación"])
   }
+
+  protected editarPublicacion(): void { void this.router.navigate(["/publicación/editar"], { state: { publicacion: this.publicacion() }})}
 
   protected abrirModal(): void { this.mostrarModalConfirmacion.set(true) }
 

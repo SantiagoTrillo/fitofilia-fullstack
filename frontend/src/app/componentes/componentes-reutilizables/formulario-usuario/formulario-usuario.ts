@@ -1,6 +1,7 @@
 import { Component, inject, input, InputSignal, OnInit, output, OutputEmitterRef, signal, WritableSignal } from "@angular/core"
+import { Location } from "@angular/common"
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms"
-import { Router, RouterLink } from "@angular/router"
+import { Router } from "@angular/router"
 import { UsuarioInterface } from "../../../interfaces/usuario-interface"
 import { ToastService } from "../../../servicios/toast-service"
 import { PublicacionInterface } from "../../../interfaces/publicacion-interface"
@@ -9,16 +10,18 @@ import { PublicacionInterface } from "../../../interfaces/publicacion-interface"
   selector: "app-formulario-usuario",
   templateUrl: "./formulario-usuario.html",
   styleUrl: "./formulario-usuario.less",
-  imports: [ReactiveFormsModule, RouterLink]
+  imports: [ReactiveFormsModule]
 })
 export class FormularioUsuario implements OnInit {
   private formBuilder: FormBuilder = inject(FormBuilder)
   private toastService: ToastService = inject(ToastService)
+  private location: Location = inject(Location)
   private router: Router = inject(Router)
 
   protected imagenSeleccionada: WritableSignal<File | null> = signal<File | null>(null)
 
-  protected readonly rutaBotonSecundario: string = window.history.state["rutaOrigen"] ?? this.router.currentNavigation()?.previousNavigation?.finalUrl?.toString() ?? "/"
+  protected readonly rutaBotonSecundario: string = this.router.currentNavigation()?.extras.state?.["rutaOrigen"]
+    ?? window.history.state["rutaOrigen"] ?? this.router.currentNavigation()?.previousNavigation?.finalUrl?.toString() ?? "/"
 
   titulo: InputSignal<string> = input.required<string>()
   textoBotonPrimario: InputSignal<string> = input.required<string>()
@@ -45,7 +48,7 @@ export class FormularioUsuario implements OnInit {
   ngOnInit(): void {
     this.formulario.valueChanges.subscribe(_ => this.formularioModificado.emit(this.formulario.dirty))
 
-    if (this.tipoFormulario() === "creacionPublicacion") {
+    if (this.tipoFormulario() === "creacionPublicacion" || this.tipoFormulario() === "edicionPublicacion") {
       this.formulario.get("nombre")?.clearValidators()
       this.formulario.get("apellido")?.clearValidators()
       this.formulario.get("correo")?.clearValidators()
@@ -60,6 +63,13 @@ export class FormularioUsuario implements OnInit {
       this.formulario.get("contrasenia")?.updateValueAndValidity()
       this.formulario.get("contraseniaRepetida")?.updateValueAndValidity()
       this.formulario.get("fechaNacimiento")?.updateValueAndValidity()
+
+      if (this.tipoFormulario() === "edicionPublicacion") {
+        this.formulario.get("titulo")?.setValidators([this.validarTituloModificado, Validators.minLength(3), Validators.maxLength(80)])
+        this.formulario.get("cuerpo")?.setValidators([Validators.minLength(3), Validators.maxLength(1000)])
+        this.formulario.get("titulo")?.updateValueAndValidity()
+        this.formulario.get("cuerpo")?.updateValueAndValidity()
+      }
     } else {
       this.formulario.get("titulo")?.clearValidators()
       this.formulario.get("cuerpo")?.clearValidators()
@@ -107,6 +117,10 @@ export class FormularioUsuario implements OnInit {
     return contrasenia === contraseniaRepetida ? null : { contraseniasDistintas: true }
   }
 
+  private validarTituloModificado(control: AbstractControl): ValidationErrors | null {
+    return control.dirty && !control.value?.trim() ? { required: true } : null
+  }
+
   protected seleccionarImagen(inputFotoPerfil: HTMLInputElement): void {
     const imagen: File | null = inputFotoPerfil.files?.[0] ?? null
 
@@ -143,6 +157,26 @@ export class FormularioUsuario implements OnInit {
       return
     }
 
+    if (this.tipoFormulario() === "edicionPublicacion") {
+      const titulo: AbstractControl<any, any> | null = this.formulario.get("titulo")
+      const cuerpo: AbstractControl<any, any> | null  = this.formulario.get("cuerpo")
+      const imagen: File | null = this.imagenSeleccionada()
+
+      if (titulo?.dirty) formData.append("titulo", datosFormulario.titulo)
+      if (cuerpo?.dirty) formData.append("cuerpo", datosFormulario.cuerpo)
+      if (imagen) formData.append("imagen", imagen)
+
+      if (!titulo?.dirty && !cuerpo?.dirty && !imagen) {
+        this.toastService.mostrarToast("No hay cambios para guardar", "informacion")
+
+        return
+      }
+
+      this.formularioEnviado.emit(formData)
+
+      return
+    }
+
     formData.append("nombre", datosFormulario.nombre)
     formData.append("apellido", datosFormulario.apellido)
     formData.append("correo", datosFormulario.correo)
@@ -159,5 +193,15 @@ export class FormularioUsuario implements OnInit {
     if (imagen) formData.append("fotoPerfil", imagen)
 
     this.formularioEnviado.emit(formData)
+  }
+
+  protected cancelarFormulario(): void {
+    if (this.tipoFormulario() === "edicionPublicacion") {
+      this.location.back()
+
+      return
+    }
+
+    void this.router.navigateByUrl(this.rutaBotonSecundario)
   }
 }

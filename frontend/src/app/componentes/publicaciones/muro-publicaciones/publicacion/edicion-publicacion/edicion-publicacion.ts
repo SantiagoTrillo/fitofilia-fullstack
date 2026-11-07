@@ -5,6 +5,7 @@ import { PublicacionInterface } from "../../../../../interfaces/publicacion-inte
 import { PublicacionService } from "../../../../../servicios/publicacion-service"
 import { ToastService } from "../../../../../servicios/toast-service"
 import { Router } from "@angular/router"
+import { Location } from "@angular/common"
 
 @Component({
   selector: "app-edicion-publicacion",
@@ -16,32 +17,44 @@ export class EdicionPublicacion {
   private publicacionService: PublicacionService = inject(PublicacionService)
   private toastService: ToastService = inject(ToastService)
   private router: Router = inject(Router)
+  private location: Location = inject(Location)
 
   protected mostrarModalConfirmacion: WritableSignal<boolean> = signal<boolean>(false)
   protected rutaDestino: WritableSignal<string> = signal<string>("")
-
-  protected datosIniciales: Signal<PublicacionInterface | null> = signal<PublicacionInterface | null>(this.publicacionService.publicacionSeleccionada())
+  protected datosIniciales: Signal<PublicacionInterface | null> = signal<PublicacionInterface | null>(
+    this.router.currentNavigation()?.extras.state?.["publicacion"] ?? window.history.state["publicacion"] ?? null
+  )
 
   formularioModificado: WritableSignal<boolean> = signal<boolean>(false)
   edicionExitosa: WritableSignal<boolean> = signal<boolean>(false)
   confirmacionAceptada: WritableSignal<boolean> = signal<boolean>(false)
 
+  protected ngOnInit(): void { if (!this.datosIniciales()) void this.router.navigate(["/"]) }
+
   protected async editarPublicacion(formData: FormData): Promise<void> {
-    const publicacionEditada: PublicacionInterface | null = await this.publicacionService.editarPublicacion(
-      this.publicacionService.publicacionSeleccionada()!._id, formData
-    )
+    const publicacion: PublicacionInterface | null = this.datosIniciales()
+
+    if (!publicacion) {
+      void this.router.navigate(["/"])
+
+      return
+    }
+
+    const publicacionEditada: PublicacionInterface | null = await this.publicacionService.editarPublicacion(publicacion._id, formData)
 
     if (publicacionEditada) {
+      this.publicacionService.seleccionarPublicacion({ ...publicacion, ...publicacionEditada, autor: publicacion.autor })
       this.edicionExitosa.set(true)
       this.toastService.mostrarToast("Publicación editada correctamente", "exito")
-      void this.router.navigate(["/publicación"])
+      this.location.back()
     }
   }
 
   protected aceptarSalida(): void {
     this.confirmacionAceptada.set(true)
     this.mostrarModalConfirmacion.set(false)
-    void this.router.navigate([this.rutaDestino()])
+
+    void this.router.navigateByUrl(this.rutaDestino(), { replaceUrl: true })
   }
 
   protected cancelarSalida(): void { this.mostrarModalConfirmacion.set(false) }

@@ -10,6 +10,7 @@ export interface PublicacionInterface {
   }
   corazones?: number
   dadoresCorazones?: string[]
+  modificada: boolean
   disponible: boolean
   createdAt: string
 }

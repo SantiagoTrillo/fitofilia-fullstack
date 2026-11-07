@@ -119,7 +119,7 @@
     }
     <div class="botones">
       <button type="submit">{{ textoBotonPrimario() }}</button>
-      <button type="button" [routerLink]="rutaBotonSecundario">{{ textoBotonSecundario() }}</button>
+      <button type="button" (click)="cancelarFormulario()">{{ textoBotonSecundario() }}</button>
     </div>
   </form>
 </section>

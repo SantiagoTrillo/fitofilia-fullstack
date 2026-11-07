@@ -53,10 +53,10 @@ export class ComentariosService {
 
     if (!comentarioActualizado) throw new NotFoundException("Comentario no encontrado")
     if (comentarioActualizado.autor.toString() !== idUsuarioActualizador.toString() && usuarioActualizador.perfil !== "administrador") {
-      throw new ForbiddenException("No tenés permiso para eliminar este comentario")
+      throw new ForbiddenException("No tenés permiso para editar este comentario")
     }
 
-    await this.modeloComentario.updateOne({ _id: idComentarioBuscado }, { $set: { ...crearComentarioDto, modificado: true } })
+    await this.modeloComentario.updateOne({ _id: idComentarioBuscado }, { $set: { ...crearComentarioDto, modificado: true }})
 
     return this.modeloComentario.findById(idComentarioBuscado).populate("autor", "nombreUsuario fotoPerfil")
   }

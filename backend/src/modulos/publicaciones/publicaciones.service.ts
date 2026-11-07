@@ -48,14 +48,20 @@ export class PublicacionesService {
     return publicacionBuscada
   }
 
-  async actualizar(idBuscado: string, actualizarPublicacionDto: ActualizarPublicacionDto): Promise<DocumentoPublicacion> {
-    const publicacionActualizada: DocumentoPublicacion | null = await this.modeloPublicacion.findByIdAndUpdate(
-      idBuscado, actualizarPublicacionDto, { returnDocument: "after" }
-    )
+  async actualizar(
+    idPublicacion: string, idUsuarioActualizador: string, actualizarPublicacionDto: ActualizarPublicacionDto
+  ): Promise<DocumentoPublicacion | null> {
+    const publicacionActualizada: DocumentoPublicacion | null = await this.modeloPublicacion.findOne({ _id: idPublicacion })
+    const usuarioActualizador: DocumentoUsuario = await this.usuariosService.buscarPorId(idUsuarioActualizador)
 
     if (!publicacionActualizada) throw new NotFoundException("Publicación no encontrada")
+    if (publicacionActualizada.autor.toString() !== idUsuarioActualizador.toString() && usuarioActualizador.perfil !== "administrador") {
+      throw new ForbiddenException("No tenés permiso para editar esta publicación")
+    }
 
-    return publicacionActualizada
+    await this.modeloPublicacion.updateOne({ _id: idPublicacion }, { $set: { ...actualizarPublicacionDto, modificada: true } })
+
+    return this.modeloPublicacion.findById(idPublicacion).populate("autor", "nombreUsuario fotoPerfil")
   }
 
   async eliminar(idPublicacion: string, idUsuarioEliminador: string): Promise<void> {

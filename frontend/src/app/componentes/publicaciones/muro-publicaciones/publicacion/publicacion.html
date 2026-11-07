@@ -5,6 +5,7 @@
       @else { <i class="fa-solid fa-circle-user icono-autor-predeterminado"></i> }
       <span>{{ publicacion().autor.nombreUsuario }}</span>
       <span>- {{ publicacion().createdAt | date:"dd/MM/yyyy hh:mm a" }}</span>
+      @if (publicacion().modificada) { <span> - Editada</span> }
     </div>
     <div class="botones-estado">
       @if (publicacion().autor._id === autenticacionService.usuarioActual()?._id) {
