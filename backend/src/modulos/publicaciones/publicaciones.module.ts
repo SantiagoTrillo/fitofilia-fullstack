@@ -9,10 +9,12 @@ import { ArchivosService } from "../../archivos.service.js"
 import { ComentariosController } from "./comentarios/comentarios.controller.js"
 import { ComentariosService } from "./comentarios/comentarios.service.js"
 import { Comentario, EsquemaComentario } from "./comentarios/entidad/comentario.schema.js"
+import { EstadisticasController } from "./estadisticas/estadisticas.controller.js"
+import { EstadisticasService } from "./estadisticas/estadisticas.service.js"
 
 @Module({
-  controllers: [PublicacionesController, ComentariosController],
-  providers: [PublicacionesService, ComentariosService, ArchivosService],
+  controllers: [PublicacionesController, ComentariosController, EstadisticasController],
+  providers: [PublicacionesService, ComentariosService, EstadisticasService, ArchivosService],
   imports: [
     MongooseModule.forFeature([{ name: Publicacion.name, schema: EsquemaPublicacion }]),
     MongooseModule.forFeature([{ name: Comentario.name, schema: EsquemaComentario }]), AutenticacionModule, UsuariosModule
