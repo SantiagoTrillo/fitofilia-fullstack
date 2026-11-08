@@ -7,12 +7,13 @@ import { ActualizarPublicacionDto } from "./dto/actualizar-publicacion.dto.js"
 import { OpcionesDto } from "./dto/opciones.dto.js"
 import { DocumentoUsuario } from "../usuarios/entidad/usuario.schema.js"
 import { UsuariosService } from "../usuarios/usuarios.service.js"
+import { Comentario, DocumentoComentario } from "./comentarios/entidad/comentario.schema.js"
 
 @Injectable()
 export class PublicacionesService {
   constructor(
     @InjectModel(Publicacion.name) private modeloPublicacion: Model<DocumentoPublicacion>,
-    private readonly usuariosService: UsuariosService
+    @InjectModel(Comentario.name) private modeloComentario: Model<DocumentoComentario>, private readonly usuariosService: UsuariosService
   ) {}
 
   private escaparExpresionRegular(texto: string): string { return texto.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") }
@@ -76,6 +77,7 @@ export class PublicacionesService {
     publicacionEliminada.disponible = false
 
     await publicacionEliminada.save()
+    await this.modeloComentario.updateMany({ publicacion: idPublicacion }, { $set: { disponible: false } })
   }
 
   async darCorazon(idPublicacion: string, idUsuario: string): Promise<void> {

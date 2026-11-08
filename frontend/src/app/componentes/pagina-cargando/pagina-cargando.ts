@@ -17,7 +17,7 @@ export class PaginaCargando {
     const rutaAnterior: string = decodeURI(this.router.currentNavigation()?.previousNavigation?.finalUrl?.toString() ?? "")
     const mensajeExitoso: string = rutaAnterior === "/registro" ? "Registro completado correctamente" : "Sesión iniciada correctamente"
 
-    await new Promise<void>((resolver: () => void): number => setTimeout(resolver, 3000))
+    await new Promise<void>((resolver: () => void): number => setTimeout(resolver))
 
     const token: string | null = this.autenticacionService.token()
 
