@@ -5,6 +5,7 @@ import { autenticacionGuard } from "./guardias/autenticacion-guard"
 import { formularioGuard } from "./guardias/formulario-guard"
 import { PaginaPublicacion } from "./componentes/publicaciones/pagina-publicacion/pagina-publicacion"
 import { PaginaCargando } from "./componentes/pagina-cargando/pagina-cargando"
+import { administradorGuard } from "./guardias/administrador-guard"
 
 export const routes: Routes = [
   {
@@ -59,6 +60,12 @@ export const routes: Routes = [
       import("./componentes/autenticacion/perfil/edicion-perfil/edicion-perfil").then(m => m.EdicionPerfil),
     canActivate: [autenticacionGuard],
     canDeactivate: [formularioGuard]
+  },
+  {
+    path: "panel-control/usuarios",
+    loadComponent: () =>
+      import("./componentes/panel-control/usuarios/listado-usuarios/listado-usuarios").then(m => m.ListadoUsuarios),
+    canActivate: [autenticacionGuard, administradorGuard]
   },
   {
     path: "**",

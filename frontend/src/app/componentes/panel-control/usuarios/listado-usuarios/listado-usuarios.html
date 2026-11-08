@@ -1,0 +1,32 @@
+<main>
+  <h2>Gestión de usuarios</h2>
+  <app-creacion-usuarios (usuarioCreado)="agregarUsuario($event)"/>
+  <section>
+    <h3>Lista de usuarios</h3>
+    @if (usuariosRegistrados().length) {
+      <div>
+        @for (usuario of usuariosRegistrados(); track usuario._id) {
+          <div class="usuario">
+            @if (usuario.fotoPerfil) { <img [src]="usuario.fotoPerfil" alt="Foto de perfil"> }
+            @else { <i class="fa-solid fa-user"></i> }
+            <div>
+              <h4>{{ usuario.nombreUsuario }}</h4>
+              <p>{{ usuario.nombre }} {{ usuario.apellido }}</p>
+              <p>{{ usuario.correo }}</p>
+              <span>{{ usuario.perfil }}</span>
+            </div>
+            <label>
+              <span>{{ usuario.disponible ? "Habilitado" : "Deshabilitado" }}</span>
+              <input
+                type="checkbox"
+                [checked]="usuario.disponible"
+                [disabled]="usuarioActualizando() === usuario._id"
+                (change)="cambiarDisponibilidad(usuario)"
+              >
+            </label>
+          </div>
+        }
+      </div>
+    } @else { <p>No hay usuarios aún</p> }
+  </section>
+</main>

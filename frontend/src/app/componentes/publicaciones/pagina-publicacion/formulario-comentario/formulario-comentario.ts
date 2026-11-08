@@ -8,7 +8,7 @@ import { ToastService } from "../../../../servicios/toast-service"
   styleUrl: "./formulario-comentario.less",
   imports: [FormsModule, ReactiveFormsModule]
 })
-export class FormularioComentario implements AfterViewInit {
+export class FormularioComentario {
   private toastService: ToastService = inject(ToastService)
   private formBuilder: FormBuilder = inject(FormBuilder)
 
@@ -30,6 +30,8 @@ export class FormularioComentario implements AfterViewInit {
 
     if (textoInicial) this.formularioComentario.patchValue({ texto: textoInicial })
   }
+
+  protected ngAfterViewInit(): void { this.ajustarAlturaTextarea() }
 
   protected enviarFormulario(): void {
     this.envioIntentado = true
@@ -55,6 +57,4 @@ export class FormularioComentario implements AfterViewInit {
     this.textareaTexto.nativeElement.style.height = "auto"
     this.textareaTexto.nativeElement.style.height = `${ this.textareaTexto.nativeElement.scrollHeight }px`
   }
-
-  ngAfterViewInit(): void { this.ajustarAlturaTextarea() }
 }

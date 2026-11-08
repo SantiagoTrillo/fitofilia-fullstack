@@ -12,7 +12,7 @@ import { PublicacionInterface } from "../../../interfaces/publicacion-interface"
   styleUrl: "./formulario-usuario.less",
   imports: [ReactiveFormsModule]
 })
-export class FormularioUsuario implements OnInit {
+export class FormularioUsuario {
   private formBuilder: FormBuilder = inject(FormBuilder)
   private toastService: ToastService = inject(ToastService)
   private location: Location = inject(Location)
@@ -39,13 +39,28 @@ export class FormularioUsuario implements OnInit {
     nombreUsuario: ["", [Validators.required, Validators.minLength(2)]],
     contrasenia: ["", [Validators.required, Validators.minLength(8), Validators.pattern(/(?=.*[A-Z])(?=.*[0-9])/)]],
     contraseniaRepetida: ["", Validators.required],
+    perfil: ["usuario"],
     fechaNacimiento: ["", Validators.required],
     descripcion: [""],
     titulo: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(80)]],
     cuerpo: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(1000)]]
   }, { validators: this.validarContraseniasIguales })
 
-  ngOnInit(): void {
+  private validarContraseniasIguales(formulario: AbstractControl): ValidationErrors | null {
+    const contrasenia: string = formulario.get("contrasenia")?.value
+    const contraseniaRepetida: string = formulario.get("contraseniaRepetida")?.value
+
+    if (!contrasenia && !contraseniaRepetida) return null
+    if (!contrasenia || !contraseniaRepetida) return null
+
+    return contrasenia === contraseniaRepetida ? null : { contraseniasDistintas: true }
+  }
+
+  private validarTituloModificado(control: AbstractControl): ValidationErrors | null {
+    return control.dirty && !control.value?.trim() ? { required: true } : null
+  }
+
+  protected ngOnInit(): void {
     this.formulario.valueChanges.subscribe(_ => this.formularioModificado.emit(this.formulario.dirty))
 
     if (this.tipoFormulario() === "creacionPublicacion" || this.tipoFormulario() === "edicionPublicacion") {
@@ -76,7 +91,7 @@ export class FormularioUsuario implements OnInit {
       this.formulario.get("titulo")?.updateValueAndValidity()
       this.formulario.get("cuerpo")?.updateValueAndValidity()
 
-      if (this.tipoFormulario() !== "registro") {
+      if (this.tipoFormulario() === "edicionPerfil") {
         this.formulario.get("contrasenia")?.clearValidators()
         this.formulario.get("contraseniaRepetida")?.clearValidators()
         this.formulario.get("contrasenia")?.updateValueAndValidity()
@@ -105,20 +120,6 @@ export class FormularioUsuario implements OnInit {
         })
       }
     }
-  }
-
-  private validarContraseniasIguales(formulario: AbstractControl): ValidationErrors | null {
-    const contrasenia: string = formulario.get("contrasenia")?.value
-    const contraseniaRepetida: string = formulario.get("contraseniaRepetida")?.value
-
-    if (!contrasenia && !contraseniaRepetida) return null
-    if (!contrasenia || !contraseniaRepetida) return null
-
-    return contrasenia === contraseniaRepetida ? null : { contraseniasDistintas: true }
-  }
-
-  private validarTituloModificado(control: AbstractControl): ValidationErrors | null {
-    return control.dirty && !control.value?.trim() ? { required: true } : null
   }
 
   protected seleccionarImagen(inputFotoPerfil: HTMLInputElement): void {
@@ -191,6 +192,7 @@ export class FormularioUsuario implements OnInit {
     const imagen: File | null = this.imagenSeleccionada()
 
     if (imagen) formData.append("fotoPerfil", imagen)
+    if (this.tipoFormulario() === "creacionUsuario") formData.append("perfil", datosFormulario.perfil)
 
     this.formularioEnviado.emit(formData)
   }

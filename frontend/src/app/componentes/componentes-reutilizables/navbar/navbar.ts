@@ -1,6 +1,7 @@
-import { Component } from "@angular/core"
+import { Component, inject } from "@angular/core"
 import { RouterLink } from "@angular/router"
 import { NgOptimizedImage}  from "@angular/common"
+import { AutenticacionService } from "../../../servicios/autenticacion-service"
 
 @Component({
   selector: "app-navbar",
@@ -8,4 +9,4 @@ import { NgOptimizedImage}  from "@angular/common"
   styleUrl: "./navbar.less",
   imports: [RouterLink, NgOptimizedImage]
 })
-export class Navbar {}
+export class Navbar { protected autenticacionService: AutenticacionService = inject(AutenticacionService) }

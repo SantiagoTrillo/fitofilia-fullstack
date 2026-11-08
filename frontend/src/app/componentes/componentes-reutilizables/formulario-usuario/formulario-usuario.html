@@ -73,7 +73,7 @@
           }
         </div>
       </div>
-      @if (tipoFormulario() === "registro") {
+      @if (tipoFormulario() === "registro" || tipoFormulario() === "creacionUsuario") {
         <div class="campo">
           <label>Contraseña: <input type="password" autocomplete="new-password" formControlName="contrasenia"></label>
           <div class="contenedor-error">
@@ -116,10 +116,21 @@
           @if (formulario.get("descripcion")?.errors?.["maxlength"]) { <span>No puede superar los 75 caracteres</span> }
         </div>
       </div>
+      @if (tipoFormulario() === "creacionUsuario") {
+        <div class="campo perfil">
+          <label>Perfil:</label>
+          <div class="opciones-perfil">
+            <label><input type="radio" formControlName="perfil" value="usuario"> Usuario</label>
+            <label><input type="radio" formControlName="perfil" value="administrador"> Administrador</label>
+          </div>
+        </div>
+      }
     }
     <div class="botones">
       <button type="submit">{{ textoBotonPrimario() }}</button>
-      <button type="button" (click)="cancelarFormulario()">{{ textoBotonSecundario() }}</button>
+      @if (tipoFormulario() !== "creacionUsuario") {
+        <button type="button" (click)="cancelarFormulario()">{{ textoBotonSecundario() }}</button>
+      }
     </div>
   </form>
 </section>

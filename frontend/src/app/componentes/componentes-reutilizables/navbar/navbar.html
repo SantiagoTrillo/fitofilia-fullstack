@@ -5,6 +5,9 @@
         <a routerLink="/"><img ngSrc="logo.png" width="60" height="60" alt="Logo de Fitofilia"><h1 class="fitofilia">Fitofilia</h1></a>
       </div>
       <div class="botones">
+        @if (autenticacionService.usuarioActual()?.perfil === "administrador") {
+          <button routerLink="/panel-control/usuarios">Gestionar usuarios</button>
+        }
         <button routerLink="publicación/crear">Crear publicación</button>
         <a routerLink="/perfil"><i class="fa-solid fa-user"></i></a>
       </div>

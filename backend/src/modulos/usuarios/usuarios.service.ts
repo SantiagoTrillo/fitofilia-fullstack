@@ -27,7 +27,7 @@ export class UsuariosService {
     return await usuarioNuevo.save()
   }
 
-  async buscarTodos(): Promise<DocumentoUsuario[]> { return await this.modeloUsuario.find() }
+  async buscarTodos(): Promise<DocumentoUsuario[]> { return await this.modeloUsuario.find().sort({ nombreUsuario: 1 }) }
 
   async buscarPorId(idUsuarioBuscado: string): Promise<DocumentoUsuario> {
     const usuarioBuscado: DocumentoUsuario | null = await this.modeloUsuario.findById(idUsuarioBuscado)
