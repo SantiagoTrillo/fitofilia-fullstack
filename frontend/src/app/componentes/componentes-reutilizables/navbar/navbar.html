@@ -6,6 +6,7 @@
       </div>
       <div class="botones">
         @if (autenticacionService.usuarioActual()?.perfil === "administrador") {
+          <button routerLink="/panel-control/estadisticas">Estadísticas</button>
           <button routerLink="/panel-control/usuarios">Gestionar usuarios</button>
         }
         <button routerLink="publicación/crear">Crear publicación</button>

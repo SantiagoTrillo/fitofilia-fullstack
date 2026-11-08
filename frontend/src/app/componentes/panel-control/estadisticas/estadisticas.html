@@ -1,0 +1,39 @@
+<main>
+  <h2>Estadísticas</h2>
+  <div class="parametros">
+    <label>Fecha desde: <input type="date" [value]="fechaDesde()" [max]="fechaHasta()" (change)="seleccionarFechaDesde($event)"></label>
+    <label>Fecha hasta: <input type="date" [value]="fechaHasta()" [min]="fechaDesde()" (change)="seleccionarFechaHasta($event)"></label>
+    <label>Publicación:
+      <select (change)="seleccionarPublicacion($event)">
+        <option value="">Seleccionar publicación</option>
+        @for (publicacion of publicacionesPublicadas(); track publicacion._id) {
+          <option [value]="publicacion._id">{{ publicacion.titulo }}</option>
+        }
+      </select>
+    </label>
+  </div>
+  @if (verificarPeriodoInvertido()) { <p>La fecha desde no puede ser posterior a la fecha hasta</p> }
+  <div class="graficos">
+    <div class="grafico">
+      <h3>Publicaciones totales</h3>
+      <div class="area-grafico">
+        <canvas #canvasPublicaciones width="320" height="190"></canvas>
+        @if (!periodoValido()) { <div class="grafico-vacio">Seleccioná un período</div> }
+      </div>
+    </div>
+    <div class="grafico">
+      <h3>Comentarios totales</h3>
+      <div class="area-grafico">
+        <canvas #canvasComentarios width="320" height="190"></canvas>
+        @if (!periodoValido()) { <div class="grafico-vacio">Seleccioná un período</div> }
+      </div>
+    </div>
+    <div class="grafico">
+      <h3>Comentarios por publicación</h3>
+      <div class="area-grafico">
+        <canvas #canvasComentariosPublicacion width="320" height="190"></canvas>
+        @if (!periodoValido() || !idPublicacion()) { <div class="grafico-vacio">Seleccioná un período y una publicación</div> }
+      </div>
+    </div>
+  </div>
+</main>

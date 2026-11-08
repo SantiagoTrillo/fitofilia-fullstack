@@ -62,6 +62,12 @@ export const routes: Routes = [
     canDeactivate: [formularioGuard]
   },
   {
+    path: "panel-control/estadisticas",
+    loadComponent: () =>
+      import("./componentes/panel-control/estadisticas/estadisticas").then(m => m.Estadisticas),
+    canActivate: [autenticacionGuard, administradorGuard]
+  },
+  {
     path: "panel-control/usuarios",
     loadComponent: () =>
       import("./componentes/panel-control/usuarios/listado-usuarios/listado-usuarios").then(m => m.ListadoUsuarios),
