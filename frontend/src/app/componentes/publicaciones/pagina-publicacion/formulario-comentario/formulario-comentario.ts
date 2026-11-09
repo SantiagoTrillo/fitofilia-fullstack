@@ -1,12 +1,13 @@
 import { Component, ElementRef, inject, input, InputSignal, output, OutputEmitterRef, ViewChild } from "@angular/core"
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms"
 import { ToastService } from "../../../../servicios/toast-service"
+import { AjustarAlturaTextareaDirective } from "../../../../directivas/ajustar-altura-textarea-directive"
 
 @Component({
   selector: "app-formulario-comentario",
   templateUrl: "./formulario-comentario.html",
   styleUrl: "./formulario-comentario.less",
-  imports: [FormsModule, ReactiveFormsModule]
+  imports: [FormsModule, ReactiveFormsModule, AjustarAlturaTextareaDirective]
 })
 export class FormularioComentario {
   private toastService: ToastService = inject(ToastService)
@@ -31,8 +32,6 @@ export class FormularioComentario {
     if (textoInicial) this.formularioComentario.patchValue({ texto: textoInicial })
   }
 
-  protected ngAfterViewInit(): void { this.ajustarAlturaTextarea() }
-
   protected enviarFormulario(): void {
     this.envioIntentado = true
 
@@ -51,10 +50,5 @@ export class FormularioComentario {
     this.formularioComentario.reset()
     this.textareaTexto.nativeElement.style.height = "auto"
     this.envioIntentado = false
-  }
-
-  protected ajustarAlturaTextarea(): void {
-    this.textareaTexto.nativeElement.style.height = "auto"
-    this.textareaTexto.nativeElement.style.height = `${ this.textareaTexto.nativeElement.scrollHeight }px`
   }
 }

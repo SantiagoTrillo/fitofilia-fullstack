@@ -11,9 +11,9 @@
   <div class="cabecera">
     <div class="informacion">
       @if (comentario().autor.fotoPerfil) { <img [src]="comentario().autor.fotoPerfil" alt="Foto de perfil del autor"> }
-      @else { <i class="fa-solid fa-circle-user icono-autor-predeterminado"></i> }
+      @else { <span class="iniciales-autor">{{ comentario().autor.nombreUsuario | inicialesUsuario }}</span> }
       <span>{{ comentario().autor.nombreUsuario }}</span>
-      <span> - {{ comentario().createdAt | date:"dd/MM/yyyy hh:mm a" }}</span>
+      <span> - {{ comentario().createdAt | tiempoTranscurrido }}</span>
       @if (comentario().modificado) { <span> - Editado</span> }
     </div>
     <div class="botones">

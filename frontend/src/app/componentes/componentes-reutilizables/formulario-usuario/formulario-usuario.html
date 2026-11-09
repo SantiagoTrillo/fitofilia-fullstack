@@ -20,13 +20,7 @@
       </div>
       <div class="campo cuerpo">
         <label>Cuerpo:
-          <textarea
-            #textareaCuerpo
-            rows="3"
-            maxlength="1000"
-            formControlName="cuerpo"
-            (input)="ajustarAlturaTextarea(textareaCuerpo)"
-          ></textarea>
+          <textarea appAjustarAlturaTextarea rows="3" maxlength="1000" formControlName="cuerpo"></textarea>
         </label>
         <div class="contenedor-error">
           @if (formulario.get("cuerpo")?.touched && formulario.get("cuerpo")?.invalid) {

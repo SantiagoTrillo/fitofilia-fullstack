@@ -1,5 +1,5 @@
 import { Component, inject, input, InputSignal, output, OutputEmitterRef, signal, TemplateRef, WritableSignal } from "@angular/core"
-import { DatePipe, NgTemplateOutlet } from "@angular/common"
+import { NgTemplateOutlet } from "@angular/common"
 import { ComentarioInterface } from "../../../../interfaces/comentario-interface"
 import { AutenticacionService } from "../../../../servicios/autenticacion-service"
 import { ComentarioService } from "../../../../servicios/comentario-service"
@@ -7,12 +7,14 @@ import { PublicacionService } from "../../../../servicios/publicacion-service"
 import { ModalConfirmacion } from "../../../componentes-reutilizables/modal-confirmacion/modal-confirmacion"
 import { FormularioComentario } from "../formulario-comentario/formulario-comentario"
 import { ToastService } from "../../../../servicios/toast-service"
+import { TiempoTranscurridoPipe } from "../../../../tuberias/tiempo-transcurrido-pipe"
+import { InicialesUsuarioPipe } from "../../../../tuberias/iniciales-usuario-pipe"
 
 @Component({
   selector: "app-comentario",
   templateUrl: "./comentario.html",
   styleUrl: "./comentario.less",
-  imports: [DatePipe, ModalConfirmacion, NgTemplateOutlet, FormularioComentario]
+  imports: [TiempoTranscurridoPipe, InicialesUsuarioPipe, ModalConfirmacion, NgTemplateOutlet, FormularioComentario]
 })
 export class Comentario {
   private comentarioService: ComentarioService = inject(ComentarioService)

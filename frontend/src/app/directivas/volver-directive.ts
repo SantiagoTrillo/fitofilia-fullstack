@@ -8,7 +8,5 @@ export class VolverDirective {
   private location: Location = inject(Location)
 
   @HostListener("click")
-  onClick(): void {
-    this.location.back()
-  }
+  onClick(): void { this.location.back() }
 }

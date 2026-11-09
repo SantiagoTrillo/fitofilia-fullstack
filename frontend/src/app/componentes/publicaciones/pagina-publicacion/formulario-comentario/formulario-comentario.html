@@ -5,7 +5,7 @@
         #textareaTexto
         maxlength="1000"
         formControlName="texto"
-        (input)="ajustarAlturaTextarea()"
+        appAjustarAlturaTextarea
       ></textarea>
       <div class="error">
         @if (envioIntentado && formularioComentario.get("texto")?.invalid) {

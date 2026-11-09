@@ -2,9 +2,9 @@
   <div class="cabecera">
     <div class="informacion">
       @if (publicacion().autor.fotoPerfil) { <img [src]="publicacion().autor.fotoPerfil" alt="Foto de perfil del autor"> }
-      @else { <i class="fa-solid fa-circle-user icono-autor-predeterminado"></i> }
+      @else { <span class="iniciales-autor">{{ publicacion().autor.nombreUsuario | inicialesUsuario }}</span> }
       <span>{{ publicacion().autor.nombreUsuario }}</span>
-      <span>- {{ publicacion().createdAt | date:"dd/MM/yyyy hh:mm a" }}</span>
+      <span>- {{ publicacion().createdAt | tiempoTranscurrido }}</span>
       @if (publicacion().modificada) { <span> - Editada</span> }
     </div>
     <div class="botones-estado">
@@ -27,9 +27,9 @@
       [class.fa-solid]="corazonDado()"
       [class.fa-regular]="!corazonDado()"
       (click)="alternarCorazon()"
-    ></i><span>{{ cantidadCorazones() }}</span></button>
+    ></i><span>{{ cantidadCorazones() | abreviaturaNumerica }}</span></button>
     <button class="boton-comentarios" (click)="abrirPublicacion(publicacion())">
-      <i class="fa-regular fa-comment"></i>{{ cantidadComentariosExterna() ?? cantidadComentarios() }}
+      <i class="fa-regular fa-comment"></i>{{ (cantidadComentariosExterna() ?? cantidadComentarios()) | abreviaturaNumerica }}
     </button>
   </div>
 </div>

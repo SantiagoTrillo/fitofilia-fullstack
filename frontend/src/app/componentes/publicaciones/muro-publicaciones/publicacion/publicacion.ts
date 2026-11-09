@@ -3,16 +3,18 @@ import { PublicacionInterface } from "../../../../interfaces/publicacion-interfa
 import { Router } from "@angular/router"
 import { PublicacionService } from "../../../../servicios/publicacion-service"
 import { AutenticacionService } from "../../../../servicios/autenticacion-service"
-import { DatePipe } from "@angular/common"
 import { ModalConfirmacion } from "../../../componentes-reutilizables/modal-confirmacion/modal-confirmacion"
 import { RespuestaComentarioInterface } from "../../../../interfaces/respuesta-comentario-interface"
 import { ComentarioService } from "../../../../servicios/comentario-service"
+import { AbreviaturaNumericaPipe } from "../../../../tuberias/abreviatura-numerica-pipe"
+import { TiempoTranscurridoPipe } from "../../../../tuberias/tiempo-transcurrido-pipe"
+import { InicialesUsuarioPipe } from "../../../../tuberias/iniciales-usuario-pipe"
 
 @Component({
   selector: "app-publicacion",
   templateUrl: "./publicacion.html",
   styleUrl: "./publicacion.less",
-  imports: [DatePipe, ModalConfirmacion]
+  imports: [ModalConfirmacion, AbreviaturaNumericaPipe, TiempoTranscurridoPipe, InicialesUsuarioPipe]
 })
 export class Publicacion {
   private publicacionService: PublicacionService = inject(PublicacionService)

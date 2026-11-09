@@ -5,12 +5,13 @@ import { Router } from "@angular/router"
 import { UsuarioInterface } from "../../../interfaces/usuario-interface"
 import { ToastService } from "../../../servicios/toast-service"
 import { PublicacionInterface } from "../../../interfaces/publicacion-interface"
+import { AjustarAlturaTextareaDirective } from "../../../directivas/ajustar-altura-textarea-directive"
 
 @Component({
   selector: "app-formulario-usuario",
   templateUrl: "./formulario-usuario.html",
   styleUrl: "./formulario-usuario.less",
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule, AjustarAlturaTextareaDirective]
 })
 export class FormularioUsuario {
   private formBuilder: FormBuilder = inject(FormBuilder)
@@ -128,11 +129,6 @@ export class FormularioUsuario {
     this.imagenSeleccionada.set(imagen)
     this.formulario.markAsDirty()
     this.formularioModificado.emit(true)
-  }
-
-  protected ajustarAlturaTextarea(textarea: HTMLTextAreaElement): void {
-    textarea.style.height = "auto"
-    textarea.style.height = `${ textarea.scrollHeight }px`
   }
 
   protected enviarFormulario(): void {

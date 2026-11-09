@@ -1,9 +1,11 @@
 import { Component, input, InputSignal, output, OutputEmitterRef } from "@angular/core"
+import { CerrarModalClickFondoDirective } from "../../../directivas/cerrar-modal-click-fondo-directive"
 
 @Component({
   selector: "app-modal-confirmacion",
   templateUrl: "./modal-confirmacion.html",
-  styleUrl: "./modal-confirmacion.less"
+  styleUrl: "./modal-confirmacion.less",
+  imports: [CerrarModalClickFondoDirective]
 })
 export class ModalConfirmacion {
   titulo: InputSignal<string> = input<string>("Confirmación")
