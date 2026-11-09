@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://fitofilia-backend.vercel.app/:path*"
+      "destination": "https://fitofilia-backend.onrender.com/:path*"
     },
     {
       "source": "/(.*)",
