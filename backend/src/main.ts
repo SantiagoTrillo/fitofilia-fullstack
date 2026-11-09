@@ -7,7 +7,7 @@ import { join } from 'path'
 async function bootstrap(): Promise<void> {
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule)
 
-  app.enableCors({ origin: 'http://localhost:4200', credentials: true })
+  app.enableCors({ origin: ['http://localhost:4200', 'https://fitofilia.vercel.app'], credentials: true })
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
   app.useStaticAssets(join(process.cwd(), 'subidas'), { prefix: '/subidas/' })
 
