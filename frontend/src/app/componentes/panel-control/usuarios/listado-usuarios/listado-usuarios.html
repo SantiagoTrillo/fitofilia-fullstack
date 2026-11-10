@@ -8,7 +8,7 @@
         @for (usuario of usuariosRegistrados(); track usuario._id) {
           <div class="usuario">
             @if (usuario.fotoPerfil) { <img [src]="usuario.fotoPerfil" alt="Foto de perfil"> }
-            @else { <i class="fa-solid fa-user"></i> }
+            @else { <span class="iniciales-usuario">{{ usuario.nombreUsuario | inicialesUsuario }}</span> }
             <div>
               <h4>{{ usuario.nombreUsuario }}</h4>
               <p>{{ usuario.nombre }} {{ usuario.apellido }}</p>

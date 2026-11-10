@@ -2,13 +2,14 @@ import { Component, inject, signal, WritableSignal } from "@angular/core"
 import { UsuarioInterface } from "../../../../interfaces/usuario-interface"
 import { ToastService } from "../../../../servicios/toast-service"
 import { UsuarioService } from "../../../../servicios/usuario-service"
+import { InicialesUsuarioPipe } from "../../../../tuberias/iniciales-usuario-pipe"
 import { CreacionUsuarios } from "../creacion-usuarios/creacion-usuarios"
 
 @Component({
   selector: "app-listado-usuarios",
   templateUrl: "./listado-usuarios.html",
   styleUrl: "./listado-usuarios.less",
-  imports: [CreacionUsuarios]
+  imports: [CreacionUsuarios, InicialesUsuarioPipe]
 })
 export class ListadoUsuarios {
   private usuariosService: UsuarioService = inject(UsuarioService)
