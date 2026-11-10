@@ -5,7 +5,7 @@
       @else { <span class="iniciales-autor">{{ publicacion().autor.nombreUsuario | inicialesUsuario }}</span> }
       <span>{{ publicacion().autor.nombreUsuario }}</span>
       <span>- {{ publicacion().createdAt | tiempoTranscurrido }}</span>
-      @if (publicacion().modificada) { <span> - Editada</span> }
+      @if (publicacion().modificada) { <span> - </span><span class="editada">Editada</span> }
     </div>
     <div class="botones-estado">
       @if (publicacion().autor._id === autenticacionService.usuarioActual()?._id) {
