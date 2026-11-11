@@ -1,4 +1,4 @@
-import { Component, inject, input, InputSignal, output, OutputEmitterRef, signal, WritableSignal } from "@angular/core"
+import { Component, inject, input, InputSignal, output, OutputEmitterRef, signal, Signal, WritableSignal } from "@angular/core"
 import { Location } from "@angular/common"
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms"
 import { Router } from "@angular/router"
@@ -21,8 +21,10 @@ export class FormularioUsuario {
 
   protected imagenSeleccionada: WritableSignal<File | null> = signal<File | null>(null)
 
-  protected readonly rutaBotonSecundario: string = this.router.currentNavigation()?.extras.state?.["rutaOrigen"]
-    ?? window.history.state["rutaOrigen"] ?? this.router.currentNavigation()?.previousNavigation?.finalUrl?.toString() ?? "/"
+  protected rutaBotonSecundario: Signal<string> = signal<string>(
+    this.router.currentNavigation()?.extras.state?.["rutaOrigen"] ?? window.history.state["rutaOrigen"]
+    ?? this.router.currentNavigation()?.previousNavigation?.finalUrl?.toString() ?? "/"
+  )
 
   titulo: InputSignal<string> = input.required<string>()
   textoBotonPrimario: InputSignal<string> = input.required<string>()
@@ -200,6 +202,6 @@ export class FormularioUsuario {
       return
     }
 
-    void this.router.navigateByUrl(this.rutaBotonSecundario)
+    void this.router.navigateByUrl(this.rutaBotonSecundario())
   }
 }

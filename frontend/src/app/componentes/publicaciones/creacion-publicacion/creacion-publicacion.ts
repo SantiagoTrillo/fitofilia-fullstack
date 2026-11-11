@@ -20,11 +20,6 @@ export class CreacionPublicacion {
   protected mostrarModalConfirmacion: WritableSignal<boolean> = signal<boolean>(false)
   protected rutaDestino: WritableSignal<string> = signal<string>("")
 
-  protected readonly titulo: string = "Crear nueva publicación"
-  protected readonly textoBotonPrimario: string = "Publicar"
-  protected readonly textoBotonSecundario: string = "Cancelar"
-  protected readonly tipoFormulario: string = "creacionPublicacion"
-
   formularioModificado: WritableSignal<boolean> = signal<boolean>(false)
   publicacionExitosa: WritableSignal<boolean> = signal<boolean>(false)
   confirmacionAceptada: WritableSignal<boolean> = signal<boolean>(false)

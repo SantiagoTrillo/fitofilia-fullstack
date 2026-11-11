@@ -1,13 +1,11 @@
 <main>
   <h2>Estadísticas</h2>
   <div class="parametros">
-    <label>Fecha desde: <input type="date" [value]="fechaDesde()" [max]="fechaHasta()" (change)="seleccionarFechaDesde($event)"></label>
-    <label>Fecha hasta: <input type="date" [value]="fechaHasta()" [min]="fechaDesde()" (change)="seleccionarFechaHasta($event)"></label>
+    <label>Fecha desde: <input type="date" [value]="fechaDesde()" [max]="fechaHasta()" [disabled]="cargando()" (change)="seleccionarFechaDesde($event)"></label>
+    <label>Fecha hasta: <input type="date" [value]="fechaHasta()" [min]="fechaDesde()" [disabled]="cargando()" (change)="seleccionarFechaHasta($event)"></label>
   </div>
-  @if (verificarPeriodoInvertido()) { <p class="error-periodo">La fecha desde no puede ser posterior a la fecha hasta</p> }
-  <div class="estado-cargando" [hidden]="!cargando()" aria-label="Cargando estadísticas" role="status">
-    <span></span>
-  </div>
+  @if (verificarPeriodoInvertido()) { <p class="error">La fecha desde no puede ser posterior a la fecha hasta</p> }
+  <div class="cargando" [hidden]="!cargando()"><app-pagina-cargando [modoInline]="true" /></div>
   <div class="graficos" [hidden]="!periodoValido()">
     <div class="grafico">
       <h3>Publicaciones por usuario</h3>

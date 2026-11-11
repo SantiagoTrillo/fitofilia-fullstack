@@ -13,9 +13,9 @@ export const autenticacionGuard: CanActivateFn = (_route: ActivatedRouteSnapshot
   const accesoPrevio: boolean = rutaAnterior === '/inicio-sesión' || rutaAnterior === '/registro'
 
   if (!rutaPublica && !sesionIniciada) return router.createUrlTree(['inicio-sesión'])
-  if (rutaActual === '/cargando' && !accesoPrevio && !sesionService.rutaDespuesDeValidar()) return router.createUrlTree([''])
+  if (rutaActual === '/cargando' && !accesoPrevio && !sesionService.rutaValidada()) return router.createUrlTree([''])
   if (!rutaPublica && rutaActual !== '/cargando' && sesionService.token() && !sesionService.tokenValidado()) {
-    sesionService.rutaDespuesDeValidar.set(state.url)
+    sesionService.rutaValidada.set(state.url)
 
     return router.createUrlTree(['/cargando'])
   }

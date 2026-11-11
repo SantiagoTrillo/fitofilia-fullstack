@@ -9,20 +9,26 @@ main {
   place-items: center
 }
 
+main.inline {
+  position: static;
+  height: 100%
+}
+
 span {
-  width: 12px;
-  height: 12px;
+  display: block;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background-color: transparent;
   box-shadow:
-    0 -24px var(--te-verde),
-    17px -17px color-mix(in srgb, var(--te-verde) 85%, transparent),
-    24px 0 color-mix(in srgb, var(--te-verde) 70%, transparent),
-    17px 17px color-mix(in srgb, var(--te-verde) 55%, transparent),
-    0 24px color-mix(in srgb, var(--te-verde) 40%, transparent),
-    -17px 17px color-mix(in srgb, var(--te-verde) 30%, transparent),
-    -24px 0 color-mix(in srgb, var(--te-verde) 20%, transparent),
-    -17px -17px color-mix(in srgb, var(--te-verde) 10%, transparent);
+    0 -34px var(--te-verde),
+    24px -24px color-mix(in srgb, var(--te-verde) 85%, transparent),
+    34px 0 color-mix(in srgb, var(--te-verde) 70%, transparent),
+    24px 24px color-mix(in srgb, var(--te-verde) 55%, transparent),
+    0 34px color-mix(in srgb, var(--te-verde) 40%, transparent),
+    -24px 24px color-mix(in srgb, var(--te-verde) 30%, transparent),
+    -34px 0 color-mix(in srgb, var(--te-verde) 20%, transparent),
+    -24px -24px color-mix(in srgb, var(--te-verde) 10%, transparent);
   animation: girar .55s steps(8) infinite
 }
 

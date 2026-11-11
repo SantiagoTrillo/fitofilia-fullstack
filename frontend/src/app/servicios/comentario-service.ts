@@ -1,4 +1,4 @@
-import { inject, Service } from "@angular/core"
+import { inject, Service, signal, Signal } from "@angular/core"
 import { ToastService } from "./toast-service"
 import { HttpClient, HttpParams } from "@angular/common/http"
 import { entorno } from "../../entornos/entorno"
@@ -9,14 +9,15 @@ import { RespuestaComentarioInterface } from "../interfaces/respuesta-comentario
 
 @Service()
 export class ComentarioService {
+  private urlApi: Signal<string> = signal<string>(`${ entorno.urlApi }/publicaciones`)
+
   private toastService: ToastService = inject(ToastService)
   private httpClient: HttpClient = inject(HttpClient)
-  private readonly urlApi: string = `${ entorno.urlApi }/publicaciones`
 
   async publicarComentario(idPublicacionBuscado: string, texto: string): Promise<ComentarioInterface | null> {
     try {
       return await firstValueFrom(
-        this.httpClient.post<ComentarioInterface>(`${ this.urlApi }/${ idPublicacionBuscado }/comentarios`, texto)
+        this.httpClient.post<ComentarioInterface>(`${ this.urlApi() }/${ idPublicacionBuscado }/comentarios`, texto)
       )
     } catch (error: any) {
       const mensaje: string = error.error?.message || "Error al crear el comentario"
@@ -34,7 +35,7 @@ export class ComentarioService {
       for (const [clave, valor] of Object.entries(opciones)) if (valor !== undefined) parametros = parametros.set(clave, valor)
 
       return await firstValueFrom(
-        this.httpClient.get<RespuestaComentarioInterface>(`${ this.urlApi }/${ idPublicacionBuscado }/comentarios`, { params: parametros })
+        this.httpClient.get<RespuestaComentarioInterface>(`${ this.urlApi() }/${ idPublicacionBuscado }/comentarios`, { params: parametros })
       )
     } catch (error: any) {
       const mensaje: string = error.error?.message || "Error al obtener los comentarios"
@@ -49,7 +50,7 @@ export class ComentarioService {
     try {
       return await firstValueFrom(
         this.httpClient
-          .put<ComentarioInterface>(`${ this.urlApi }/${ idPublicacionBuscado }/comentarios/${ idComentarioBuscado }`, texto)
+          .put<ComentarioInterface>(`${ this.urlApi() }/${ idPublicacionBuscado }/comentarios/${ idComentarioBuscado }`, texto)
       )
     } catch (error: any) {
       const mensaje: string = error.error?.message || "Error al editar el comentario"
@@ -63,7 +64,7 @@ export class ComentarioService {
   async eliminarComentario(idPublicacionBuscado: string, idComentarioBuscado: string): Promise<boolean> {
     try {
       await firstValueFrom(
-        this.httpClient.delete<void>(`${ this.urlApi }/${ idPublicacionBuscado }/comentarios/${ idComentarioBuscado }`)
+        this.httpClient.delete<void>(`${ this.urlApi() }/${ idPublicacionBuscado }/comentarios/${ idComentarioBuscado }`)
       )
 
       this.toastService.mostrarToast("Comentario eliminado con éxito", "exito")

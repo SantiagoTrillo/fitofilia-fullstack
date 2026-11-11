@@ -26,35 +26,33 @@ main {
         padding: 8px 12px;
         font: inherit
       }
+      input:disabled {
+        filter: grayscale(1);
+        cursor: not-allowed;
+        &::-webkit-calendar-picker-indicator {
+          display: block;
+          opacity: 1;
+          cursor: not-allowed
+        }
+      }
     }
   }
-  p.error-periodo {
+  p.error {
     margin: 0 0 28px;
     color: #ff6b6b;
     text-align: center;
   }
-  div.estado-cargando {
-    min-height: 360px;
+  div.cargando {
+    position: fixed;
+    top: 220px;
+    right: 0;
+    bottom: 0;
+    left: 0;
     display: grid;
     place-items: center;
+    z-index: 10;
+    app-pagina-cargando { display: block; width: 100%; height: 100% }
     &[hidden] { display: none }
-    span {
-      display: block;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background-color: transparent;
-      box-shadow:
-        0 -34px var(--te-verde),
-        24px -24px color-mix(in srgb, var(--te-verde) 85%, transparent),
-        34px 0 color-mix(in srgb, var(--te-verde) 70%, transparent),
-        24px 24px color-mix(in srgb, var(--te-verde) 55%, transparent),
-        0 34px color-mix(in srgb, var(--te-verde) 40%, transparent),
-        -24px 24px color-mix(in srgb, var(--te-verde) 30%, transparent),
-        -34px 0 color-mix(in srgb, var(--te-verde) 20%, transparent),
-        -24px -24px color-mix(in srgb, var(--te-verde) 10%, transparent);
-      animation: girar .55s steps(8) infinite
-    }
   }
   div.graficos {
     display: grid;
@@ -82,5 +80,3 @@ main {
     }
   }
 }
-
-@keyframes girar { to { transform: rotate(360deg) } }

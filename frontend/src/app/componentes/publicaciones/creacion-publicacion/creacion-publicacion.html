@@ -1,9 +1,9 @@
 <main>
   <app-formulario-usuario
-    [titulo]="titulo"
-    [textoBotonPrimario]="textoBotonPrimario"
-    [textoBotonSecundario]="textoBotonSecundario"
-    [tipoFormulario]="tipoFormulario"
+    titulo="Crear nueva publicación"
+    textoBotonPrimario="Publicar"
+    textoBotonSecundario="Cancelar"
+    tipoFormulario="creacionPublicacion"
     (formularioEnviado)="crearPublicacion($event)"
     (formularioModificado)="formularioModificado.set($event)"
   />
