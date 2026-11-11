@@ -15,7 +15,7 @@ export class PaginaCargando {
 
   protected async ngOnInit(): Promise<void> {
     const rutaAnterior: string = decodeURI(this.router.currentNavigation()?.previousNavigation?.finalUrl?.toString() ?? "")
-    const mostrarMensajeExitoso: boolean = rutaAnterior === "/registro" || rutaAnterior === "/inicio-sesión"
+    const mostrarToast: boolean = rutaAnterior === "/registro" || rutaAnterior === "/inicio-sesión"
     const mensajeExitoso: string = rutaAnterior === "/registro" ? "Registro completado correctamente" : "Sesión iniciada correctamente"
 
     await new Promise<void>((resolver: () => void): number => setTimeout(resolver))
@@ -39,10 +39,13 @@ export class PaginaCargando {
     }
 
     this.autenticacionService.confirmarTokenValidado()
+
     const rutaDestino: string = this.autenticacionService.rutaDespuesDeValidar() ?? "/"
+
     this.autenticacionService.rutaDespuesDeValidar.set(null)
+
     const muroCargado: boolean = await this.router.navigateByUrl(rutaDestino)
 
-    if (muroCargado && mostrarMensajeExitoso) this.toastService.mostrarToast(mensajeExitoso, "exito")
+    if (muroCargado && mostrarToast) this.toastService.mostrarToast(mensajeExitoso, "exito")
   }
 }

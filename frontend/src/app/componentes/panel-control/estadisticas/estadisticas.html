@@ -4,28 +4,22 @@
     <label>Fecha desde: <input type="date" [value]="fechaDesde()" [max]="fechaHasta()" (change)="seleccionarFechaDesde($event)"></label>
     <label>Fecha hasta: <input type="date" [value]="fechaHasta()" [min]="fechaDesde()" (change)="seleccionarFechaHasta($event)"></label>
   </div>
-  @if (verificarPeriodoInvertido()) { <p>La fecha desde no puede ser posterior a la fecha hasta</p> }
-  <div class="graficos">
+  @if (verificarPeriodoInvertido()) { <p class="error-periodo">La fecha desde no puede ser posterior a la fecha hasta</p> }
+  <div class="estado-cargando" [hidden]="!cargando()" aria-label="Cargando estadísticas" role="status">
+    <span></span>
+  </div>
+  <div class="graficos" [hidden]="!periodoValido()">
     <div class="grafico">
       <h3>Publicaciones por usuario</h3>
-      <div class="area-grafico">
-        <canvas #canvasPublicaciones width="1000" height="300"></canvas>
-        @if (!periodoValido()) { <div class="grafico-vacio">Seleccioná un período</div> }
-      </div>
+      <div class="area-grafico"><canvas #canvasPublicaciones width="1000" height="300"></canvas></div>
     </div>
     <div class="grafico">
       <h3>Comentarios totales</h3>
-      <div class="area-grafico">
-        <canvas #canvasComentarios width="1000" height="300"></canvas>
-        @if (!periodoValido()) { <div class="grafico-vacio">Seleccioná un período</div> }
-      </div>
+      <div class="area-grafico"><canvas #canvasComentarios width="1000" height="300"></canvas></div>
     </div>
     <div class="grafico">
       <h3>Comentarios por publicación</h3>
-      <div class="area-grafico">
-        <canvas #canvasComentariosPublicacion width="1000" height="300"></canvas>
-        @if (!periodoValido()) { <div class="grafico-vacio">Seleccioná un período</div> }
-      </div>
+      <div class="area-grafico"><canvas #canvasComentariosPublicacion width="1000" height="300"></canvas></div>
     </div>
   </div>
 </main>
