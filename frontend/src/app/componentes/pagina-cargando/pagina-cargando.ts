@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core"
+import { Component, inject, input, InputSignal } from "@angular/core"
 import { AutenticacionService } from "../../servicios/autenticacion-service"
 import { Router } from "@angular/router"
 import { ToastService } from "../../servicios/toast-service"
@@ -13,11 +13,14 @@ export class PaginaCargando {
   private router: Router = inject(Router)
   private toastService: ToastService = inject(ToastService)
 
-  protected async ngOnInit(): Promise<void> {
-    const rutaAnterior: string = decodeURI(this.router.currentNavigation()?.previousNavigation?.finalUrl?.toString() ?? "")
-    const mensajeExitoso: string = rutaAnterior === "/registro" ? "Registro completado correctamente" : "Sesión iniciada correctamente"
+  modoInline: InputSignal<boolean> = input(false)
 
-    await new Promise<void>((resolver: () => void): number => setTimeout(resolver))
+  protected async ngOnInit(): Promise<void> {
+    if (this.modoInline()) return
+
+    const rutaAnterior: string = decodeURI(this.router.currentNavigation()?.previousNavigation?.finalUrl?.toString() ?? "")
+    const mostrarToast: boolean = rutaAnterior === "/registro" || rutaAnterior === "/inicio-sesión"
+    const mensajeExitoso: string = rutaAnterior === "/registro" ? "Registro completado correctamente" : "Sesión iniciada correctamente"
 
     const token: string | null = this.autenticacionService.token()
 
@@ -37,8 +40,14 @@ export class PaginaCargando {
       return
     }
 
-    const muroCargado: boolean = await this.router.navigate([""])
+    this.autenticacionService.validarToken()
 
-    if (muroCargado) this.toastService.mostrarToast(mensajeExitoso, "exito")
+    const rutaDestino: string = this.autenticacionService.rutaValidada() ?? "/"
+
+    this.autenticacionService.rutaValidada.set(null)
+
+    const muroCargado: boolean = await this.router.navigateByUrl(rutaDestino)
+
+    if (muroCargado && mostrarToast) this.toastService.mostrarToast(mensajeExitoso, "exito")
   }
 }

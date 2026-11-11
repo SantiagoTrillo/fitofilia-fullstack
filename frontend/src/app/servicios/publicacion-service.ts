@@ -1,4 +1,4 @@
-import { inject, Service, signal, WritableSignal } from "@angular/core"
+import { inject, Service, signal, Signal, WritableSignal } from "@angular/core"
 import { ToastService } from "./toast-service"
 import { PublicacionInterface } from "../interfaces/publicacion-interface"
 import { HttpClient, HttpParams } from "@angular/common/http"
@@ -9,15 +9,16 @@ import { RespuestaPublicacionInterface } from "../interfaces/respuesta-publicaci
 
 @Service()
 export class PublicacionService {
+  private urlApi: Signal<string> = signal<string>(`${ entorno.urlApi }/publicaciones`)
+
   private toastService: ToastService = inject(ToastService)
   private httpClient: HttpClient = inject(HttpClient)
-  private readonly urlApi: string = `${ entorno.urlApi }/publicaciones`
 
   publicacionSeleccionada: WritableSignal<PublicacionInterface | null> = signal<PublicacionInterface | null>(null)
 
   async crearPublicacion(formData: FormData): Promise<PublicacionInterface | null> {
     try {
-      return await firstValueFrom(this.httpClient.post<PublicacionInterface>(this.urlApi, formData))
+      return await firstValueFrom(this.httpClient.post<PublicacionInterface>(this.urlApi(), formData))
     } catch (error: any) {
       const mensaje: string = error.error?.message || "Error al crear la publicación"
 
@@ -33,7 +34,7 @@ export class PublicacionService {
 
       for (const [clave, valor] of Object.entries(opciones)) if (valor !== undefined) parametros = parametros.set(clave, valor)
 
-      return await firstValueFrom(this.httpClient.get<RespuestaPublicacionInterface>(this.urlApi, { params: parametros }))
+      return await firstValueFrom(this.httpClient.get<RespuestaPublicacionInterface>(this.urlApi(), { params: parametros }))
     }
     catch (error: any) {
       const mensaje: string = error.error.message
@@ -46,7 +47,7 @@ export class PublicacionService {
 
   async editarPublicacion(idPublicacionBuscado: string, formData: FormData): Promise<PublicacionInterface | null> {
     try {
-      return await firstValueFrom(this.httpClient.patch<PublicacionInterface>(`${ this.urlApi }/${ idPublicacionBuscado }`, formData))
+      return await firstValueFrom(this.httpClient.patch<PublicacionInterface>(`${ this.urlApi() }/${ idPublicacionBuscado }`, formData))
     } catch (error: any) {
       const mensaje: string = error.error?.message || "Error al editar la publicación"
 
@@ -58,7 +59,7 @@ export class PublicacionService {
 
   async eliminarPublicacion(idPublicacionBuscado: string): Promise<boolean> {
     try {
-      await firstValueFrom(this.httpClient.delete<void>(`${ this.urlApi }/${ idPublicacionBuscado }`))
+      await firstValueFrom(this.httpClient.delete<void>(`${ this.urlApi() }/${ idPublicacionBuscado }`))
 
       this.toastService.mostrarToast("Publicación eliminada con éxito", "exito")
 
@@ -74,7 +75,7 @@ export class PublicacionService {
 
   async darCorazon(idPublicacionBuscado: string): Promise<boolean> {
     try {
-      await firstValueFrom(this.httpClient.post(`${ this.urlApi }/${ idPublicacionBuscado }/corazones`, null))
+      await firstValueFrom(this.httpClient.post(`${ this.urlApi() }/${ idPublicacionBuscado }/corazones`, null))
 
       return true
     }
@@ -89,7 +90,7 @@ export class PublicacionService {
 
   async quitarCorazon(idPublicacionBuscado: string): Promise<boolean> {
     try {
-      await firstValueFrom(this.httpClient.delete<void>(`${ this.urlApi }/${ idPublicacionBuscado }/corazones`))
+      await firstValueFrom(this.httpClient.delete<void>(`${ this.urlApi() }/${ idPublicacionBuscado }/corazones`))
 
       return true
     }

@@ -1,4 +1,4 @@
-import { inject, Service, signal, WritableSignal } from "@angular/core"
+import { inject, Service, signal, Signal, WritableSignal } from "@angular/core"
 import { ToastService } from "./toast-service"
 import { UsuarioInterface } from "../interfaces/usuario-interface"
 import { HttpClient } from "@angular/common/http"
@@ -8,9 +8,9 @@ import { firstValueFrom } from "rxjs"
 
 @Service()
 export class AutenticacionService {
-  private readonly urlApi: string = `${ entorno.urlApi }`
-  private readonly duracionSesion: number = 15 * 60 * 1000
-  private readonly tiempoAviso: number = 10 * 60 * 1000
+  private urlApi: Signal<string> = signal<string>(`${ entorno.urlApi }`)
+  private duracionSesion: Signal<number> = signal<number>(15 * 60 * 1000)
+  private tiempoAviso: Signal<number> = signal<number>(10 * 60 * 1000)
 
   private toastService: ToastService = inject(ToastService)
   private httpClient: HttpClient = inject(HttpClient)
@@ -23,9 +23,12 @@ export class AutenticacionService {
   )
   token: WritableSignal<string | null> = signal<string | null>(sessionStorage.getItem("token") || null)
   mostrarModal: WritableSignal<boolean> = signal<boolean>(false)
+  tokenValidado: WritableSignal<boolean> = signal<boolean>(!sessionStorage.getItem("token"))
+  rutaValidada: WritableSignal<string | null> = signal<string | null>(null)
 
-  private iniciarTemporizadores(expiracion: number = Date.now() + this.duracionSesion): void {
+  private iniciarTemporizadores(expiracion: number = Date.now() + this.duracionSesion()): void {
     this.restablecerTemporizadores()
+
     this.mostrarModal.set(false)
     sessionStorage.setItem("expiracionSesion", expiracion.toString())
 
@@ -42,7 +45,7 @@ export class AutenticacionService {
     }
 
     this.temporizadorAviso = setTimeout(
-      (): void => this.mostrarModal.set(true), Math.max(0, tiempoRestante - (this.duracionSesion - this.tiempoAviso))
+      (): void => this.mostrarModal.set(true), Math.max(0, tiempoRestante - (this.duracionSesion() - this.tiempoAviso()))
     )
     this.temporizadorExpiracion = setTimeout((): void => {
       this.cerrarSesion()
@@ -59,7 +62,19 @@ export class AutenticacionService {
     this.temporizadorExpiracion = null
   }
 
-  constructor() {
+  private autenticarUsuario(respuesta: any): any {
+    this.usuarioActual.set(respuesta.usuario)
+    this.token.set(respuesta.token)
+    this.tokenValidado.set(false)
+    sessionStorage.setItem("usuarioActual", JSON.stringify(respuesta.usuario))
+    sessionStorage.setItem("token", respuesta.token)
+
+    this.iniciarTemporizadores()
+
+    return respuesta.usuario
+  }
+
+  protected constructor() {
     if (this.token()) {
       const expiracionSesion: number = Number(sessionStorage.getItem("expiracionSesion"))
 
@@ -69,15 +84,9 @@ export class AutenticacionService {
 
   async iniciarSesion(correo: string, contrasenia: string): Promise<UsuarioInterface | null> {
     try {
-      const respuesta: any = await firstValueFrom(this.httpClient.post<any>(`${ this.urlApi }/inicio-sesion`, { correo, contrasenia }))
+      const respuesta: any = await firstValueFrom(this.httpClient.post<any>(`${ this.urlApi() }/inicio-sesion`, { correo, contrasenia }))
 
-      this.usuarioActual.set(respuesta.usuario)
-      this.token.set(respuesta.token)
-      sessionStorage.setItem("usuarioActual", JSON.stringify(respuesta.usuario))
-      sessionStorage.setItem("token", respuesta.token)
-      this.iniciarTemporizadores()
-
-      return respuesta.usuario
+      return this.autenticarUsuario(respuesta)
     } catch (error: any) {
       const mensaje: string = error.error?.message || "Error al iniciar sesión"
 
@@ -89,15 +98,9 @@ export class AutenticacionService {
 
   async registrarUsuario(usuarioNuevo: any): Promise<UsuarioInterface | null> {
     try {
-      const respuesta: any = await firstValueFrom(this.httpClient.post<any>(`${ this.urlApi }/registro`, usuarioNuevo))
+      const respuesta: any = await firstValueFrom(this.httpClient.post<any>(`${ this.urlApi() }/registro`, usuarioNuevo))
 
-      this.usuarioActual.set(respuesta.usuario)
-      this.token.set(respuesta.token)
-      sessionStorage.setItem("usuarioActual", JSON.stringify(respuesta.usuario))
-      sessionStorage.setItem("token", respuesta.token)
-      this.iniciarTemporizadores()
-
-      return respuesta.usuario
+      return this.autenticarUsuario(respuesta)
     } catch (error: any) {
       const mensaje: string = error.error?.message || "Error al registrarse"
 
@@ -109,7 +112,7 @@ export class AutenticacionService {
 
   async autorizarAcceso(token: string): Promise<boolean> {
     try {
-      await firstValueFrom(this.httpClient.post<string>(`${ this.urlApi }/autorizar-token`, token))
+      await firstValueFrom(this.httpClient.post<string>(`${ this.urlApi() }/autorizar-token`, token))
 
       return true
     } catch (error: any) {
@@ -124,10 +127,11 @@ export class AutenticacionService {
   async refrescarToken(): Promise<boolean> {
     try {
       const tokenRefrescado: string = await firstValueFrom(
-        this.httpClient.post(`${ this.urlApi }/refrescar-token`, null, { responseType: "text" })
+        this.httpClient.post(`${ this.urlApi() }/refrescar-token`, null, { responseType: "text" })
       )
 
       this.token.set(tokenRefrescado)
+      this.tokenValidado.set(true)
       sessionStorage.setItem("token", tokenRefrescado)
       this.iniciarTemporizadores()
 
@@ -144,7 +148,7 @@ export class AutenticacionService {
   async editarPerfil(perfilEditado: FormData): Promise<boolean> {
     try {
       const usuarioActualizado: UsuarioInterface = await firstValueFrom(
-        this.httpClient.patch<UsuarioInterface>(`${ this.urlApi }/usuarios/${ this.usuarioActual()?._id }`, perfilEditado)
+        this.httpClient.patch<UsuarioInterface>(`${ this.urlApi() }/usuarios/${ this.usuarioActual()?._id }`, perfilEditado)
       )
 
       this.usuarioActual.set(usuarioActualizado)
@@ -162,13 +166,19 @@ export class AutenticacionService {
 
   cerrarSesion(): void {
     this.restablecerTemporizadores()
+
     this.mostrarModal.set(false)
     this.usuarioActual.set(null)
     this.token.set(null)
+    this.tokenValidado.set(true)
+    this.rutaValidada.set(null)
+
     sessionStorage.removeItem("usuarioActual")
     sessionStorage.removeItem("token")
     sessionStorage.removeItem("expiracionSesion")
   }
 
   cerrarModal(): void { this.mostrarModal.set(false) }
+
+  validarToken(): void { this.tokenValidado.set(true) }
 }
