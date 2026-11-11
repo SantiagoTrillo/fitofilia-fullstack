@@ -23,6 +23,8 @@ export class AutenticacionService {
   )
   token: WritableSignal<string | null> = signal<string | null>(sessionStorage.getItem("token") || null)
   mostrarModal: WritableSignal<boolean> = signal<boolean>(false)
+  tokenValidado: WritableSignal<boolean> = signal<boolean>(!sessionStorage.getItem("token"))
+  rutaDespuesDeValidar: WritableSignal<string | null> = signal<string | null>(null)
 
   private iniciarTemporizadores(expiracion: number = Date.now() + this.duracionSesion): void {
     this.restablecerTemporizadores()
@@ -73,6 +75,7 @@ export class AutenticacionService {
 
       this.usuarioActual.set(respuesta.usuario)
       this.token.set(respuesta.token)
+      this.tokenValidado.set(false)
       sessionStorage.setItem("usuarioActual", JSON.stringify(respuesta.usuario))
       sessionStorage.setItem("token", respuesta.token)
       this.iniciarTemporizadores()
@@ -93,6 +96,7 @@ export class AutenticacionService {
 
       this.usuarioActual.set(respuesta.usuario)
       this.token.set(respuesta.token)
+      this.tokenValidado.set(false)
       sessionStorage.setItem("usuarioActual", JSON.stringify(respuesta.usuario))
       sessionStorage.setItem("token", respuesta.token)
       this.iniciarTemporizadores()
@@ -128,6 +132,7 @@ export class AutenticacionService {
       )
 
       this.token.set(tokenRefrescado)
+      this.tokenValidado.set(true)
       sessionStorage.setItem("token", tokenRefrescado)
       this.iniciarTemporizadores()
 
@@ -165,10 +170,13 @@ export class AutenticacionService {
     this.mostrarModal.set(false)
     this.usuarioActual.set(null)
     this.token.set(null)
+    this.tokenValidado.set(true)
+    this.rutaDespuesDeValidar.set(null)
     sessionStorage.removeItem("usuarioActual")
     sessionStorage.removeItem("token")
     sessionStorage.removeItem("expiracionSesion")
   }
 
   cerrarModal(): void { this.mostrarModal.set(false) }
+  confirmarTokenValidado(): void { this.tokenValidado.set(true) }
 }

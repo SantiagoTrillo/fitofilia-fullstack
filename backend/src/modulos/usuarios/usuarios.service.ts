@@ -27,7 +27,13 @@ export class UsuariosService {
     return await usuarioNuevo.save()
   }
 
-  async buscarTodos(): Promise<DocumentoUsuario[]> { return await this.modeloUsuario.find().sort({ nombreUsuario: 1 }) }
+  async buscarTodos(): Promise<DocumentoUsuario[]> {
+    const usuarios: DocumentoUsuario[] = await this.modeloUsuario.find()
+
+    return usuarios.sort((primerUsuario: DocumentoUsuario, segundoUsuario: DocumentoUsuario): number =>
+      primerUsuario.nombreUsuario.localeCompare(segundoUsuario.nombreUsuario, "es", { sensitivity: "base" })
+    )
+  }
 
   async buscarPorId(idUsuarioBuscado: string): Promise<DocumentoUsuario> {
     const usuarioBuscado: DocumentoUsuario | null = await this.modeloUsuario.findById(idUsuarioBuscado)

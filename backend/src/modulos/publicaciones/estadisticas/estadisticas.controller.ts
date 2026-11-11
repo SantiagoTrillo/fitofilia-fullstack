@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, UseGuards } from "@nestjs/common"
+import { Controller, Get, Query, UseGuards } from "@nestjs/common"
 import { AutenticacionGuard } from "../../../guardias/autenticacion.guard.js"
 import { AdministradorGuard } from "../../../guardias/administrador.guard.js"
 import { EstadisticasService } from "./estadisticas.service.js"
@@ -8,19 +8,22 @@ import { EstadisticasService } from "./estadisticas.service.js"
 export class EstadisticasController {
   constructor(private readonly estadisticasService: EstadisticasService) {}
 
-  @Get("publicaciones")
-  async contarPublicacionesPeriodo (
+  @Get("usuarios/publicaciones")
+  async contarPublicacionesUsuariosPeriodo(
     @Query("fechaDesde") fechaDesde: string, @Query("fechaHasta") fechaHasta: string
-  ): Promise<number> { return this.estadisticasService.contarPublicacionesPeriodo(fechaDesde, fechaHasta) }
+  ): Promise<{ nombreUsuario: string; cantidadPublicaciones: number }[]> {
+    return this.estadisticasService.contarPublicacionesUsuariosPeriodo(fechaDesde, fechaHasta)
+  }
 
   @Get("comentarios")
   async contarComentariosPeriodo(
     @Query("fechaDesde") fechaDesde: string, @Query("fechaHasta") fechaHasta: string
   ): Promise<number> { return this.estadisticasService.contarComentariosPeriodo(fechaDesde, fechaHasta) }
 
-  @Get("publicaciones/:id/comentarios")
-  async contarComentariosPublicacionPeriodo(
-    @Param("id") idPublicacionBuscado: string, @Query("fechaDesde") fechaDesde: string,
-    @Query("fechaHasta") fechaHasta: string
-  ): Promise<number> { return this.estadisticasService.contarComentariosPublicacionPeriodo(idPublicacionBuscado, fechaDesde, fechaHasta) }
+  @Get("publicaciones/comentarios")
+  async contarComentariosPublicacionesPeriodo(
+    @Query("fechaDesde") fechaDesde: string, @Query("fechaHasta") fechaHasta: string
+  ): Promise<{ tituloPublicacion: string; cantidadComentarios: number }[]> {
+    return this.estadisticasService.contarComentariosPublicacionesPeriodo(fechaDesde, fechaHasta)
+  }
 }

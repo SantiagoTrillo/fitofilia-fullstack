@@ -12,9 +12,13 @@ export class EstadisticasService {
     return new HttpParams().set("fechaDesde", fechaDesde).set("fechaHasta", fechaHasta)
   }
 
-  async contarPublicacionesPeriodo(fechaDesde: string, fechaHasta: string): Promise<number> {
+  async contarPublicacionesUsuariosPeriodo(
+    fechaDesde: string, fechaHasta: string
+  ): Promise<{ nombreUsuario: string; cantidadPublicaciones: number }[]> {
     return firstValueFrom(
-      this.httpClient.get<number>(`${ this.urlApi }/publicaciones`, { params: this.crearParametros(fechaDesde, fechaHasta) })
+      this.httpClient.get<{ nombreUsuario: string; cantidadPublicaciones: number }[]>(
+        `${ this.urlApi }/usuarios/publicaciones`, { params: this.crearParametros(fechaDesde, fechaHasta) }
+      )
     )
   }
 
@@ -24,10 +28,12 @@ export class EstadisticasService {
     )
   }
 
-  async contarComentariosPublicacionPeriodo(idPublicacion: string, fechaDesde: string, fechaHasta: string): Promise<number> {
+  async contarComentariosPublicacionesPeriodo(
+    fechaDesde: string, fechaHasta: string
+  ): Promise<{ tituloPublicacion: string; cantidadComentarios: number }[]> {
     return firstValueFrom(
-      this.httpClient.get<number>(
-        `${ this.urlApi }/publicaciones/${ idPublicacion }/comentarios`, { params: this.crearParametros(fechaDesde, fechaHasta) }
+      this.httpClient.get<{ tituloPublicacion: string; cantidadComentarios: number }[]>(
+        `${ this.urlApi }/publicaciones/comentarios`, { params: this.crearParametros(fechaDesde, fechaHasta) }
       )
     )
   }
