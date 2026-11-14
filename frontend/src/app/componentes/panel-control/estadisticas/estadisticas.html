@@ -5,7 +5,7 @@
     <label>Fecha hasta: <input type="date" [value]="fechaHasta()" [min]="fechaDesde()" [disabled]="cargando()" (change)="seleccionarFechaHasta($event)"></label>
   </div>
   @if (verificarPeriodoInvertido()) { <p class="error">La fecha desde no puede ser posterior a la fecha hasta</p> }
-  <div class="cargando" [hidden]="!cargando()"><app-pagina-cargando [modoInline]="true" /></div>
+  <div class="cargando" [hidden]="!cargando()"><app-pagina-cargando [modoInline]="true" texto="Cargando gráficos..." /></div>
   <div class="graficos" [hidden]="!periodoValido()">
     <div class="grafico">
       <h3>Publicaciones por usuario</h3>

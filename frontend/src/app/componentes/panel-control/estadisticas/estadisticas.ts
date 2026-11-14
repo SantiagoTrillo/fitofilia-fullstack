@@ -117,7 +117,17 @@ export class Estadisticas {
     } finally { this.cargando.set(false) }
   }
 
-  protected ngAfterViewInit(): void { this.destruirGraficos() }
+  protected ngAfterViewInit(): void {
+    this.destruirGraficos()
+
+    const hoy: Date = new Date()
+    const fechaHoy: string = `${ hoy.getFullYear() }-${ String(hoy.getMonth() + 1).padStart(2, "0") }-${ String(hoy.getDate()).padStart(2, "0") }`
+
+    this.fechaDesde.set(fechaHoy)
+    this.fechaHasta.set(fechaHoy)
+
+    void this.renderizarGraficos()
+  }
 
   protected ngOnDestroy(): void { this.destruirGraficos() }
 

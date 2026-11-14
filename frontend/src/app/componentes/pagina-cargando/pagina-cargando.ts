@@ -14,6 +14,7 @@ export class PaginaCargando {
   private toastService: ToastService = inject(ToastService)
 
   modoInline: InputSignal<boolean> = input(false)
+  texto: InputSignal<string> = input<string>("Validando token...")
 
   protected async ngOnInit(): Promise<void> {
     if (this.modoInline()) return
