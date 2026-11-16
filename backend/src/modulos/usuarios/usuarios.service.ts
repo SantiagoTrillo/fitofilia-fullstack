@@ -1,4 +1,4 @@
-import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common"
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { CrearUsuarioDto } from "./dto/crear-usuario.dto.js"
 import { ActualizarUsuarioDto } from "./dto/actualizar-usuario.dto.js"
 import { DocumentoUsuario, Usuario } from "./entidad/usuario.schema.js"
@@ -10,19 +10,24 @@ import bcrypt from "bcrypt"
 export class UsuariosService {
   constructor(@InjectModel(Usuario.name) private modeloUsuario: Model<DocumentoUsuario>) {}
 
-  async crear(idUsuarioCreador: string, crearUsuarioDto: CrearUsuarioDto): Promise<DocumentoUsuario> {
+  async crear(crearUsuarioDto: CrearUsuarioDto, idUsuarioCreador: string | undefined = undefined): Promise<DocumentoUsuario> {
     const correoExistente: DocumentoUsuario | null = await this.modeloUsuario.findOne({ correo: crearUsuarioDto.correo })
     const usuarioExistente: DocumentoUsuario | null = await this.modeloUsuario.findOne({ nombreUsuario: crearUsuarioDto.nombreUsuario })
-    const usuarioCreador: DocumentoUsuario | null = await this.buscarPorId(idUsuarioCreador)
 
     if (correoExistente) throw new ConflictException("El correo ya está en uso")
     if (usuarioExistente) throw new ConflictException("El nombre de usuario ya está en uso")
-    if (usuarioCreador.perfil !== "administrador" && crearUsuarioDto.perfil === "administrador") {
-      throw new ForbiddenException("No tenés permiso para crear este usuario")
+
+    if (idUsuarioCreador) {
+      const usuarioCreador: DocumentoUsuario = await this.buscarPorId(idUsuarioCreador)
+
+      if (usuarioCreador.perfil !== "administrador" && crearUsuarioDto.perfil === "administrador") {
+        throw new ForbiddenException("No tenés permiso para crear este usuario")
+      }
     }
 
     const contraseniaEncriptada: string = await bcrypt.hash(crearUsuarioDto.contrasenia, 10)
-    const usuarioNuevo = new this.modeloUsuario({...crearUsuarioDto, contrasenia: contraseniaEncriptada})
+    const perfil: string | undefined = idUsuarioCreador ? crearUsuarioDto.perfil : "usuario"
+    const usuarioNuevo = new this.modeloUsuario({ ...crearUsuarioDto, contrasenia: contraseniaEncriptada, perfil })
 
     return await usuarioNuevo.save()
   }

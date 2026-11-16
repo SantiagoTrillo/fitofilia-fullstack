@@ -35,8 +35,8 @@ export class InicioSesion {
 
   protected async iniciarSesionRapido(): Promise<void> {
     const usuarioAutenticado: UsuarioInterface | null = await this.sesionService.iniciarSesion(
-      "santitrillo07@gmail.com",
-      "Fitofilia2026"
+      "playwright@gmail.com",
+      "Playwright2026"
     )
 
     if (usuarioAutenticado) void this.router.navigate(["cargando"])

@@ -23,7 +23,7 @@ export class UsuariosController {
   ): Promise<DocumentoUsuario> {
     if (fotoPerfil) crearUsuarioDto.fotoPerfil = await this.archivosService.subirArchivo(fotoPerfil, "usuarios")
 
-    return this.usuariosService.crear(peticion.usuario.sujeto, crearUsuarioDto)
+    return this.usuariosService.crear(crearUsuarioDto, peticion.usuario.sujeto)
   }
 
   @Get()

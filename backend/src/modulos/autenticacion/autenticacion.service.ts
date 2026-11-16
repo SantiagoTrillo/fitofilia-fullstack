@@ -1,4 +1,4 @@
-import {BadRequestException, ForbiddenException, Injectable, UnauthorizedException} from "@nestjs/common"
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common"
 import { IniciarSesionDto } from "./dto/iniciar-sesion.dto.js"
 import { DocumentoUsuario } from "../usuarios/entidad/usuario.schema.js"
 import bcrypt from "bcrypt"
@@ -21,14 +21,20 @@ export class AutenticacionService {
   }
 
   async iniciarSesion(iniciarSesionDto: IniciarSesionDto): Promise<any> {
-    const usuarioAutenticado: DocumentoUsuario | null = await this.usuariosService.buscarPorCorreo(iniciarSesionDto.correo)
+    let usuarioAutenticado: DocumentoUsuario
 
-    if (!usuarioAutenticado) throw new BadRequestException("Credenciales incorrectas")
+    try { usuarioAutenticado = await this.usuariosService.buscarPorCorreo(iniciarSesionDto.correo) }
+    catch (error) {
+      if (error instanceof NotFoundException) throw new UnauthorizedException("Credenciales inválidas")
+
+      throw error
+    }
+
     if (!usuarioAutenticado.disponible) throw new ForbiddenException("Esta cuenta se encuentra deshabilitada")
 
     const contraseniaCorrecta: boolean = await bcrypt.compare(iniciarSesionDto.contrasenia, usuarioAutenticado.contrasenia)
 
-    if (!contraseniaCorrecta) throw new BadRequestException("Credenciales incorrectas")
+    if (!contraseniaCorrecta) throw new BadRequestException("Credenciales inválidas")
 
     const token: string = await this.generarToken(usuarioAutenticado)
 
